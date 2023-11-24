@@ -6,7 +6,7 @@ import { Contract, Interface, type ContractRunner } from "ethers";
 import type {
   IERC20,
   IERC20Interface,
-} from "../../../../../../../../../../@chainlink/contracts-ccip/src/v0.8/vendor/openzeppelin-solidity/v4.8.0/token/ERC20/IERC20";
+} from "../../../../../@openzeppelin/contracts/token/ERC20/IERC20";
 
 const _abi = [
   {
@@ -143,7 +143,7 @@ const _abi = [
     inputs: [
       {
         internalType: "address",
-        name: "to",
+        name: "recipient",
         type: "address",
       },
       {
@@ -167,12 +167,12 @@ const _abi = [
     inputs: [
       {
         internalType: "address",
-        name: "from",
+        name: "sender",
         type: "address",
       },
       {
         internalType: "address",
-        name: "to",
+        name: "recipient",
         type: "address",
       },
       {

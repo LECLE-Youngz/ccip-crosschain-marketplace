@@ -22,6 +22,14 @@ export const LINK_ADDRESSES: AddressMap = {
     [`avalancheFuji`]: `0x0b9d5D9136855f6FEc3c0993feE6E9CE8a297846`
 };
 
+export const AGGREGATOR_ADDRESS: AddressMap = {
+    [`ethereumSepolia`]: ``,
+    [`polygonMumbai`]: ``,
+    [`optimismGoerli`]: ``,
+    [`arbitrumTestnet`]: ``,
+    [`avalancheFuji`]: `0x5498BB86BC934c8D34FDA08E81D444153d0D06aD`
+};
+
 export const routerConfig = {
     ethereumSepolia: {
         address: `0xd0daae2231e9cb96b94c8512223533293c3693bf`,
@@ -36,7 +44,7 @@ export const routerConfig = {
     avalancheFuji: {
         address: `0x554472a2720e5e7d5d3c817529aba05eed5f82d8`,
         chainSelector: `14767482510784806043`,
-        feeTokens: [LINK_ADDRESSES[`avalancheFuji`], `0xd00ae08403B9bbb9124bB305C09058E32C39A48c`]
+        feeTokens: [LINK_ADDRESSES[`avalancheFuji`], `0xd00ae08403B9bbb9124bB305C09058E32C39A48c`],
     },
     arbitrumTestnet: {
         address: `0x88e492127709447a5abefdab8788a15b4567589e`,

@@ -28,8 +28,10 @@ export type { IERC20 } from "./@chainlink/contracts-ccip/src/v0.8/vendor/openzep
 export { IERC20__factory } from "./factories/@chainlink/contracts-ccip/src/v0.8/vendor/openzeppelin-solidity/v4.8.0/token/ERC20/IERC20__factory";
 export type { IERC165 } from "./@chainlink/contracts-ccip/src/v0.8/vendor/openzeppelin-solidity/v4.8.0/utils/introspection/IERC165";
 export { IERC165__factory } from "./factories/@chainlink/contracts-ccip/src/v0.8/vendor/openzeppelin-solidity/v4.8.0/utils/introspection/IERC165__factory";
-export type { LinkTokenInterface } from "./@chainlink/contracts/src/v0.8/interfaces/LinkTokenInterface";
-export { LinkTokenInterface__factory } from "./factories/@chainlink/contracts/src/v0.8/interfaces/LinkTokenInterface__factory";
+export type { AggregatorV3Interface } from "./@chainlink/contracts/src/v0.8/interfaces/AggregatorV3Interface";
+export { AggregatorV3Interface__factory } from "./factories/@chainlink/contracts/src/v0.8/interfaces/AggregatorV3Interface__factory";
+export type { LinkTokenInterface } from "./@chainlink/contracts/src/v0.8/shared/interfaces/LinkTokenInterface";
+export { LinkTokenInterface__factory } from "./factories/@chainlink/contracts/src/v0.8/shared/interfaces/LinkTokenInterface__factory";
 export type { Ownable } from "./@openzeppelin/contracts/access/Ownable";
 export { Ownable__factory } from "./factories/@openzeppelin/contracts/access/Ownable__factory";
 export type { ERC721 } from "./@openzeppelin/contracts/token/ERC721/ERC721";
@@ -46,6 +48,8 @@ export type { ERC165 } from "./@openzeppelin/contracts/utils/introspection/ERC16
 export { ERC165__factory } from "./factories/@openzeppelin/contracts/utils/introspection/ERC165__factory";
 export type { DestinationMinter } from "./contracts/DestinationMinter";
 export { DestinationMinter__factory } from "./factories/contracts/DestinationMinter__factory";
+export type { NftMarketplace } from "./contracts/Marketplace.sol/NftMarketplace";
+export { NftMarketplace__factory } from "./factories/contracts/Marketplace.sol/NftMarketplace__factory";
 export type { MyNFT } from "./contracts/MyNFT";
 export { MyNFT__factory } from "./factories/contracts/MyNFT__factory";
 export type { SourceMinter } from "./contracts/SourceMinter";

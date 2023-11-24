@@ -54,9 +54,9 @@ declare module "hardhat/types/runtime" {
       signerOrOptions?: ethers.Signer | FactoryOptions
     ): Promise<Contracts.IERC165__factory>;
     getContractFactory(
-      name: "LinkTokenInterface",
+      name: "AggregatorV3Interface",
       signerOrOptions?: ethers.Signer | FactoryOptions
-    ): Promise<Contracts.LinkTokenInterface__factory>;
+    ): Promise<Contracts.AggregatorV3Interface__factory>;
     getContractFactory(
       name: "LinkTokenInterface",
       signerOrOptions?: ethers.Signer | FactoryOptions
@@ -65,6 +65,10 @@ declare module "hardhat/types/runtime" {
       name: "Ownable",
       signerOrOptions?: ethers.Signer | FactoryOptions
     ): Promise<Contracts.Ownable__factory>;
+    getContractFactory(
+      name: "IERC20",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.IERC20__factory>;
     getContractFactory(
       name: "ERC721",
       signerOrOptions?: ethers.Signer | FactoryOptions
@@ -97,6 +101,10 @@ declare module "hardhat/types/runtime" {
       name: "DestinationMinter",
       signerOrOptions?: ethers.Signer | FactoryOptions
     ): Promise<Contracts.DestinationMinter__factory>;
+    getContractFactory(
+      name: "NftMarketplace",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.NftMarketplace__factory>;
     getContractFactory(
       name: "MyNFT",
       signerOrOptions?: ethers.Signer | FactoryOptions
@@ -161,10 +169,10 @@ declare module "hardhat/types/runtime" {
       signer?: ethers.Signer
     ): Promise<Contracts.IERC165>;
     getContractAt(
-      name: "LinkTokenInterface",
+      name: "AggregatorV3Interface",
       address: string | ethers.Addressable,
       signer?: ethers.Signer
-    ): Promise<Contracts.LinkTokenInterface>;
+    ): Promise<Contracts.AggregatorV3Interface>;
     getContractAt(
       name: "LinkTokenInterface",
       address: string | ethers.Addressable,
@@ -175,6 +183,11 @@ declare module "hardhat/types/runtime" {
       address: string | ethers.Addressable,
       signer?: ethers.Signer
     ): Promise<Contracts.Ownable>;
+    getContractAt(
+      name: "IERC20",
+      address: string | ethers.Addressable,
+      signer?: ethers.Signer
+    ): Promise<Contracts.IERC20>;
     getContractAt(
       name: "ERC721",
       address: string | ethers.Addressable,
@@ -215,6 +228,11 @@ declare module "hardhat/types/runtime" {
       address: string | ethers.Addressable,
       signer?: ethers.Signer
     ): Promise<Contracts.DestinationMinter>;
+    getContractAt(
+      name: "NftMarketplace",
+      address: string | ethers.Addressable,
+      signer?: ethers.Signer
+    ): Promise<Contracts.NftMarketplace>;
     getContractAt(
       name: "MyNFT",
       address: string | ethers.Addressable,
@@ -272,9 +290,9 @@ declare module "hardhat/types/runtime" {
       signerOrOptions?: ethers.Signer | DeployContractOptions
     ): Promise<Contracts.IERC165>;
     deployContract(
-      name: "LinkTokenInterface",
+      name: "AggregatorV3Interface",
       signerOrOptions?: ethers.Signer | DeployContractOptions
-    ): Promise<Contracts.LinkTokenInterface>;
+    ): Promise<Contracts.AggregatorV3Interface>;
     deployContract(
       name: "LinkTokenInterface",
       signerOrOptions?: ethers.Signer | DeployContractOptions
@@ -283,6 +301,10 @@ declare module "hardhat/types/runtime" {
       name: "Ownable",
       signerOrOptions?: ethers.Signer | DeployContractOptions
     ): Promise<Contracts.Ownable>;
+    deployContract(
+      name: "IERC20",
+      signerOrOptions?: ethers.Signer | DeployContractOptions
+    ): Promise<Contracts.IERC20>;
     deployContract(
       name: "ERC721",
       signerOrOptions?: ethers.Signer | DeployContractOptions
@@ -315,6 +337,10 @@ declare module "hardhat/types/runtime" {
       name: "DestinationMinter",
       signerOrOptions?: ethers.Signer | DeployContractOptions
     ): Promise<Contracts.DestinationMinter>;
+    deployContract(
+      name: "NftMarketplace",
+      signerOrOptions?: ethers.Signer | DeployContractOptions
+    ): Promise<Contracts.NftMarketplace>;
     deployContract(
       name: "MyNFT",
       signerOrOptions?: ethers.Signer | DeployContractOptions
@@ -379,10 +405,10 @@ declare module "hardhat/types/runtime" {
       signerOrOptions?: ethers.Signer | DeployContractOptions
     ): Promise<Contracts.IERC165>;
     deployContract(
-      name: "LinkTokenInterface",
+      name: "AggregatorV3Interface",
       args: any[],
       signerOrOptions?: ethers.Signer | DeployContractOptions
-    ): Promise<Contracts.LinkTokenInterface>;
+    ): Promise<Contracts.AggregatorV3Interface>;
     deployContract(
       name: "LinkTokenInterface",
       args: any[],
@@ -393,6 +419,11 @@ declare module "hardhat/types/runtime" {
       args: any[],
       signerOrOptions?: ethers.Signer | DeployContractOptions
     ): Promise<Contracts.Ownable>;
+    deployContract(
+      name: "IERC20",
+      args: any[],
+      signerOrOptions?: ethers.Signer | DeployContractOptions
+    ): Promise<Contracts.IERC20>;
     deployContract(
       name: "ERC721",
       args: any[],
@@ -433,6 +464,11 @@ declare module "hardhat/types/runtime" {
       args: any[],
       signerOrOptions?: ethers.Signer | DeployContractOptions
     ): Promise<Contracts.DestinationMinter>;
+    deployContract(
+      name: "NftMarketplace",
+      args: any[],
+      signerOrOptions?: ethers.Signer | DeployContractOptions
+    ): Promise<Contracts.NftMarketplace>;
     deployContract(
       name: "MyNFT",
       args: any[],

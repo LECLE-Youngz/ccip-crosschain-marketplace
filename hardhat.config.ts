@@ -11,6 +11,7 @@ const POLYGON_MUMBAI_RPC_URL = process.env.POLYGON_MUMBAI_RPC_URL;
 const OPTIMISM_GOERLI_RPC_URL = process.env.OPTIMISM_GOERLI_RPC_URL;
 const ARBITRUM_TESTNET_RPC_URL = process.env.ARBITRUM_TESTNET_RPC_URL;
 const AVALANCHE_FUJI_RPC_URL = process.env.AVALANCHE_FUJI_RPC_URL;
+const SNOWTRACE_API_KEY = process.env.SNOWTRACE_API_KEY;
 
 const config: HardhatUserConfig = {
   solidity: "0.8.19",
@@ -43,7 +44,13 @@ const config: HardhatUserConfig = {
       accounts: PRIVATE_KEY !== undefined ? [PRIVATE_KEY] : [],
       chainId: 43113
     }
-  }
+  }, 
+  etherscan: {
+    apiKey: {
+      // avalanche
+      avalancheFujiTestnet: SNOWTRACE_API_KEY || '',
+    },
+  },
 };
 
 export default config;
