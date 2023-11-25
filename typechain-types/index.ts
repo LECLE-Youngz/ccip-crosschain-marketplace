@@ -52,6 +52,8 @@ export type { NftMarketplace } from "./contracts/Marketplace.sol/NftMarketplace"
 export { NftMarketplace__factory } from "./factories/contracts/Marketplace.sol/NftMarketplace__factory";
 export type { MyNFT } from "./contracts/MyNFT";
 export { MyNFT__factory } from "./factories/contracts/MyNFT__factory";
+export type { PremiumNFT } from "./contracts/PremiumNFT";
+export { PremiumNFT__factory } from "./factories/contracts/PremiumNFT__factory";
 export type { SourceMinter } from "./contracts/SourceMinter";
 export { SourceMinter__factory } from "./factories/contracts/SourceMinter__factory";
 export type { Withdraw } from "./contracts/utils/Withdraw";

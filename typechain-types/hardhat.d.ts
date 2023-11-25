@@ -110,6 +110,10 @@ declare module "hardhat/types/runtime" {
       signerOrOptions?: ethers.Signer | FactoryOptions
     ): Promise<Contracts.MyNFT__factory>;
     getContractFactory(
+      name: "PremiumNFT",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.PremiumNFT__factory>;
+    getContractFactory(
       name: "SourceMinter",
       signerOrOptions?: ethers.Signer | FactoryOptions
     ): Promise<Contracts.SourceMinter__factory>;
@@ -239,6 +243,11 @@ declare module "hardhat/types/runtime" {
       signer?: ethers.Signer
     ): Promise<Contracts.MyNFT>;
     getContractAt(
+      name: "PremiumNFT",
+      address: string | ethers.Addressable,
+      signer?: ethers.Signer
+    ): Promise<Contracts.PremiumNFT>;
+    getContractAt(
       name: "SourceMinter",
       address: string | ethers.Addressable,
       signer?: ethers.Signer
@@ -346,6 +355,10 @@ declare module "hardhat/types/runtime" {
       signerOrOptions?: ethers.Signer | DeployContractOptions
     ): Promise<Contracts.MyNFT>;
     deployContract(
+      name: "PremiumNFT",
+      signerOrOptions?: ethers.Signer | DeployContractOptions
+    ): Promise<Contracts.PremiumNFT>;
+    deployContract(
       name: "SourceMinter",
       signerOrOptions?: ethers.Signer | DeployContractOptions
     ): Promise<Contracts.SourceMinter>;
@@ -474,6 +487,11 @@ declare module "hardhat/types/runtime" {
       args: any[],
       signerOrOptions?: ethers.Signer | DeployContractOptions
     ): Promise<Contracts.MyNFT>;
+    deployContract(
+      name: "PremiumNFT",
+      args: any[],
+      signerOrOptions?: ethers.Signer | DeployContractOptions
+    ): Promise<Contracts.PremiumNFT>;
     deployContract(
       name: "SourceMinter",
       args: any[],

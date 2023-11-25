@@ -7,4 +7,5 @@ import type * as utils from "./utils";
 export type { utils };
 export type { DestinationMinter } from "./DestinationMinter";
 export type { MyNFT } from "./MyNFT";
+export type { PremiumNFT } from "./PremiumNFT";
 export type { SourceMinter } from "./SourceMinter";
