@@ -57,3 +57,5 @@ export const routerConfig = {
         feeTokens: [LINK_ADDRESSES[`polygonMumbai`], `0x9c3C9283D3e44854697Cd22D3Faa240Cfb032889`]
     }
 }
+
+export const SUBGRAPH_NAME = "Nexthype";
