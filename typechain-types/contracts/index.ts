@@ -3,9 +3,10 @@
 /* eslint-disable */
 import type * as marketplaceSol from "./Marketplace.sol";
 export type { marketplaceSol };
+import type * as nexthypeNftSol from "./NexthypeNFT.sol";
+export type { nexthypeNftSol };
 import type * as utils from "./utils";
 export type { utils };
 export type { DestinationMinter } from "./DestinationMinter";
-export type { MyNFT } from "./MyNFT";
 export type { PremiumNFT } from "./PremiumNFT";
 export type { SourceMinter } from "./SourceMinter";

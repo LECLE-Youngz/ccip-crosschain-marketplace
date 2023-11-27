@@ -21,27 +21,23 @@ import type {
   TypedLogDescription,
   TypedListener,
   TypedContractMethod,
-} from "../common";
+} from "../../common";
 
-export interface PremiumNFTInterface extends Interface {
+export interface NEXTHYPEInterface extends Interface {
   getFunction(
     nameOrSignature:
-      | "TOKEN_URI"
       | "approve"
       | "balanceOf"
       | "getApproved"
-      | "getPremiumState"
-      | "getSubscriptionPlan"
       | "isApprovedForAll"
-      | "isExpired"
       | "name"
       | "owner"
       | "ownerOf"
       | "renounceOwnership"
+      | "safeMint"
       | "safeTransferFrom(address,address,uint256)"
       | "safeTransferFrom(address,address,uint256,bytes)"
       | "setApprovalForAll"
-      | "subscribe"
       | "supportsInterface"
       | "symbol"
       | "tokenURI"
@@ -57,7 +53,6 @@ export interface PremiumNFTInterface extends Interface {
       | "Transfer"
   ): EventFragment;
 
-  encodeFunctionData(functionFragment: "TOKEN_URI", values?: undefined): string;
   encodeFunctionData(
     functionFragment: "approve",
     values: [AddressLike, BigNumberish]
@@ -71,20 +66,8 @@ export interface PremiumNFTInterface extends Interface {
     values: [BigNumberish]
   ): string;
   encodeFunctionData(
-    functionFragment: "getPremiumState",
-    values: [BigNumberish]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "getSubscriptionPlan",
-    values: [BigNumberish]
-  ): string;
-  encodeFunctionData(
     functionFragment: "isApprovedForAll",
     values: [AddressLike, AddressLike]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "isExpired",
-    values: [BigNumberish]
   ): string;
   encodeFunctionData(functionFragment: "name", values?: undefined): string;
   encodeFunctionData(functionFragment: "owner", values?: undefined): string;
@@ -96,6 +79,7 @@ export interface PremiumNFTInterface extends Interface {
     functionFragment: "renounceOwnership",
     values?: undefined
   ): string;
+  encodeFunctionData(functionFragment: "safeMint", values: [string]): string;
   encodeFunctionData(
     functionFragment: "safeTransferFrom(address,address,uint256)",
     values: [AddressLike, AddressLike, BigNumberish]
@@ -107,10 +91,6 @@ export interface PremiumNFTInterface extends Interface {
   encodeFunctionData(
     functionFragment: "setApprovalForAll",
     values: [AddressLike, boolean]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "subscribe",
-    values: [BigNumberish]
   ): string;
   encodeFunctionData(
     functionFragment: "supportsInterface",
@@ -130,7 +110,6 @@ export interface PremiumNFTInterface extends Interface {
     values: [AddressLike]
   ): string;
 
-  decodeFunctionResult(functionFragment: "TOKEN_URI", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "approve", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "balanceOf", data: BytesLike): Result;
   decodeFunctionResult(
@@ -138,18 +117,9 @@ export interface PremiumNFTInterface extends Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: "getPremiumState",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "getSubscriptionPlan",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
     functionFragment: "isApprovedForAll",
     data: BytesLike
   ): Result;
-  decodeFunctionResult(functionFragment: "isExpired", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "name", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "owner", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "ownerOf", data: BytesLike): Result;
@@ -157,6 +127,7 @@ export interface PremiumNFTInterface extends Interface {
     functionFragment: "renounceOwnership",
     data: BytesLike
   ): Result;
+  decodeFunctionResult(functionFragment: "safeMint", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "safeTransferFrom(address,address,uint256)",
     data: BytesLike
@@ -169,7 +140,6 @@ export interface PremiumNFTInterface extends Interface {
     functionFragment: "setApprovalForAll",
     data: BytesLike
   ): Result;
-  decodeFunctionResult(functionFragment: "subscribe", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "supportsInterface",
     data: BytesLike
@@ -257,11 +227,11 @@ export namespace TransferEvent {
   export type LogDescription = TypedLogDescription<Event>;
 }
 
-export interface PremiumNFT extends BaseContract {
-  connect(runner?: ContractRunner | null): PremiumNFT;
+export interface NEXTHYPE extends BaseContract {
+  connect(runner?: ContractRunner | null): NEXTHYPE;
   waitForDeployment(): Promise<this>;
 
-  interface: PremiumNFTInterface;
+  interface: NEXTHYPEInterface;
 
   queryFilter<TCEvent extends TypedContractEvent>(
     event: TCEvent,
@@ -300,8 +270,6 @@ export interface PremiumNFT extends BaseContract {
     event?: TCEvent
   ): Promise<this>;
 
-  TOKEN_URI: TypedContractMethod<[], [string], "view">;
-
   approve: TypedContractMethod<
     [to: AddressLike, tokenId: BigNumberish],
     [void],
@@ -312,25 +280,11 @@ export interface PremiumNFT extends BaseContract {
 
   getApproved: TypedContractMethod<[tokenId: BigNumberish], [string], "view">;
 
-  getPremiumState: TypedContractMethod<
-    [_tokenId: BigNumberish],
-    [bigint],
-    "view"
-  >;
-
-  getSubscriptionPlan: TypedContractMethod<
-    [subscriptionPlan: BigNumberish],
-    [bigint],
-    "view"
-  >;
-
   isApprovedForAll: TypedContractMethod<
     [owner: AddressLike, operator: AddressLike],
     [boolean],
     "view"
   >;
-
-  isExpired: TypedContractMethod<[_tokenId: BigNumberish], [boolean], "view">;
 
   name: TypedContractMethod<[], [string], "view">;
 
@@ -339,6 +293,8 @@ export interface PremiumNFT extends BaseContract {
   ownerOf: TypedContractMethod<[tokenId: BigNumberish], [string], "view">;
 
   renounceOwnership: TypedContractMethod<[], [void], "nonpayable">;
+
+  safeMint: TypedContractMethod<[_tokenURI: string], [void], "nonpayable">;
 
   "safeTransferFrom(address,address,uint256)": TypedContractMethod<
     [from: AddressLike, to: AddressLike, tokenId: BigNumberish],
@@ -361,12 +317,6 @@ export interface PremiumNFT extends BaseContract {
     [operator: AddressLike, approved: boolean],
     [void],
     "nonpayable"
-  >;
-
-  subscribe: TypedContractMethod<
-    [subscriptionPlan: BigNumberish],
-    [void],
-    "payable"
   >;
 
   supportsInterface: TypedContractMethod<
@@ -396,9 +346,6 @@ export interface PremiumNFT extends BaseContract {
   ): T;
 
   getFunction(
-    nameOrSignature: "TOKEN_URI"
-  ): TypedContractMethod<[], [string], "view">;
-  getFunction(
     nameOrSignature: "approve"
   ): TypedContractMethod<
     [to: AddressLike, tokenId: BigNumberish],
@@ -412,21 +359,12 @@ export interface PremiumNFT extends BaseContract {
     nameOrSignature: "getApproved"
   ): TypedContractMethod<[tokenId: BigNumberish], [string], "view">;
   getFunction(
-    nameOrSignature: "getPremiumState"
-  ): TypedContractMethod<[_tokenId: BigNumberish], [bigint], "view">;
-  getFunction(
-    nameOrSignature: "getSubscriptionPlan"
-  ): TypedContractMethod<[subscriptionPlan: BigNumberish], [bigint], "view">;
-  getFunction(
     nameOrSignature: "isApprovedForAll"
   ): TypedContractMethod<
     [owner: AddressLike, operator: AddressLike],
     [boolean],
     "view"
   >;
-  getFunction(
-    nameOrSignature: "isExpired"
-  ): TypedContractMethod<[_tokenId: BigNumberish], [boolean], "view">;
   getFunction(
     nameOrSignature: "name"
   ): TypedContractMethod<[], [string], "view">;
@@ -439,6 +377,9 @@ export interface PremiumNFT extends BaseContract {
   getFunction(
     nameOrSignature: "renounceOwnership"
   ): TypedContractMethod<[], [void], "nonpayable">;
+  getFunction(
+    nameOrSignature: "safeMint"
+  ): TypedContractMethod<[_tokenURI: string], [void], "nonpayable">;
   getFunction(
     nameOrSignature: "safeTransferFrom(address,address,uint256)"
   ): TypedContractMethod<
@@ -465,9 +406,6 @@ export interface PremiumNFT extends BaseContract {
     [void],
     "nonpayable"
   >;
-  getFunction(
-    nameOrSignature: "subscribe"
-  ): TypedContractMethod<[subscriptionPlan: BigNumberish], [void], "payable">;
   getFunction(
     nameOrSignature: "supportsInterface"
   ): TypedContractMethod<[interfaceId: BytesLike], [boolean], "view">;

@@ -21,7 +21,6 @@ contract PremiumNFT is ERC721URIStorage, ReentrancyGuard, Ownable {
     mapping(uint256 => uint256) tokenExpiredTime;
     mapping(SUBSCRIPTION_PLAN => uint256) subscriptionPlans;
     
-
     constructor(string memory token_uri, uint256[] memory subscriptionPrice) ERC721("PremiumNFT", "PSC") {
         TOKEN_URI = token_uri;
         subscriptionPlans[SUBSCRIPTION_PLAN.WEEK] = subscriptionPrice[0];
@@ -70,5 +69,9 @@ contract PremiumNFT is ERC721URIStorage, ReentrancyGuard, Ownable {
 
     function getPremiumState(uint256 _tokenId) view external returns(uint256) {
         return tokenExpiredTime[_tokenId];
+    }
+
+    function isExpired(uint256 _tokenId) view external returns(bool) {
+        return block.timestamp > tokenExpiredTime[_tokenId] ? true : false;
     }
 }
