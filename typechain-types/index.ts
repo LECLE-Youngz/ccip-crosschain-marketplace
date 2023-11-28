@@ -52,6 +52,10 @@ export type { ERC165 } from "./@openzeppelin/contracts/utils/introspection/ERC16
 export { ERC165__factory } from "./factories/@openzeppelin/contracts/utils/introspection/ERC165__factory";
 export type { DestinationMinter } from "./contracts/DestinationMinter";
 export { DestinationMinter__factory } from "./factories/contracts/DestinationMinter__factory";
+export type { GenerativeNFT } from "./contracts/GenerativeNFT";
+export { GenerativeNFT__factory } from "./factories/contracts/GenerativeNFT__factory";
+export type { GenerativeNFTFactory } from "./contracts/GenerativeNFTFactory";
+export { GenerativeNFTFactory__factory } from "./factories/contracts/GenerativeNFTFactory__factory";
 export type { NftMarketplace } from "./contracts/Marketplace.sol/NftMarketplace";
 export { NftMarketplace__factory } from "./factories/contracts/Marketplace.sol/NftMarketplace__factory";
 export type { NEXTHYPE } from "./contracts/NexthypeNFT.sol/NEXTHYPE";

@@ -47,9 +47,12 @@ export interface NftMarketplaceInterface extends Interface {
       | "getListPromptBuyers"
       | "getListing"
       | "getPromptPrice"
+      | "getTokenPrice"
       | "listItem"
+      | "roundToMillion"
       | "updateListing"
       | "updatePromptPrice"
+      | "usdc"
   ): FunctionFragment;
 
   getEvent(
@@ -62,11 +65,11 @@ export interface NftMarketplaceInterface extends Interface {
 
   encodeFunctionData(
     functionFragment: "buyItem",
-    values: [AddressLike, BigNumberish, AddressLike, BigNumberish]
+    values: [AddressLike, BigNumberish, BigNumberish]
   ): string;
   encodeFunctionData(
     functionFragment: "buyPrompt",
-    values: [AddressLike, BigNumberish, AddressLike, BigNumberish]
+    values: [AddressLike, BigNumberish, BigNumberish]
   ): string;
   encodeFunctionData(
     functionFragment: "cancelListing",
@@ -89,8 +92,16 @@ export interface NftMarketplaceInterface extends Interface {
     values: [AddressLike, BigNumberish]
   ): string;
   encodeFunctionData(
+    functionFragment: "getTokenPrice",
+    values: [AddressLike, BigNumberish]
+  ): string;
+  encodeFunctionData(
     functionFragment: "listItem",
     values: [AddressLike, BigNumberish, BigNumberish, BigNumberish]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "roundToMillion",
+    values: [BigNumberish]
   ): string;
   encodeFunctionData(
     functionFragment: "updateListing",
@@ -100,6 +111,7 @@ export interface NftMarketplaceInterface extends Interface {
     functionFragment: "updatePromptPrice",
     values: [AddressLike, BigNumberish, BigNumberish]
   ): string;
+  encodeFunctionData(functionFragment: "usdc", values?: undefined): string;
 
   decodeFunctionResult(functionFragment: "buyItem", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "buyPrompt", data: BytesLike): Result;
@@ -120,7 +132,15 @@ export interface NftMarketplaceInterface extends Interface {
     functionFragment: "getPromptPrice",
     data: BytesLike
   ): Result;
+  decodeFunctionResult(
+    functionFragment: "getTokenPrice",
+    data: BytesLike
+  ): Result;
   decodeFunctionResult(functionFragment: "listItem", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "roundToMillion",
+    data: BytesLike
+  ): Result;
   decodeFunctionResult(
     functionFragment: "updateListing",
     data: BytesLike
@@ -129,6 +149,7 @@ export interface NftMarketplaceInterface extends Interface {
     functionFragment: "updatePromptPrice",
     data: BytesLike
   ): Result;
+  decodeFunctionResult(functionFragment: "usdc", data: BytesLike): Result;
 }
 
 export namespace ItemBoughtEvent {
@@ -281,23 +302,13 @@ export interface NftMarketplace extends BaseContract {
   ): Promise<this>;
 
   buyItem: TypedContractMethod<
-    [
-      nftAddress: AddressLike,
-      tokenId: BigNumberish,
-      tokenAddress: AddressLike,
-      tokenAmount: BigNumberish
-    ],
+    [nftAddress: AddressLike, tokenId: BigNumberish, tokenAmount: BigNumberish],
     [void],
     "payable"
   >;
 
   buyPrompt: TypedContractMethod<
-    [
-      nftAddress: AddressLike,
-      tokenId: BigNumberish,
-      tokenAddress: AddressLike,
-      tokenAmount: BigNumberish
-    ],
+    [nftAddress: AddressLike, tokenId: BigNumberish, tokenAmount: BigNumberish],
     [void],
     "payable"
   >;
@@ -324,7 +335,13 @@ export interface NftMarketplace extends BaseContract {
 
   getPromptPrice: TypedContractMethod<
     [nftAddress: AddressLike, tokenId: BigNumberish],
-    [bigint],
+    [[bigint, bigint]],
+    "view"
+  >;
+
+  getTokenPrice: TypedContractMethod<
+    [nftAddress: AddressLike, tokenId: BigNumberish],
+    [[bigint, bigint]],
     "view"
   >;
 
@@ -338,6 +355,8 @@ export interface NftMarketplace extends BaseContract {
     [void],
     "nonpayable"
   >;
+
+  roundToMillion: TypedContractMethod<[input: BigNumberish], [bigint], "view">;
 
   updateListing: TypedContractMethod<
     [
@@ -360,6 +379,8 @@ export interface NftMarketplace extends BaseContract {
     "nonpayable"
   >;
 
+  usdc: TypedContractMethod<[], [string], "view">;
+
   getFunction<T extends ContractMethod = ContractMethod>(
     key: string | FunctionFragment
   ): T;
@@ -367,24 +388,14 @@ export interface NftMarketplace extends BaseContract {
   getFunction(
     nameOrSignature: "buyItem"
   ): TypedContractMethod<
-    [
-      nftAddress: AddressLike,
-      tokenId: BigNumberish,
-      tokenAddress: AddressLike,
-      tokenAmount: BigNumberish
-    ],
+    [nftAddress: AddressLike, tokenId: BigNumberish, tokenAmount: BigNumberish],
     [void],
     "payable"
   >;
   getFunction(
     nameOrSignature: "buyPrompt"
   ): TypedContractMethod<
-    [
-      nftAddress: AddressLike,
-      tokenId: BigNumberish,
-      tokenAddress: AddressLike,
-      tokenAmount: BigNumberish
-    ],
+    [nftAddress: AddressLike, tokenId: BigNumberish, tokenAmount: BigNumberish],
     [void],
     "payable"
   >;
@@ -416,7 +427,14 @@ export interface NftMarketplace extends BaseContract {
     nameOrSignature: "getPromptPrice"
   ): TypedContractMethod<
     [nftAddress: AddressLike, tokenId: BigNumberish],
-    [bigint],
+    [[bigint, bigint]],
+    "view"
+  >;
+  getFunction(
+    nameOrSignature: "getTokenPrice"
+  ): TypedContractMethod<
+    [nftAddress: AddressLike, tokenId: BigNumberish],
+    [[bigint, bigint]],
     "view"
   >;
   getFunction(
@@ -431,6 +449,9 @@ export interface NftMarketplace extends BaseContract {
     [void],
     "nonpayable"
   >;
+  getFunction(
+    nameOrSignature: "roundToMillion"
+  ): TypedContractMethod<[input: BigNumberish], [bigint], "view">;
   getFunction(
     nameOrSignature: "updateListing"
   ): TypedContractMethod<
@@ -454,6 +475,9 @@ export interface NftMarketplace extends BaseContract {
     [void],
     "nonpayable"
   >;
+  getFunction(
+    nameOrSignature: "usdc"
+  ): TypedContractMethod<[], [string], "view">;
 
   getEvent(
     key: "ItemBought"

@@ -8,5 +8,7 @@ export type { nexthypeNftSol };
 import type * as utils from "./utils";
 export type { utils };
 export type { DestinationMinter } from "./DestinationMinter";
+export type { GenerativeNFT } from "./GenerativeNFT";
+export type { GenerativeNFTFactory } from "./GenerativeNFTFactory";
 export type { PremiumNFT } from "./PremiumNFT";
 export type { SourceMinter } from "./SourceMinter";

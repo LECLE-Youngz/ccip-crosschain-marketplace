@@ -29,6 +29,7 @@ export interface NEXTHYPEInterface extends Interface {
       | "approve"
       | "balanceOf"
       | "getApproved"
+      | "getTotal"
       | "isApprovedForAll"
       | "name"
       | "owner"
@@ -65,6 +66,7 @@ export interface NEXTHYPEInterface extends Interface {
     functionFragment: "getApproved",
     values: [BigNumberish]
   ): string;
+  encodeFunctionData(functionFragment: "getTotal", values?: undefined): string;
   encodeFunctionData(
     functionFragment: "isApprovedForAll",
     values: [AddressLike, AddressLike]
@@ -116,6 +118,7 @@ export interface NEXTHYPEInterface extends Interface {
     functionFragment: "getApproved",
     data: BytesLike
   ): Result;
+  decodeFunctionResult(functionFragment: "getTotal", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "isApprovedForAll",
     data: BytesLike
@@ -280,6 +283,8 @@ export interface NEXTHYPE extends BaseContract {
 
   getApproved: TypedContractMethod<[tokenId: BigNumberish], [string], "view">;
 
+  getTotal: TypedContractMethod<[], [bigint], "view">;
+
   isApprovedForAll: TypedContractMethod<
     [owner: AddressLike, operator: AddressLike],
     [boolean],
@@ -358,6 +363,9 @@ export interface NEXTHYPE extends BaseContract {
   getFunction(
     nameOrSignature: "getApproved"
   ): TypedContractMethod<[tokenId: BigNumberish], [string], "view">;
+  getFunction(
+    nameOrSignature: "getTotal"
+  ): TypedContractMethod<[], [bigint], "view">;
   getFunction(
     nameOrSignature: "isApprovedForAll"
   ): TypedContractMethod<

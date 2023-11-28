@@ -23,16 +23,23 @@ contract NftMarketplace is ReentrancyGuard {
     // Chainlink DataFeed
     AggregatorV3Interface internal dataFeed;
     address immutable i_link;
-
+    // Avalanche Fuji USDC contract address
+    address public usdc;
+    
     /**
      * Network: Avalanche Fuji Testnet
+     * LINK: 0x0b9d5D9136855f6FEc3c0993feE6E9CE8a297846
      * Aggregator: LINK/AVAX
      * Address: 0x79c91fd4F8b3DaBEe17d286EB11cEE4D83521775
+     * USDC: 0x5425890298aed601595a70AB815c96711a31Bc65
      */
-    constructor(address link, address aggregatorAddr) {
+    constructor(address link, address aggregatorAddr, address usdcAddress) {
         dataFeed = AggregatorV3Interface(aggregatorAddr);
-        i_link = link;
+        i_link = link; 
+        usdc = usdcAddress;
     }
+
+    IERC20 erc20 = IERC20(usdc);
 
     struct Listing {
         uint256 nftPrice;
@@ -163,19 +170,18 @@ contract NftMarketplace is ReentrancyGuard {
     function buyItem(
         address nftAddress,
         uint256 tokenId,
-        address tokenAddress,
         uint256 tokenAmount
     ) external payable isListed(nftAddress, tokenId) nonReentrant {
         Listing memory listedItem = s_listings[nftAddress][tokenId];
 
-        uint256 _tokenAmount = uint256(getChainlinkDataFeedLatestAnswer()) * listedItem.promptPrice / (10**8);
+        uint256 _tokenAmount = roundToMillion(uint256(getChainlinkDataFeedLatestAnswer())) * listedItem.promptPrice / (10**8);
 
         if (tokenAmount != 0) {
              require(
                 tokenAmount == _tokenAmount,
-                "NFT Prompt ERC20 Price not met"
+                "NFT ERC20 Price not met"
             );
-            IERC20 erc20 = IERC20(tokenAddress);
+
             _tokenAmount = tokenAmount / (10**12);
             erc20.transferFrom(msg.sender ,listedItem.seller, _tokenAmount);
         } else {
@@ -207,7 +213,6 @@ contract NftMarketplace is ReentrancyGuard {
     function buyPrompt(
         address nftAddress,
         uint256 tokenId,
-        address tokenAddress,
         uint256 tokenAmount
     ) external payable nonReentrant {
         Listing memory listedItem = s_listings[nftAddress][tokenId];
@@ -222,7 +227,7 @@ contract NftMarketplace is ReentrancyGuard {
             );
         }
 
-        uint256 _tokenAmount = uint256(getChainlinkDataFeedLatestAnswer()) * listedItem.promptPrice / (10**8);
+        uint256 _tokenAmount = roundToMillion(uint256(getChainlinkDataFeedLatestAnswer())) * listedItem.promptPrice / (10**8);
 
         if (tokenAmount != 0) {
             require(
@@ -230,7 +235,6 @@ contract NftMarketplace is ReentrancyGuard {
                 "NFT Prompt ERC20 Price not met"
             );
 
-            IERC20 erc20 = IERC20(tokenAddress);
             _tokenAmount = tokenAmount / (10**12);
             erc20.transferFrom(msg.sender ,listedItem.seller, _tokenAmount);
         } else {
@@ -334,8 +338,20 @@ contract NftMarketplace is ReentrancyGuard {
         return answer;
     }
 
-    function getPromptPrice(address nftAddress, uint256 tokenId) public view returns (uint256) {
+    function getTokenPrice(address nftAddress, uint256 tokenId) public view returns (uint256, uint256) {
         Listing memory listedItem = s_listings[nftAddress][tokenId];
-        return uint256(getChainlinkDataFeedLatestAnswer()) * listedItem.promptPrice / (10**8);
+        return (listedItem.nftPrice, roundToMillion(uint256(getChainlinkDataFeedLatestAnswer())) * listedItem.nftPrice / (10**8));
     }
+
+    function getPromptPrice(address nftAddress, uint256 tokenId) public view returns (uint256, uint256) {
+        Listing memory listedItem = s_listings[nftAddress][tokenId];
+        return (listedItem.promptPrice, roundToMillion(uint256(getChainlinkDataFeedLatestAnswer())) * listedItem.promptPrice / (10**8));
+    }
+
+    function roundToMillion(uint256 input) public pure returns (uint256) {
+        // Round to the nearest million
+        uint256 roundedValue = (input + 500000) / 1000000 * 1000000;
+        return roundedValue;
+    }
+    
 }

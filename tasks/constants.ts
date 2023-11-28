@@ -30,6 +30,14 @@ export const AGGREGATOR_ADDRESS: AddressMap = {
     [`avalancheFuji`]: `0x5498BB86BC934c8D34FDA08E81D444153d0D06aD`
 };
 
+export const USDC_ADDRESS: AddressMap = {
+    [`ethereumSepolia`]: ``,
+    [`polygonMumbai`]: ``,
+    [`optimismGoerli`]: ``,
+    [`arbitrumTestnet`]: ``,
+    [`avalancheFuji`]: `0x5425890298aed601595a70AB815c96711a31Bc65`
+};
+
 export const routerConfig = {
     ethereumSepolia: {
         address: `0xd0daae2231e9cb96b94c8512223533293c3693bf`,
