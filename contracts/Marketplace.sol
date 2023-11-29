@@ -174,7 +174,7 @@ contract NftMarketplace is ReentrancyGuard {
     ) external payable isListed(nftAddress, tokenId) nonReentrant {
         Listing memory listedItem = s_listings[nftAddress][tokenId];
 
-        uint256 _tokenAmount = roundToMillion(uint256(getChainlinkDataFeedLatestAnswer())) * listedItem.promptPrice / (10**8);
+        uint256 _tokenAmount = roundToMillion(uint256(getChainlinkDataFeedLatestAnswer())) * listedItem.nftPrice / (10**8);
 
         if (tokenAmount != 0) {
              require(
