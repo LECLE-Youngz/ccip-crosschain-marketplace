@@ -1,0 +1,8 @@
+type ERC721TokenCreated @entity(immutable: true) {
+  id: Bytes!
+  owner: Bytes! # address
+  tokenAddress: Bytes! # address
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
