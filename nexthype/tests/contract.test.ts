@@ -6,26 +6,32 @@ import {
   beforeAll,
   afterAll
 } from "matchstick-as/assembly/index"
-import { Address } from "@graphprotocol/graph-ts"
-import { ERC721TokenCreated } from "../generated/schema"
-import { ERC721TokenCreated as ERC721TokenCreatedEvent } from "../generated/Contract/Contract"
-import { handleERC721TokenCreated } from "../src/contract"
-import { createERC721TokenCreatedEvent } from "./contract-utils"
+import { Address, BigInt } from "@graphprotocol/graph-ts"
+import { ItemBought } from "../generated/schema"
+import { ItemBought as ItemBoughtEvent } from "../generated/Contract/Contract"
+import { handleItemBought } from "../src/contract"
+import { createItemBoughtEvent } from "./contract-utils"
 
 // Tests structure (matchstick-as >=0.5.0)
 // https://thegraph.com/docs/en/developer/matchstick/#tests-structure-0-5-0
 
 describe("Describe entity assertions", () => {
   beforeAll(() => {
-    let owner = Address.fromString("0x0000000000000000000000000000000000000001")
-    let tokenAddress = Address.fromString(
+    let buyer = Address.fromString("0x0000000000000000000000000000000000000001")
+    let nftAddress = Address.fromString(
       "0x0000000000000000000000000000000000000001"
     )
-    let newERC721TokenCreatedEvent = createERC721TokenCreatedEvent(
-      owner,
-      tokenAddress
+    let tokenId = BigInt.fromI32(234)
+    let nftPrice = BigInt.fromI32(234)
+    let promptPrice = BigInt.fromI32(234)
+    let newItemBoughtEvent = createItemBoughtEvent(
+      buyer,
+      nftAddress,
+      tokenId,
+      nftPrice,
+      promptPrice
     )
-    handleERC721TokenCreated(newERC721TokenCreatedEvent)
+    handleItemBought(newItemBoughtEvent)
   })
 
   afterAll(() => {
@@ -35,21 +41,39 @@ describe("Describe entity assertions", () => {
   // For more test scenarios, see:
   // https://thegraph.com/docs/en/developer/matchstick/#write-a-unit-test
 
-  test("ERC721TokenCreated created and stored", () => {
-    assert.entityCount("ERC721TokenCreated", 1)
+  test("ItemBought created and stored", () => {
+    assert.entityCount("ItemBought", 1)
 
     // 0xa16081f360e3847006db660bae1c6d1b2e17ec2a is the default address used in newMockEvent() function
     assert.fieldEquals(
-      "ERC721TokenCreated",
+      "ItemBought",
       "0xa16081f360e3847006db660bae1c6d1b2e17ec2a-1",
-      "owner",
+      "buyer",
       "0x0000000000000000000000000000000000000001"
     )
     assert.fieldEquals(
-      "ERC721TokenCreated",
+      "ItemBought",
       "0xa16081f360e3847006db660bae1c6d1b2e17ec2a-1",
-      "tokenAddress",
+      "nftAddress",
       "0x0000000000000000000000000000000000000001"
+    )
+    assert.fieldEquals(
+      "ItemBought",
+      "0xa16081f360e3847006db660bae1c6d1b2e17ec2a-1",
+      "tokenId",
+      "234"
+    )
+    assert.fieldEquals(
+      "ItemBought",
+      "0xa16081f360e3847006db660bae1c6d1b2e17ec2a-1",
+      "nftPrice",
+      "234"
+    )
+    assert.fieldEquals(
+      "ItemBought",
+      "0xa16081f360e3847006db660bae1c6d1b2e17ec2a-1",
+      "promptPrice",
+      "234"
     )
 
     // More assert options:

@@ -22,7 +22,7 @@ contract NEXTHYPE is ERC721URIStorage, Ownable {
         _setTokenURI(tokenId, _tokenURI);
     }
 
-    function getTotal () view public returns(uint256) {
+    function getTotalToken() view public returns(uint256) {
         return _nextTokenId;
     }
 }

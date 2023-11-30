@@ -6,19 +6,28 @@ dataSources:
     name: Contract
     network: fuji
     source:
-      address: "0xdDce846d8a694C212ab76D4F9D8e2b4CfBC5C37C"
+      address: "0x6556fC2dE5Ab0d742F824285353754227ab27A6D"
       abi: Contract
-      startBlock: 28204478
+      startBlock: 28162097
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.7
       language: wasm/assemblyscript
       entities:
-        - ERC721TokenCreated
+        - ItemBought
+        - ItemCanceled
+        - ItemListed
+        - PromptBought
       abis:
         - name: Contract
           file: ./abis/Contract.json
       eventHandlers:
-        - event: ERC721TokenCreated(address,address)
-          handler: handleERC721TokenCreated
+        - event: ItemBought(indexed address,indexed address,indexed uint256,uint256,uint256)
+          handler: handleItemBought
+        - event: ItemCanceled(indexed address,indexed address,indexed uint256)
+          handler: handleItemCanceled
+        - event: ItemListed(indexed address,indexed address,indexed uint256,uint256,uint256)
+          handler: handleItemListed
+        - event: PromptBought(indexed address,indexed address,indexed uint256,uint256,uint256)
+          handler: handlePromptBought
       file: ./src/contract.ts
