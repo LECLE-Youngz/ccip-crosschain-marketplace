@@ -26,6 +26,7 @@ import type {
 export interface GenerativeNFTInterface extends Interface {
   getFunction(
     nameOrSignature:
+      | "_nextTokenId"
       | "approve"
       | "balanceOf"
       | "getApproved"
@@ -53,6 +54,10 @@ export interface GenerativeNFTInterface extends Interface {
       | "Transfer"
   ): EventFragment;
 
+  encodeFunctionData(
+    functionFragment: "_nextTokenId",
+    values?: undefined
+  ): string;
   encodeFunctionData(
     functionFragment: "approve",
     values: [AddressLike, BigNumberish]
@@ -113,6 +118,10 @@ export interface GenerativeNFTInterface extends Interface {
     values: [AddressLike]
   ): string;
 
+  decodeFunctionResult(
+    functionFragment: "_nextTokenId",
+    data: BytesLike
+  ): Result;
   decodeFunctionResult(functionFragment: "approve", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "balanceOf", data: BytesLike): Result;
   decodeFunctionResult(
@@ -273,6 +282,8 @@ export interface GenerativeNFT extends BaseContract {
     event?: TCEvent
   ): Promise<this>;
 
+  _nextTokenId: TypedContractMethod<[], [bigint], "view">;
+
   approve: TypedContractMethod<
     [to: AddressLike, tokenId: BigNumberish],
     [void],
@@ -352,6 +363,9 @@ export interface GenerativeNFT extends BaseContract {
     key: string | FunctionFragment
   ): T;
 
+  getFunction(
+    nameOrSignature: "_nextTokenId"
+  ): TypedContractMethod<[], [bigint], "view">;
   getFunction(
     nameOrSignature: "approve"
   ): TypedContractMethod<

@@ -46,4 +46,4 @@ export async function queryNFTsByAddress(address: string): Promise<string[]> {
 }
 
 // tokenIdArray = data.transfers?.map((transfer: Transfer) => transfer.tokenId)) 
-queryNFTsByAddress("0x0120BA1b38ba33Ce3537Acef506adb133fe729aD")
+// queryNFTsByAddress("0x0120BA1b38ba33Ce3537Acef506adb133fe729aD")

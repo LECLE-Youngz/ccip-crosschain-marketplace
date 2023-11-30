@@ -60,6 +60,8 @@ export type { NftMarketplace } from "./contracts/Marketplace.sol/NftMarketplace"
 export { NftMarketplace__factory } from "./factories/contracts/Marketplace.sol/NftMarketplace__factory";
 export type { NEXTHYPE } from "./contracts/NexthypeNFT.sol/NEXTHYPE";
 export { NEXTHYPE__factory } from "./factories/contracts/NexthypeNFT.sol/NEXTHYPE__factory";
+export type { PremiumFactory } from "./contracts/PremiumFactory";
+export { PremiumFactory__factory } from "./factories/contracts/PremiumFactory__factory";
 export type { PremiumNFT } from "./contracts/PremiumNFT";
 export { PremiumNFT__factory } from "./factories/contracts/PremiumNFT__factory";
 export type { SourceMinter } from "./contracts/SourceMinter";

@@ -1,8 +1,8 @@
 {
   "fuji": {
-    "NEXTHYPE": {
-      "address": "0x14c534A06d57e23B0933d9Ad654865251b7097B0",
-      "startBlock": 28132319
+    "Contract": {
+      "address": "0xdDce846d8a694C212ab76D4F9D8e2b4CfBC5C37C",
+      "startBlock": 28204478
     }
   }
 }

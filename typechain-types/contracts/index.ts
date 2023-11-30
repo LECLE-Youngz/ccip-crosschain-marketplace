@@ -10,5 +10,6 @@ export type { utils };
 export type { DestinationMinter } from "./DestinationMinter";
 export type { GenerativeNFT } from "./GenerativeNFT";
 export type { GenerativeNFTFactory } from "./GenerativeNFTFactory";
+export type { PremiumFactory } from "./PremiumFactory";
 export type { PremiumNFT } from "./PremiumNFT";
 export type { SourceMinter } from "./SourceMinter";

@@ -10,11 +10,13 @@ import "@openzeppelin/contracts/access/Ownable.sol";
  * DO NOT USE THIS CODE IN PRODUCTION.
  */
 contract GenerativeNFT is ERC721URIStorage, Ownable {
-    uint256 private _nextTokenId;
+    uint256 public _nextTokenId;
 
     constructor(string memory name, string memory symbol)
-        ERC721(name, symbol)
-    {}
+        ERC721(name, symbol) 
+    {
+        transferOwnership(tx.origin);
+    }
 
     function safeMint(address _to, string memory _tokenURI) public onlyOwner() {
         uint256 tokenId = _nextTokenId++;

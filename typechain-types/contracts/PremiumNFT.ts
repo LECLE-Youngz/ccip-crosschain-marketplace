@@ -54,6 +54,7 @@ export interface PremiumNFTInterface extends Interface {
       | "Approval"
       | "ApprovalForAll"
       | "OwnershipTransferred"
+      | "PremiumMemberSubscribed"
       | "Transfer"
   ): EventFragment;
 
@@ -232,6 +233,18 @@ export namespace OwnershipTransferredEvent {
   export interface OutputObject {
     previousOwner: string;
     newOwner: string;
+  }
+  export type Event = TypedContractEvent<InputTuple, OutputTuple, OutputObject>;
+  export type Filter = TypedDeferredTopicFilter<Event>;
+  export type Log = TypedEventLog<Event>;
+  export type LogDescription = TypedLogDescription<Event>;
+}
+
+export namespace PremiumMemberSubscribedEvent {
+  export type InputTuple = [arg0: AddressLike];
+  export type OutputTuple = [arg0: string];
+  export interface OutputObject {
+    arg0: string;
   }
   export type Event = TypedContractEvent<InputTuple, OutputTuple, OutputObject>;
   export type Filter = TypedDeferredTopicFilter<Event>;
@@ -510,6 +523,13 @@ export interface PremiumNFT extends BaseContract {
     OwnershipTransferredEvent.OutputObject
   >;
   getEvent(
+    key: "PremiumMemberSubscribed"
+  ): TypedContractEvent<
+    PremiumMemberSubscribedEvent.InputTuple,
+    PremiumMemberSubscribedEvent.OutputTuple,
+    PremiumMemberSubscribedEvent.OutputObject
+  >;
+  getEvent(
     key: "Transfer"
   ): TypedContractEvent<
     TransferEvent.InputTuple,
@@ -549,6 +569,17 @@ export interface PremiumNFT extends BaseContract {
       OwnershipTransferredEvent.InputTuple,
       OwnershipTransferredEvent.OutputTuple,
       OwnershipTransferredEvent.OutputObject
+    >;
+
+    "PremiumMemberSubscribed(address)": TypedContractEvent<
+      PremiumMemberSubscribedEvent.InputTuple,
+      PremiumMemberSubscribedEvent.OutputTuple,
+      PremiumMemberSubscribedEvent.OutputObject
+    >;
+    PremiumMemberSubscribed: TypedContractEvent<
+      PremiumMemberSubscribedEvent.InputTuple,
+      PremiumMemberSubscribedEvent.OutputTuple,
+      PremiumMemberSubscribedEvent.OutputObject
     >;
 
     "Transfer(address,address,uint256)": TypedContractEvent<

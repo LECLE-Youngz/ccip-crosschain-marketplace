@@ -126,6 +126,10 @@ declare module "hardhat/types/runtime" {
       signerOrOptions?: ethers.Signer | FactoryOptions
     ): Promise<Contracts.NEXTHYPE__factory>;
     getContractFactory(
+      name: "PremiumFactory",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.PremiumFactory__factory>;
+    getContractFactory(
       name: "PremiumNFT",
       signerOrOptions?: ethers.Signer | FactoryOptions
     ): Promise<Contracts.PremiumNFT__factory>;
@@ -279,6 +283,11 @@ declare module "hardhat/types/runtime" {
       signer?: ethers.Signer
     ): Promise<Contracts.NEXTHYPE>;
     getContractAt(
+      name: "PremiumFactory",
+      address: string | ethers.Addressable,
+      signer?: ethers.Signer
+    ): Promise<Contracts.PremiumFactory>;
+    getContractAt(
       name: "PremiumNFT",
       address: string | ethers.Addressable,
       signer?: ethers.Signer
@@ -407,6 +416,10 @@ declare module "hardhat/types/runtime" {
       signerOrOptions?: ethers.Signer | DeployContractOptions
     ): Promise<Contracts.NEXTHYPE>;
     deployContract(
+      name: "PremiumFactory",
+      signerOrOptions?: ethers.Signer | DeployContractOptions
+    ): Promise<Contracts.PremiumFactory>;
+    deployContract(
       name: "PremiumNFT",
       signerOrOptions?: ethers.Signer | DeployContractOptions
     ): Promise<Contracts.PremiumNFT>;
@@ -559,6 +572,11 @@ declare module "hardhat/types/runtime" {
       args: any[],
       signerOrOptions?: ethers.Signer | DeployContractOptions
     ): Promise<Contracts.NEXTHYPE>;
+    deployContract(
+      name: "PremiumFactory",
+      args: any[],
+      signerOrOptions?: ethers.Signer | DeployContractOptions
+    ): Promise<Contracts.PremiumFactory>;
     deployContract(
       name: "PremiumNFT",
       args: any[],
