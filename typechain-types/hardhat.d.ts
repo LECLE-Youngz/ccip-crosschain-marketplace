@@ -114,6 +114,10 @@ declare module "hardhat/types/runtime" {
       signerOrOptions?: ethers.Signer | FactoryOptions
     ): Promise<Contracts.GenerativeNFT__factory>;
     getContractFactory(
+      name: "GenerativeNFT",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.GenerativeNFT__factory>;
+    getContractFactory(
       name: "GenerativeNFTFactory",
       signerOrOptions?: ethers.Signer | FactoryOptions
     ): Promise<Contracts.GenerativeNFTFactory__factory>;
@@ -268,6 +272,11 @@ declare module "hardhat/types/runtime" {
       signer?: ethers.Signer
     ): Promise<Contracts.GenerativeNFT>;
     getContractAt(
+      name: "GenerativeNFT",
+      address: string | ethers.Addressable,
+      signer?: ethers.Signer
+    ): Promise<Contracts.GenerativeNFT>;
+    getContractAt(
       name: "GenerativeNFTFactory",
       address: string | ethers.Addressable,
       signer?: ethers.Signer
@@ -399,6 +408,10 @@ declare module "hardhat/types/runtime" {
       name: "DestinationMinter",
       signerOrOptions?: ethers.Signer | DeployContractOptions
     ): Promise<Contracts.DestinationMinter>;
+    deployContract(
+      name: "GenerativeNFT",
+      signerOrOptions?: ethers.Signer | DeployContractOptions
+    ): Promise<Contracts.GenerativeNFT>;
     deployContract(
       name: "GenerativeNFT",
       signerOrOptions?: ethers.Signer | DeployContractOptions
@@ -552,6 +565,11 @@ declare module "hardhat/types/runtime" {
       args: any[],
       signerOrOptions?: ethers.Signer | DeployContractOptions
     ): Promise<Contracts.DestinationMinter>;
+    deployContract(
+      name: "GenerativeNFT",
+      args: any[],
+      signerOrOptions?: ethers.Signer | DeployContractOptions
+    ): Promise<Contracts.GenerativeNFT>;
     deployContract(
       name: "GenerativeNFT",
       args: any[],

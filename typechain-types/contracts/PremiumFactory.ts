@@ -28,8 +28,6 @@ export interface PremiumFactoryInterface extends Interface {
     nameOrSignature:
       | "deployGenerativeToken"
       | "getTotalPremiumCollection"
-      | "indexToContract"
-      | "indexToOwner"
       | "tokens"
   ): FunctionFragment;
 
@@ -44,14 +42,6 @@ export interface PremiumFactoryInterface extends Interface {
     values?: undefined
   ): string;
   encodeFunctionData(
-    functionFragment: "indexToContract",
-    values: [BigNumberish]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "indexToOwner",
-    values: [BigNumberish]
-  ): string;
-  encodeFunctionData(
     functionFragment: "tokens",
     values: [BigNumberish]
   ): string;
@@ -62,14 +52,6 @@ export interface PremiumFactoryInterface extends Interface {
   ): Result;
   decodeFunctionResult(
     functionFragment: "getTotalPremiumCollection",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "indexToContract",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "indexToOwner",
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "tokens", data: BytesLike): Result;
@@ -139,10 +121,6 @@ export interface PremiumFactory extends BaseContract {
 
   getTotalPremiumCollection: TypedContractMethod<[], [bigint], "view">;
 
-  indexToContract: TypedContractMethod<[arg0: BigNumberish], [string], "view">;
-
-  indexToOwner: TypedContractMethod<[arg0: BigNumberish], [string], "view">;
-
   tokens: TypedContractMethod<[arg0: BigNumberish], [string], "view">;
 
   getFunction<T extends ContractMethod = ContractMethod>(
@@ -159,12 +137,6 @@ export interface PremiumFactory extends BaseContract {
   getFunction(
     nameOrSignature: "getTotalPremiumCollection"
   ): TypedContractMethod<[], [bigint], "view">;
-  getFunction(
-    nameOrSignature: "indexToContract"
-  ): TypedContractMethod<[arg0: BigNumberish], [string], "view">;
-  getFunction(
-    nameOrSignature: "indexToOwner"
-  ): TypedContractMethod<[arg0: BigNumberish], [string], "view">;
   getFunction(
     nameOrSignature: "tokens"
   ): TypedContractMethod<[arg0: BigNumberish], [string], "view">;

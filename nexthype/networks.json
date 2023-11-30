@@ -3,6 +3,15 @@
     "Marketplace": {
       "address": "0x6556fC2dE5Ab0d742F824285353754227ab27A6D",
       "startBlock": 28162097
+    },
+    "nexthypeNFT": {
+      "address": "0x14c534A06d57e23B0933d9Ad654865251b7097B0"
+    },
+    "GenFactory": {
+      "address": "0xdDce846d8a694C212ab76D4F9D8e2b4CfBC5C37C"
+    },
+    "generativeNFT": {
+      "address": "0x5d9f7dd24549be80A15c5bCecDa95D3F99785969"
     }
   }
 }

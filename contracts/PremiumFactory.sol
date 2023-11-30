@@ -13,9 +13,6 @@ contract PremiumFactory {
     event PremiumTokenCreated(address owner, address tokenAddress);
 
     PremiumNFT[] public tokens; //an array that contains different GenerativeNFT tokens deployed
-    mapping(uint256 => address) public indexToContract; //index to contract address mapping
-    mapping(uint256 => address) public indexToOwner; //index to GenerativeNFT owner address
-
 
     function deployGenerativeToken(string memory token_uri, uint256[] memory subscriptionPrice)
         public
@@ -23,8 +20,6 @@ contract PremiumFactory {
     {
         PremiumNFT t = new PremiumNFT(token_uri, subscriptionPrice);
         tokens.push(t);
-        indexToContract[tokens.length - 1] = address(t);
-        indexToOwner[tokens.length - 1] = tx.origin;
         emit PremiumTokenCreated(msg.sender, address(t));
         return address(t);
     }
@@ -32,11 +27,6 @@ contract PremiumFactory {
     /////////////////////
     // Getter Functions //
     /////////////////////
-    // return num of deployed generative NFT collections
-    // function getCountCollectionByAddress(address _owner) public view returns (uint amount) {
-    //     return tokens[_index].balanceOf(indexToOwner[_index]);
-    // }
-
     function getTotalPremiumCollection() public view returns (uint amount) {
         return tokens.length;
     }

@@ -13,9 +13,6 @@ contract GenerativeNFTFactory {
     event ERC721TokenCreated(address owner, address tokenAddress);
 
     GenerativeNFT[] public tokens; //an array that contains different GenerativeNFT tokens deployed
-    mapping(uint256 => address) public indexToContract; //index to contract address mapping
-    mapping(uint256 => address) public indexToOwner; //index to GenerativeNFT owner address
-
 
     function deployGenerativeToken(string memory name, string memory symbol)
         public
@@ -23,8 +20,6 @@ contract GenerativeNFTFactory {
     {
         GenerativeNFT t = new GenerativeNFT(name, symbol);
         tokens.push(t);
-        indexToContract[tokens.length - 1] = address(t);
-        indexToOwner[tokens.length - 1] = tx.origin;
         emit ERC721TokenCreated(msg.sender, address(t));
         return address(t);
     }
@@ -32,11 +27,6 @@ contract GenerativeNFTFactory {
     /////////////////////
     // Getter Functions //
     /////////////////////
-    // return num of deployed generative NFT collections
-    // function getCountCollectionByAddress(address _owner) public view returns (uint amount) {
-    //     return tokens[_index].balanceOf(indexToOwner[_index]);
-    // }
-
     function getTotalCollection() public view returns (uint amount) {
         return tokens.length;
     }

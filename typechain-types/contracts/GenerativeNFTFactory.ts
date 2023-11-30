@@ -25,12 +25,7 @@ import type {
 
 export interface GenerativeNFTFactoryInterface extends Interface {
   getFunction(
-    nameOrSignature:
-      | "deployGenerativeToken"
-      | "getTotalCollection"
-      | "indexToContract"
-      | "indexToOwner"
-      | "tokens"
+    nameOrSignature: "deployGenerativeToken" | "getTotalCollection" | "tokens"
   ): FunctionFragment;
 
   getEvent(nameOrSignatureOrTopic: "ERC721TokenCreated"): EventFragment;
@@ -44,14 +39,6 @@ export interface GenerativeNFTFactoryInterface extends Interface {
     values?: undefined
   ): string;
   encodeFunctionData(
-    functionFragment: "indexToContract",
-    values: [BigNumberish]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "indexToOwner",
-    values: [BigNumberish]
-  ): string;
-  encodeFunctionData(
     functionFragment: "tokens",
     values: [BigNumberish]
   ): string;
@@ -62,14 +49,6 @@ export interface GenerativeNFTFactoryInterface extends Interface {
   ): Result;
   decodeFunctionResult(
     functionFragment: "getTotalCollection",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "indexToContract",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "indexToOwner",
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "tokens", data: BytesLike): Result;
@@ -139,10 +118,6 @@ export interface GenerativeNFTFactory extends BaseContract {
 
   getTotalCollection: TypedContractMethod<[], [bigint], "view">;
 
-  indexToContract: TypedContractMethod<[arg0: BigNumberish], [string], "view">;
-
-  indexToOwner: TypedContractMethod<[arg0: BigNumberish], [string], "view">;
-
   tokens: TypedContractMethod<[arg0: BigNumberish], [string], "view">;
 
   getFunction<T extends ContractMethod = ContractMethod>(
@@ -159,12 +134,6 @@ export interface GenerativeNFTFactory extends BaseContract {
   getFunction(
     nameOrSignature: "getTotalCollection"
   ): TypedContractMethod<[], [bigint], "view">;
-  getFunction(
-    nameOrSignature: "indexToContract"
-  ): TypedContractMethod<[arg0: BigNumberish], [string], "view">;
-  getFunction(
-    nameOrSignature: "indexToOwner"
-  ): TypedContractMethod<[arg0: BigNumberish], [string], "view">;
   getFunction(
     nameOrSignature: "tokens"
   ): TypedContractMethod<[arg0: BigNumberish], [string], "view">;

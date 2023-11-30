@@ -39,3 +39,5 @@
         npx hardhat verify 0xa9dEA1924e533090535f1Df56FD98BFDDBd36962 0x0b9d5D9136855f6FEc3c0993feE6E9CE8a297846 0x5498BB86BC934c8D34FDA08E81D444153d0D06aD --network avalancheFuji
 
         "https://ipfs.io/ipfs/QmYuKY45Aq87LeL1R5dhb1hqHLp6ZFbJaCP8jxqKM1MX6y/babe_ruth_1.json";
+
+        (graph codegen) -and (graph build)
