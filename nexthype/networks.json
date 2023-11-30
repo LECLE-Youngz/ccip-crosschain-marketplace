@@ -1,6 +1,6 @@
 {
   "fuji": {
-    "Contract": {
+    "Marketplace": {
       "address": "0x6556fC2dE5Ab0d742F824285353754227ab27A6D",
       "startBlock": 28162097
     }

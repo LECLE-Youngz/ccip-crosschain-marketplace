@@ -5,7 +5,7 @@ import {
   ItemCanceled,
   ItemListed,
   PromptBought
-} from "../generated/Contract/Contract"
+} from "../generated/Marketplace/Marketplace"
 
 export function createItemBoughtEvent(
   buyer: Address,

@@ -3,7 +3,7 @@ import {
   ItemCanceled as ItemCanceledEvent,
   ItemListed as ItemListedEvent,
   PromptBought as PromptBoughtEvent
-} from "../generated/Contract/Contract"
+} from "../generated/Marketplace/Marketplace"
 import {
   ItemBought,
   ItemCanceled,
