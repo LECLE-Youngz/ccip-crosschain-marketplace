@@ -7,7 +7,7 @@ import { Transfer } from './types'
 const APIURL = 'https://api.studio.thegraph.com/query/59181/nexthype/v2.9.0'
 
 // Query NFTs Prompt by this NFT address and tokenId
-export async function queryNFTsByAddress(address: string): Promise<string[]> {
+export async function queryNFTsByAddress(address: string, collectionAddr: string): Promise<string[]> {
   const client = new ApolloClient({
     uri: APIURL,
     cache: new InMemoryCache(),
@@ -19,6 +19,7 @@ export async function queryNFTsByAddress(address: string): Promise<string[]> {
       query: gql(tokensQuery),
       variables: {
         address: address,
+        collectionAddr: collectionAddr
       },
     })
     .then((data: object) => { 
@@ -60,4 +61,4 @@ export async function queryPromptBuyers(address: string, tokenId: string): Promi
   return tokenIdArray;
 }
 
-queryPromptBuyers("0x0120BA1b38ba33Ce3537Acef506adb133fe729aD", "0")
+// queryNFTsByAddress("0x0120BA1b38ba33Ce3537Acef506adb133fe729aD", "0x0120BA1b38ba33Ce3537Acef506adb133fe729aD")
