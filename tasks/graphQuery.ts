@@ -55,11 +55,8 @@ query getAllCollection {
 */
 export const queryOwnerByIdNCollection = `
 query getOwnerByIdNCollection($address: String, $tokenId: String) {
-    transfersTo: transfers(where: {contract: $collectionAddr, tokenId: tokenId}) {
-      to
-    }
-
-    transfersFrom: transfers(where: {contract: $collectionAddr, tokenId: tokenId}) {
+    transfers(where: {contract: $collectionAddr, tokenId: tokenId}
+      orderDirection: desc) {
       to
     }
   }
@@ -94,3 +91,5 @@ query getPromptBoughts($address: String, $tokenId: String) {
     }
   }
 `;
+
+// nftid addresscol owner
