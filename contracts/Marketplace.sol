@@ -183,10 +183,10 @@ contract NftMarketplace is ReentrancyGuard {
             );
 
             _tokenAmount = tokenAmount / (10**12);
-            erc20.transferFrom(msg.sender ,listedItem.seller, _tokenAmount);
+            erc20.transferFrom(msg.sender, listedItem.seller, _tokenAmount);
         } else {
             require(msg.value == listedItem.nftPrice, "NFT Price not met");
-            (bool success, ) = payable(msg.sender).call{value: listedItem.nftPrice}("");
+            (bool success, ) = payable(listedItem.seller).call{value: listedItem.nftPrice}("");
             require(success, "Transfer failed");
         }
 
@@ -236,7 +236,7 @@ contract NftMarketplace is ReentrancyGuard {
             );
 
             _tokenAmount = tokenAmount / (10**12);
-            erc20.transferFrom(msg.sender ,listedItem.seller, _tokenAmount);
+            erc20.transferFrom(msg.sender, listedItem.seller, _tokenAmount);
         } else {
             require(
                 msg.value == listedItem.promptPrice,
