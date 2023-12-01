@@ -92,4 +92,24 @@ query getPromptBoughts($address: String, $tokenId: String) {
   }
 `;
 
-// nftid addresscol owner
+/* address = userAddress
+   tokenId
+   return: listPrompt allowed to that user
+*/
+export const queryPromptAllows = `
+query getPromptBoughts($address: String) {
+  promptBoughts(where: {buyer: $address}) {
+    nftAddress
+    tokenId
+  }
+  itemBoughts(where: {buyer: $address}) {
+    nftAddress
+    tokenId
+  }
+  transfers(where: {from: "0x0000000000000000000000000000000000000000", to: $address}) {
+    contract
+    tokenId
+  }
+  }
+`;
+
