@@ -47,9 +47,15 @@ query getOwnerByIdNCollection($address: String, $tokenId: String) {
   }
 `;
 
+// query tat ca Coll va Id tu address, nho xu ly khi khong con giữ
 export const queryAllCollectionByAddress = `
 query getAllCollectionByAddress($address: String) {
-    transfers(where: {to: $address, from_not: $address}) {
+    transfersTo: transfers(where: {to: $address}) {
+        contract
+        tokenId
+    }
+
+    transfersFrom: transfers(where: {from: $address}) {
         contract
         tokenId
     }

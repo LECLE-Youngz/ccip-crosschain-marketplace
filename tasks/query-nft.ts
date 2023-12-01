@@ -1,5 +1,5 @@
 import { ApolloClient, InMemoryCache, gql } from '@apollo/client';
-import { tokensQuery, queryPromptBoughts } from './graphQuery'
+import { tokensQuery, queryPromptBoughts, queryAllCollectionByAddress } from './graphQuery'
 import { Transfer } from './types'
 
 const APIURL = 'https://api.studio.thegraph.com/query/59181/nexthype/v2.9.0'
@@ -68,4 +68,40 @@ export async function queryPromptBuyers(address: string, tokenId: string): Promi
   return tokenIdArray;
 }
 
-queryNFTsByAddress("0x036e961F66074373eF8bd348e4f5f908b9b9d93a", "0xF579d4f36aa6ED63aEb325ee8a3A37eDDCAE01Cb")
+// 
+export async function queryAllCollectionNIds(address: string): Promise<string[]> {
+  const client = new ApolloClient({
+    uri: APIURL,
+    cache: new InMemoryCache(),
+  })
+  
+  var tokenIdArray : string[] = [];
+  await client
+    .query({
+      query: gql(queryAllCollectionByAddress),
+      variables: {
+        address: address,
+      },
+    })
+    .then((data: any) => { 
+      // handle data here
+      console.log(JSON.stringify(data, null, 2));
+
+      const minusResult: Transfer[] = 
+      data.data.transfersTo && data.data.transfersFrom
+      ? data.data.transfersTo.filter(
+          (transferTo: Transfer) => !data.data.transfersFrom.some((transferFrom: Transfer) => transferFrom.tokenId.toLocaleLowerCase() === transferTo.tokenId.toLocaleLowerCase())
+        )
+      : [];
+
+    console.log("minusResult: ", minusResult);      
+    })
+    .catch((err: any) => {
+      console.log('Error fetching data: ', err)
+    })
+  return tokenIdArray;
+}
+
+queryAllCollectionNIds("0x036e961F66074373eF8bd348e4f5f908b9b9d93a")
+
+// queryNFTsByAddress("0x036e961F66074373eF8bd348e4f5f908b9b9d93a","0xF579d4f36aa6ED63aEb325ee8a3A37eDDCAE01Cb")
