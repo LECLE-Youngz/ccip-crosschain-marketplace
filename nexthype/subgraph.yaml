@@ -6,7 +6,7 @@ dataSources:
     name: Marketplace
     network: fuji
     source:
-      address: "0x0d68F13Bc80aDAC5c2C97842dDcE72Bab46b68A6"
+      address: "0xD9799F37a6e5310d2261cfC66e9994C6B30E5446"
       abi: Marketplace
       startBlock: 28218783
     mapping:
@@ -35,7 +35,7 @@ dataSources:
     name: nexthypeNFT
     network: fuji
     source:
-      address: "0x1bAcd56c102EDfD6C2b648dDEa52f00389a1fbf8"
+      address: "0xF579d4f36aa6ED63aEb325ee8a3A37eDDCAE01Cb"
       abi: nexthypeNFT
       startBlock: 28218750
     mapping:

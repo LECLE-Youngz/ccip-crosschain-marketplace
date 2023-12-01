@@ -1,24 +1,12 @@
 import { ApolloClient, InMemoryCache, gql } from '@apollo/client';
-import { any } from 'hardhat/internal/core/params/argumentTypes';
+import { tokensQuery, queryPromptBoughts } from './graphQuery'
+import { Transfer } from './types'
+
 // import { SUBGRAPH_NAME } from "./constants";
 
-const APIURL = 'https://api.studio.thegraph.com/query/59181/nexthype/v2.0.1'
-// https://api.studio.thegraph.com/query/<ID>/<SUBGRAPH_NAME>/<VERSION>
-// https://gateway.thegraph.com/api/<API_KEY>/subgraphs/id/<SUBGRAPH_ID>
+const APIURL = 'https://api.studio.thegraph.com/query/59181/nexthype/v2.9.0'
 
-const tokensQuery = `
-query getNFT($address: String) {
-  transfers(where: {to: $address}) {
-    tokenId
-  }
-}
-`
-
-interface Transfer {
-  __typename: string;
-  tokenId: string;
-}
-
+// Query NFTs Prompt by this NFT address and tokenId
 export async function queryNFTsByAddress(address: string): Promise<string[]> {
   const client = new ApolloClient({
     uri: APIURL,
@@ -45,5 +33,31 @@ export async function queryNFTsByAddress(address: string): Promise<string[]> {
   return tokenIdArray;
 }
 
-// tokenIdArray = data.transfers?.map((transfer: Transfer) => transfer.tokenId)) 
-// queryNFTsByAddress("0x0120BA1b38ba33Ce3537Acef506adb133fe729aD")
+// Query all NFTs possessed by this address
+export async function queryPromptBuyers(address: string, tokenId: string): Promise<string[]> {
+  const client = new ApolloClient({
+    uri: APIURL,
+    cache: new InMemoryCache(),
+  })
+  var tokenIdArray : string[] = [];
+  await client
+    .query({
+      query: gql(queryPromptBoughts),
+      variables: {
+        address: address,
+        tokenId: tokenId
+      },
+    })
+    .then((data: object) => { 
+      // TODO:
+      // handle data here
+      console.log(JSON.stringify(data, null, 2))
+    })
+    .catch((err: any) => {
+      console.log('Error fetching data: ', err)
+    })
+  console.log(tokenIdArray)
+  return tokenIdArray;
+}
+
+queryPromptBuyers("0x0120BA1b38ba33Ce3537Acef506adb133fe729aD", "0")
