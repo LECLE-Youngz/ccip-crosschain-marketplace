@@ -17,6 +17,7 @@ query getAllNFT($address: String, $collectionAddr: String) {
 }
 `;
 
+// promptAllower
 export const queryPromptBoughts = `
 query getPromptBoughts($address: String, $tokenId: String) {
     promptBoughts(where: {nftAddress: $address, tokenId: $tokenId}) {
@@ -31,6 +32,15 @@ query getPromptBoughts($address: String, $tokenId: String) {
   }
 `;
 
+// promptAllower
+export const queryPromptBuyers = `
+query queryPromptBuyers($address: String, $tokenId: String) {
+    promptBoughts(where: {nftAddress: $address, tokenId: $tokenId}) {
+        buyer
+    }
+  }
+`;
+
 export const queryAllCollection = `
 query getAllCollection {
     erc721TokenCreateds {
@@ -39,10 +49,18 @@ query getAllCollection {
   }
 `;
 
+/* address = collectionAddress
+   tokenId
+   return: ownerAddres of that NFT 
+*/
 export const queryOwnerByIdNCollection = `
 query getOwnerByIdNCollection($address: String, $tokenId: String) {
-    transfers(where: {from: "0x0000000000000000000000000000000000000000", contract: $address, tokenId: $tokenId}) {
-        to
+    transfersTo: transfers(where: {contract: $collectionAddr, tokenId: tokenId}) {
+      to
+    }
+
+    transfersFrom: transfers(where: {contract: $collectionAddr, tokenId: tokenId}) {
+      to
     }
   }
 `;
