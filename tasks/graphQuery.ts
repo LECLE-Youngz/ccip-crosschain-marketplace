@@ -10,7 +10,7 @@ query getNFT($address: String, $collectionAddr: String) {
 `
 
 export const queryAllNfts = `
-query getAllNFT($address: String, $collectionAddr: String) {
+query getAllNFT($collectionAddr: String) {
   transfers(where: { from: "0x0000000000000000000000000000000000000000", contract: $collectionAddr}) {
     tokenId
   }
