@@ -29,20 +29,20 @@ import type {
 
 export interface PremiumFactoryInterface extends utils.Interface {
   functions: {
-    "deployGenerativeToken(string,uint256[])": FunctionFragment;
+    "deployPremiumToken(string,uint256[])": FunctionFragment;
     "getTotalPremiumCollection()": FunctionFragment;
     "tokens(uint256)": FunctionFragment;
   };
 
   getFunction(
     nameOrSignatureOrTopic:
-      | "deployGenerativeToken"
+      | "deployPremiumToken"
       | "getTotalPremiumCollection"
       | "tokens"
   ): FunctionFragment;
 
   encodeFunctionData(
-    functionFragment: "deployGenerativeToken",
+    functionFragment: "deployPremiumToken",
     values: [PromiseOrValue<string>, PromiseOrValue<BigNumberish>[]]
   ): string;
   encodeFunctionData(
@@ -55,7 +55,7 @@ export interface PremiumFactoryInterface extends utils.Interface {
   ): string;
 
   decodeFunctionResult(
-    functionFragment: "deployGenerativeToken",
+    functionFragment: "deployPremiumToken",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
@@ -110,7 +110,7 @@ export interface PremiumFactory extends BaseContract {
   removeListener: OnEvent<this>;
 
   functions: {
-    deployGenerativeToken(
+    deployPremiumToken(
       token_uri: PromiseOrValue<string>,
       subscriptionPrice: PromiseOrValue<BigNumberish>[],
       overrides?: Overrides & { from?: PromiseOrValue<string> }
@@ -126,7 +126,7 @@ export interface PremiumFactory extends BaseContract {
     ): Promise<[string]>;
   };
 
-  deployGenerativeToken(
+  deployPremiumToken(
     token_uri: PromiseOrValue<string>,
     subscriptionPrice: PromiseOrValue<BigNumberish>[],
     overrides?: Overrides & { from?: PromiseOrValue<string> }
@@ -140,7 +140,7 @@ export interface PremiumFactory extends BaseContract {
   ): Promise<string>;
 
   callStatic: {
-    deployGenerativeToken(
+    deployPremiumToken(
       token_uri: PromiseOrValue<string>,
       subscriptionPrice: PromiseOrValue<BigNumberish>[],
       overrides?: CallOverrides
@@ -166,7 +166,7 @@ export interface PremiumFactory extends BaseContract {
   };
 
   estimateGas: {
-    deployGenerativeToken(
+    deployPremiumToken(
       token_uri: PromiseOrValue<string>,
       subscriptionPrice: PromiseOrValue<BigNumberish>[],
       overrides?: Overrides & { from?: PromiseOrValue<string> }
@@ -181,7 +181,7 @@ export interface PremiumFactory extends BaseContract {
   };
 
   populateTransaction: {
-    deployGenerativeToken(
+    deployPremiumToken(
       token_uri: PromiseOrValue<string>,
       subscriptionPrice: PromiseOrValue<BigNumberish>[],
       overrides?: Overrides & { from?: PromiseOrValue<string> }

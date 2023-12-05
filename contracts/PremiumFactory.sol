@@ -14,7 +14,7 @@ contract PremiumFactory {
 
     PremiumNFT[] public tokens; //an array that contains different GenerativeNFT tokens deployed
 
-    function deployGenerativeToken(string memory token_uri, uint256[] memory subscriptionPrice)
+    function deployPremiumToken(string memory token_uri, uint256[] memory subscriptionPrice)
         public
         returns (address)
     {
