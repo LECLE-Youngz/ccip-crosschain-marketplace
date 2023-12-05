@@ -12,6 +12,12 @@
     },
     "generativeNFT": {
       "address": "0x5d9f7dd24549be80A15c5bCecDa95D3F99785969"
+    },
+    "Contract": {
+      "address": "0x09faf0E8dc8aA02810692f0c5Aa8aaaF58B1C1CD"
+    },
+    "PremiumNFT": {
+      "address": "0xcE2A3970721B5913D098abCC7C8C29615b3f3a7B"
     }
   }
 }

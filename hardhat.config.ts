@@ -1,4 +1,5 @@
 import * as dotenvenc from '@chainlink/env-enc'
+import "@chainlink/hardhat-chainlink";
 dotenvenc.config();
 
 import { HardhatUserConfig } from "hardhat/config";

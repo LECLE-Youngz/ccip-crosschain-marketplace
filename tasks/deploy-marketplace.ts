@@ -17,7 +17,7 @@ task(`deploy-marketplace`, `Deploys Marketplace.sol smart contract`)
         const privateKey = getPrivateKey();
         const rpcProviderUrl = getProviderRpcUrl(hre.network.name);
 
-        const provider = new ethers.JsonRpcProvider(rpcProviderUrl);
+        const provider = new ethers.providers.JsonRpcProvider(rpcProviderUrl);
         const wallet = new Wallet(privateKey);
         const deployer = wallet.connect(provider);
 
@@ -30,6 +30,6 @@ task(`deploy-marketplace`, `Deploys Marketplace.sol smart contract`)
         await nftMarketplace.waitForDeployment();
 
         spinner.stop();
-        console.log(`✅ NftMarketplace contract deployed at address ${nftMarketplace.target} on the ${hre.network.name} blockchain`)
+        console.log(`✅ NftMarketplace contract deployed at address ${nftMarketplace.address} on the ${hre.network.name} blockchain`)
 
     })

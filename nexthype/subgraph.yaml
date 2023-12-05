@@ -80,6 +80,26 @@ dataSources:
         - event: ERC721TokenCreated(address,address)
           handler: handleERC721TokenCreated
       file: ./src/gen-factory.ts
+  - kind: ethereum
+    name: Contract
+    network: fuji
+    source:
+      address: "0x09faf0E8dc8aA02810692f0c5Aa8aaaF58B1C1CD"
+      abi: Contract
+      startBlock: 28302174
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - PremiumTokenCreated
+      abis:
+        - name: Contract
+          file: ./abis/Contract.json
+      eventHandlers:
+        - event: PremiumTokenCreated(address,address)
+          handler: handlePremiumTokenCreated
+      file: ./src/contract.ts
 templates:
   - kind: ethereum
     name: generativeNFT
@@ -108,3 +128,34 @@ templates:
         - event: Transfer(indexed address,indexed address,indexed uint256)
           handler: handleTransfer
       file: ./src/generative-nft.ts
+  - kind: ethereum
+    name: PremiumNFT
+    network: fuji
+    source:
+      abi: PremiumNFT
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - PremiumNFTApproval
+        - PremiumNFTApprovalForAll
+        - PremiumNFTOwnershipTransferred
+        - PremiumMemberSubscribed
+        - PremiumNFTTransfer
+      abis:
+        - name: PremiumNFT
+          file: ./abis/PremiumNFT.json
+      eventHandlers:
+        - event: Approval(indexed address,indexed address,indexed uint256)
+          handler: handleApproval
+        - event: ApprovalForAll(indexed address,indexed address,bool)
+          handler: handleApprovalForAll
+        - event: OwnershipTransferred(indexed address,indexed address)
+          handler: handleOwnershipTransferred
+        - event: PremiumMemberSubscribed(address)
+          handler: handlePremiumMemberSubscribed
+        - event: Transfer(indexed address,indexed address,indexed uint256)
+          handler: handleTransfer
+      file: ./src/premium-nft.ts
+

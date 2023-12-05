@@ -3,39 +3,47 @@
 /* eslint-disable */
 import type {
   BaseContract,
+  BigNumber,
   BigNumberish,
   BytesLike,
-  FunctionFragment,
-  Result,
-  Interface,
-  EventFragment,
-  AddressLike,
-  ContractRunner,
-  ContractMethod,
-  Listener,
+  CallOverrides,
+  ContractTransaction,
+  Overrides,
+  PopulatedTransaction,
+  Signer,
+  utils,
 } from "ethers";
 import type {
-  TypedContractEvent,
-  TypedDeferredTopicFilter,
-  TypedEventLog,
-  TypedLogDescription,
+  FunctionFragment,
+  Result,
+  EventFragment,
+} from "@ethersproject/abi";
+import type { Listener, Provider } from "@ethersproject/providers";
+import type {
+  TypedEventFilter,
+  TypedEvent,
   TypedListener,
-  TypedContractMethod,
+  OnEvent,
+  PromiseOrValue,
 } from "../common";
 
-export interface PremiumFactoryInterface extends Interface {
+export interface PremiumFactoryInterface extends utils.Interface {
+  functions: {
+    "deployGenerativeToken(string,uint256[])": FunctionFragment;
+    "getTotalPremiumCollection()": FunctionFragment;
+    "tokens(uint256)": FunctionFragment;
+  };
+
   getFunction(
-    nameOrSignature:
+    nameOrSignatureOrTopic:
       | "deployGenerativeToken"
       | "getTotalPremiumCollection"
       | "tokens"
   ): FunctionFragment;
 
-  getEvent(nameOrSignatureOrTopic: "PremiumTokenCreated"): EventFragment;
-
   encodeFunctionData(
     functionFragment: "deployGenerativeToken",
-    values: [string, BigNumberish[]]
+    values: [PromiseOrValue<string>, PromiseOrValue<BigNumberish>[]]
   ): string;
   encodeFunctionData(
     functionFragment: "getTotalPremiumCollection",
@@ -43,7 +51,7 @@ export interface PremiumFactoryInterface extends Interface {
   ): string;
   encodeFunctionData(
     functionFragment: "tokens",
-    values: [BigNumberish]
+    values: [PromiseOrValue<BigNumberish>]
   ): string;
 
   decodeFunctionResult(
@@ -55,110 +63,137 @@ export interface PremiumFactoryInterface extends Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "tokens", data: BytesLike): Result;
+
+  events: {
+    "PremiumTokenCreated(address,address)": EventFragment;
+  };
+
+  getEvent(nameOrSignatureOrTopic: "PremiumTokenCreated"): EventFragment;
 }
 
-export namespace PremiumTokenCreatedEvent {
-  export type InputTuple = [owner: AddressLike, tokenAddress: AddressLike];
-  export type OutputTuple = [owner: string, tokenAddress: string];
-  export interface OutputObject {
-    owner: string;
-    tokenAddress: string;
-  }
-  export type Event = TypedContractEvent<InputTuple, OutputTuple, OutputObject>;
-  export type Filter = TypedDeferredTopicFilter<Event>;
-  export type Log = TypedEventLog<Event>;
-  export type LogDescription = TypedLogDescription<Event>;
+export interface PremiumTokenCreatedEventObject {
+  owner: string;
+  tokenAddress: string;
 }
+export type PremiumTokenCreatedEvent = TypedEvent<
+  [string, string],
+  PremiumTokenCreatedEventObject
+>;
+
+export type PremiumTokenCreatedEventFilter =
+  TypedEventFilter<PremiumTokenCreatedEvent>;
 
 export interface PremiumFactory extends BaseContract {
-  connect(runner?: ContractRunner | null): PremiumFactory;
-  waitForDeployment(): Promise<this>;
+  connect(signerOrProvider: Signer | Provider | string): this;
+  attach(addressOrName: string): this;
+  deployed(): Promise<this>;
 
   interface: PremiumFactoryInterface;
 
-  queryFilter<TCEvent extends TypedContractEvent>(
-    event: TCEvent,
+  queryFilter<TEvent extends TypedEvent>(
+    event: TypedEventFilter<TEvent>,
     fromBlockOrBlockhash?: string | number | undefined,
     toBlock?: string | number | undefined
-  ): Promise<Array<TypedEventLog<TCEvent>>>;
-  queryFilter<TCEvent extends TypedContractEvent>(
-    filter: TypedDeferredTopicFilter<TCEvent>,
-    fromBlockOrBlockhash?: string | number | undefined,
-    toBlock?: string | number | undefined
-  ): Promise<Array<TypedEventLog<TCEvent>>>;
+  ): Promise<Array<TEvent>>;
 
-  on<TCEvent extends TypedContractEvent>(
-    event: TCEvent,
-    listener: TypedListener<TCEvent>
-  ): Promise<this>;
-  on<TCEvent extends TypedContractEvent>(
-    filter: TypedDeferredTopicFilter<TCEvent>,
-    listener: TypedListener<TCEvent>
-  ): Promise<this>;
+  listeners<TEvent extends TypedEvent>(
+    eventFilter?: TypedEventFilter<TEvent>
+  ): Array<TypedListener<TEvent>>;
+  listeners(eventName?: string): Array<Listener>;
+  removeAllListeners<TEvent extends TypedEvent>(
+    eventFilter: TypedEventFilter<TEvent>
+  ): this;
+  removeAllListeners(eventName?: string): this;
+  off: OnEvent<this>;
+  on: OnEvent<this>;
+  once: OnEvent<this>;
+  removeListener: OnEvent<this>;
 
-  once<TCEvent extends TypedContractEvent>(
-    event: TCEvent,
-    listener: TypedListener<TCEvent>
-  ): Promise<this>;
-  once<TCEvent extends TypedContractEvent>(
-    filter: TypedDeferredTopicFilter<TCEvent>,
-    listener: TypedListener<TCEvent>
-  ): Promise<this>;
+  functions: {
+    deployGenerativeToken(
+      token_uri: PromiseOrValue<string>,
+      subscriptionPrice: PromiseOrValue<BigNumberish>[],
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<ContractTransaction>;
 
-  listeners<TCEvent extends TypedContractEvent>(
-    event: TCEvent
-  ): Promise<Array<TypedListener<TCEvent>>>;
-  listeners(eventName?: string): Promise<Array<Listener>>;
-  removeAllListeners<TCEvent extends TypedContractEvent>(
-    event?: TCEvent
-  ): Promise<this>;
+    getTotalPremiumCollection(
+      overrides?: CallOverrides
+    ): Promise<[BigNumber] & { amount: BigNumber }>;
 
-  deployGenerativeToken: TypedContractMethod<
-    [token_uri: string, subscriptionPrice: BigNumberish[]],
-    [string],
-    "nonpayable"
-  >;
+    tokens(
+      arg0: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<[string]>;
+  };
 
-  getTotalPremiumCollection: TypedContractMethod<[], [bigint], "view">;
+  deployGenerativeToken(
+    token_uri: PromiseOrValue<string>,
+    subscriptionPrice: PromiseOrValue<BigNumberish>[],
+    overrides?: Overrides & { from?: PromiseOrValue<string> }
+  ): Promise<ContractTransaction>;
 
-  tokens: TypedContractMethod<[arg0: BigNumberish], [string], "view">;
+  getTotalPremiumCollection(overrides?: CallOverrides): Promise<BigNumber>;
 
-  getFunction<T extends ContractMethod = ContractMethod>(
-    key: string | FunctionFragment
-  ): T;
+  tokens(
+    arg0: PromiseOrValue<BigNumberish>,
+    overrides?: CallOverrides
+  ): Promise<string>;
 
-  getFunction(
-    nameOrSignature: "deployGenerativeToken"
-  ): TypedContractMethod<
-    [token_uri: string, subscriptionPrice: BigNumberish[]],
-    [string],
-    "nonpayable"
-  >;
-  getFunction(
-    nameOrSignature: "getTotalPremiumCollection"
-  ): TypedContractMethod<[], [bigint], "view">;
-  getFunction(
-    nameOrSignature: "tokens"
-  ): TypedContractMethod<[arg0: BigNumberish], [string], "view">;
+  callStatic: {
+    deployGenerativeToken(
+      token_uri: PromiseOrValue<string>,
+      subscriptionPrice: PromiseOrValue<BigNumberish>[],
+      overrides?: CallOverrides
+    ): Promise<string>;
 
-  getEvent(
-    key: "PremiumTokenCreated"
-  ): TypedContractEvent<
-    PremiumTokenCreatedEvent.InputTuple,
-    PremiumTokenCreatedEvent.OutputTuple,
-    PremiumTokenCreatedEvent.OutputObject
-  >;
+    getTotalPremiumCollection(overrides?: CallOverrides): Promise<BigNumber>;
+
+    tokens(
+      arg0: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<string>;
+  };
 
   filters: {
-    "PremiumTokenCreated(address,address)": TypedContractEvent<
-      PremiumTokenCreatedEvent.InputTuple,
-      PremiumTokenCreatedEvent.OutputTuple,
-      PremiumTokenCreatedEvent.OutputObject
-    >;
-    PremiumTokenCreated: TypedContractEvent<
-      PremiumTokenCreatedEvent.InputTuple,
-      PremiumTokenCreatedEvent.OutputTuple,
-      PremiumTokenCreatedEvent.OutputObject
-    >;
+    "PremiumTokenCreated(address,address)"(
+      owner?: null,
+      tokenAddress?: null
+    ): PremiumTokenCreatedEventFilter;
+    PremiumTokenCreated(
+      owner?: null,
+      tokenAddress?: null
+    ): PremiumTokenCreatedEventFilter;
+  };
+
+  estimateGas: {
+    deployGenerativeToken(
+      token_uri: PromiseOrValue<string>,
+      subscriptionPrice: PromiseOrValue<BigNumberish>[],
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<BigNumber>;
+
+    getTotalPremiumCollection(overrides?: CallOverrides): Promise<BigNumber>;
+
+    tokens(
+      arg0: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+  };
+
+  populateTransaction: {
+    deployGenerativeToken(
+      token_uri: PromiseOrValue<string>,
+      subscriptionPrice: PromiseOrValue<BigNumberish>[],
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<PopulatedTransaction>;
+
+    getTotalPremiumCollection(
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    tokens(
+      arg0: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
   };
 }

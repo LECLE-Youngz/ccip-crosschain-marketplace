@@ -4,12 +4,18 @@
     "@chainlink/contracts": "^0.8.0",
     "@chainlink/contracts-ccip": "^0.7.3",
     "@chainlink/env-enc": "^1.0.5",
-    "@nomicfoundation/hardhat-toolbox": "^3.0.0",
-    "ethers": "^6.8.1",
-    "hardhat": "^2.14.1"
+    "@chainlink/hardhat-chainlink": "^0.0.2",
+    "@nomicfoundation/hardhat-toolbox": "^2.0.2",
+    "@typescript-eslint/eslint-plugin": "^5.62.0",
+    "@typescript-eslint/parser": "^5.62.0",
+    "erc721psi": "^0.7.0",
+    "hardhat": "^2.17.4",
+    "keccak256": "^1.0.6",
+    "merkletreejs": "^0.3.10"
   },
   "dependencies": {
     "@apollo/client": "^3.8.7",
+    "fpe-map": "^0.1.2",
     "graphql": "^16.8.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"

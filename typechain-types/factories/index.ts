@@ -4,3 +4,4 @@
 export * as chainlink from "./@chainlink";
 export * as openzeppelin from "./@openzeppelin";
 export * as contracts from "./contracts";
+export * as erc721Psi from "./erc721psi";

@@ -13,7 +13,7 @@ task(`deploy-nft`, `Deploys NEXTHYPE.sol smart contract`)
         const privateKey = getPrivateKey();
         const rpcProviderUrl = getProviderRpcUrl(hre.network.name);
 
-        const provider = new ethers.JsonRpcProvider(rpcProviderUrl);
+        const provider = new ethers.providers.JsonRpcProvider(rpcProviderUrl);
         const wallet = new Wallet(privateKey);
         const deployer = wallet.connect(provider);
 
@@ -26,5 +26,5 @@ task(`deploy-nft`, `Deploys NEXTHYPE.sol smart contract`)
         await nexthype.waitForDeployment();
 
         spinner.stop();
-        console.log(`✅ NEXTHYPE NFT contract deployed at address ${nexthype.target} on the ${hre.network.name} blockchain`)
+        console.log(`✅ NEXTHYPE NFT contract deployed at address ${nexthype.address} on the ${hre.network.name} blockchain`)
     })

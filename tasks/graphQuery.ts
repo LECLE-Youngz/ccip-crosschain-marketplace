@@ -41,6 +41,10 @@ query queryPromptBuyers($address: String, $tokenId: String) {
   }
 `;
 
+
+    /////////////////////
+    // Exclusive NFT //
+    /////////////////////
 export const queryAllCollection = `
 query getAllCollection {
     erc721TokenCreateds {
@@ -112,4 +116,35 @@ query getPromptBoughts($address: String) {
   }
   }
 `;
+
+    /////////////////////
+    // Premium NFT //
+    /////////////////////
+/* getAllSubscriber: 
+input: address PremiumNFT 
+return: buyers (subscribers) of that NFT
+*/
+// bo vao address creator => danh sach nhung follower
+export const getAllSubscriber = `
+query getAllSubscriber($creatorAddr: String) {
+  transfersTo: transfers(where: {contract: $premiumAddr}) {
+    to
+    tokenId
+  }
+  
+  transfersFrom: transfers(where: {contract: $premiumAddr}) {
+    from
+    tokenId
+  }
+}
+`
+
+/* getMySubscribing: 
+input: userAddress
+return: bought PremiumNFT address list
+*/
+
+    /////////////////////
+    // Premium NFT //
+    /////////////////////
 

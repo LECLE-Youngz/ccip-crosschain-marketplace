@@ -19,3 +19,17 @@ export class generativeNFT extends DataSourceTemplate {
     );
   }
 }
+
+export class PremiumNFT extends DataSourceTemplate {
+  static create(address: Address): void {
+    DataSourceTemplate.create("PremiumNFT", [address.toHex()]);
+  }
+
+  static createWithContext(address: Address, context: DataSourceContext): void {
+    DataSourceTemplate.createWithContext(
+      "PremiumNFT",
+      [address.toHex()],
+      context
+    );
+  }
+}

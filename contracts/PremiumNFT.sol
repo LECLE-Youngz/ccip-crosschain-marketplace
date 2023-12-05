@@ -9,7 +9,7 @@ import "@openzeppelin/contracts/access/Ownable.sol";
 error SubscriptionFeeNotMet(string subscriptionPlan, uint256 subscriptionFee);
 
 contract PremiumNFT is ERC721URIStorage, ReentrancyGuard, Ownable {
-    event PremiumMemberSubscribed(address);
+    event PremiumMemberSubscribed(address creator, address subscriber);
 
     enum SUBSCRIPTION_PLAN {
         WEEK, 
@@ -61,7 +61,7 @@ contract PremiumNFT is ERC721URIStorage, ReentrancyGuard, Ownable {
         unchecked {
             tokenId++;
         }
-        emit PremiumMemberSubscribed(msg.sender);
+        emit PremiumMemberSubscribed(owner(),msg.sender);
 
     }
 

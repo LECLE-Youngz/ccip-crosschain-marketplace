@@ -8,7 +8,7 @@ import {
   Approval,
   ApprovalForAll,
   OwnershipTransferred,
-  Transfer
+  generativeNFTTransfer
 } from "../generated/schema"
 
 export function handleApproval(event: ApprovalEvent): void {
@@ -58,7 +58,7 @@ export function handleOwnershipTransferred(
 }
 
 export function handleTransfer(event: TransferEvent): void {
-  let entity = new Transfer(
+  let entity = new generativeNFTTransfer(
     event.transaction.hash.concatI32(event.logIndex.toI32())
   )
   entity.from = event.params.from
