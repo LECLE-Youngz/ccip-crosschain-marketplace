@@ -21,10 +21,14 @@ task(`deploy-exclusiveFactory`, `Deploys ExclusiveNFTFactory.sol smart contract`
 
         console.log(`ℹ️  Attempting to deploy ExclusiveNFTFactory smart contract on the ${hre.network.name} blockchain using ${deployer.address} address`);
         spinner.start();
+        const Factory = await hre.ethers.getContractFactory('ExclusiveNFTFactory')
 
-        const factory: ExclusiveNFTFactory = await hre.ethers.deployContract("ExclusiveNFTFactory");
-        await factory.waitForDeployment();
+        const factory = await Factory.deploy()
+        await factory.deployed()
+        console.log('MysteryBox deployed to', factory.address, hre.network.name)
 
         spinner.stop();
         console.log(`✅ ExclusiveNFTFactory contract deployed at address ${factory.address} on the ${hre.network.name} blockchain`)
+
+    
     })

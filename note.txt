@@ -41,3 +41,4 @@
         "https://ipfs.io/ipfs/QmYuKY45Aq87LeL1R5dhb1hqHLp6ZFbJaCP8jxqKM1MX6y/babe_ruth_1.json";
 
         (graph codegen) -and (graph build)
+        graph deploy --studio nexthype

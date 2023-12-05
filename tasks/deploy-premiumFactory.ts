@@ -6,25 +6,28 @@ import { PremiumFactory, PremiumFactory__factory } from "../typechain-types";
 import { Spinner } from "../utils/spinner";
 
 task(`deploy-premiumFactory`, `Deploys PremiumFactory.sol smart contract`)
-    .addOptionalParam(`router`, `The address of the Router contract on the destination blockchain`)
-    .setAction(async (taskArguments: TaskArguments, hre: HardhatRuntimeEnvironment) => {
-        const routerAddress = taskArguments.router ? taskArguments.router : getRouterConfig(hre.network.name).address;
+  .addOptionalParam(`router`, `The address of the Router contract on the destination blockchain`)
+  .setAction(async (taskArguments: TaskArguments, hre: HardhatRuntimeEnvironment) => {
+    const routerAddress = taskArguments.router ? taskArguments.router : getRouterConfig(hre.network.name).address;
 
-        const privateKey = getPrivateKey();
-        const rpcProviderUrl = getProviderRpcUrl(hre.network.name);
+    const privateKey = getPrivateKey();
+    const rpcProviderUrl = getProviderRpcUrl(hre.network.name);
 
-        const provider = new ethers.providers.JsonRpcProvider(rpcProviderUrl);
-        const wallet = new Wallet(privateKey);
-        const deployer = wallet.connect(provider);
+    const provider = new ethers.providers.JsonRpcProvider(rpcProviderUrl);
+    const wallet = new Wallet(privateKey);
+    const deployer = wallet.connect(provider);
 
-        const spinner: Spinner = new Spinner();
+    const spinner: Spinner = new Spinner();
 
-        console.log(`ℹ️  Attempting to deploy GenerativeNFTFactory smart contract on the ${hre.network.name} blockchain using ${deployer.address} address`);
-        spinner.start();
+    console.log(`ℹ️  Attempting to deploy GenerativeNFTFactory smart contract on the ${hre.network.name} blockchain using ${deployer.address} address`);
+    spinner.start();
 
-        const factory: PremiumFactory = await hre.ethers.deployContract("PremiumFactory");
-        await factory.waitForDeployment();
+    const Factory = await hre.ethers.getContractFactory('PremiumFactory');
 
-        spinner.stop();
-        console.log(`✅ PremiumFactory contract deployed at address ${factory.address} on the ${hre.network.name} blockchain`)
-    })
+    const factory = await Factory.deploy();
+    await factory.deployed();
+    console.log('PremiumFactory deployed to', factory.address, hre.network.name);
+
+    spinner.stop();
+    console.log(`✅ PremiumFactory contract deployed at address ${factory.address} on the ${hre.network.name} blockchain`);
+  });
