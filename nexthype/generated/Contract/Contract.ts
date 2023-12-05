@@ -37,13 +37,13 @@ export class Contract extends ethereum.SmartContract {
     return new Contract("Contract", address);
   }
 
-  deployGenerativeToken(
+  deployPremiumToken(
     token_uri: string,
     subscriptionPrice: Array<BigInt>
   ): Address {
     let result = super.call(
-      "deployGenerativeToken",
-      "deployGenerativeToken(string,uint256[]):(address)",
+      "deployPremiumToken",
+      "deployPremiumToken(string,uint256[]):(address)",
       [
         ethereum.Value.fromString(token_uri),
         ethereum.Value.fromUnsignedBigIntArray(subscriptionPrice)
@@ -53,13 +53,13 @@ export class Contract extends ethereum.SmartContract {
     return result[0].toAddress();
   }
 
-  try_deployGenerativeToken(
+  try_deployPremiumToken(
     token_uri: string,
     subscriptionPrice: Array<BigInt>
   ): ethereum.CallResult<Address> {
     let result = super.tryCall(
-      "deployGenerativeToken",
-      "deployGenerativeToken(string,uint256[]):(address)",
+      "deployPremiumToken",
+      "deployPremiumToken(string,uint256[]):(address)",
       [
         ethereum.Value.fromString(token_uri),
         ethereum.Value.fromUnsignedBigIntArray(subscriptionPrice)
@@ -115,20 +115,20 @@ export class Contract extends ethereum.SmartContract {
   }
 }
 
-export class DeployGenerativeTokenCall extends ethereum.Call {
-  get inputs(): DeployGenerativeTokenCall__Inputs {
-    return new DeployGenerativeTokenCall__Inputs(this);
+export class DeployPremiumTokenCall extends ethereum.Call {
+  get inputs(): DeployPremiumTokenCall__Inputs {
+    return new DeployPremiumTokenCall__Inputs(this);
   }
 
-  get outputs(): DeployGenerativeTokenCall__Outputs {
-    return new DeployGenerativeTokenCall__Outputs(this);
+  get outputs(): DeployPremiumTokenCall__Outputs {
+    return new DeployPremiumTokenCall__Outputs(this);
   }
 }
 
-export class DeployGenerativeTokenCall__Inputs {
-  _call: DeployGenerativeTokenCall;
+export class DeployPremiumTokenCall__Inputs {
+  _call: DeployPremiumTokenCall;
 
-  constructor(call: DeployGenerativeTokenCall) {
+  constructor(call: DeployPremiumTokenCall) {
     this._call = call;
   }
 
@@ -141,10 +141,10 @@ export class DeployGenerativeTokenCall__Inputs {
   }
 }
 
-export class DeployGenerativeTokenCall__Outputs {
-  _call: DeployGenerativeTokenCall;
+export class DeployPremiumTokenCall__Outputs {
+  _call: DeployPremiumTokenCall;
 
-  constructor(call: DeployGenerativeTokenCall) {
+  constructor(call: DeployPremiumTokenCall) {
     this._call = call;
   }
 

@@ -43,7 +43,7 @@ query queryPromptBuyers($address: String, $tokenId: String) {
 
 
     /////////////////////
-    // Exclusive NFT //
+    // Generative NFT //
     /////////////////////
 export const queryAllCollection = `
 query getAllCollection {

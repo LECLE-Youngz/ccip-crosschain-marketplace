@@ -90,7 +90,13 @@
       {
         "indexed": false,
         "internalType": "address",
-        "name": "",
+        "name": "creator",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "subscriber",
         "type": "address"
       }
     ],

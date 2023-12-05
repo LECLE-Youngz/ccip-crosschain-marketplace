@@ -84,7 +84,7 @@ dataSources:
     name: Contract
     network: fuji
     source:
-      address: "0x09faf0E8dc8aA02810692f0c5Aa8aaaF58B1C1CD"
+      address: "0x347654538f81414D217dc91c93318B0f8AEdA13F"
       abi: Contract
       startBlock: 28302174
     mapping:
@@ -153,7 +153,7 @@ templates:
           handler: handleApprovalForAll
         - event: OwnershipTransferred(indexed address,indexed address)
           handler: handleOwnershipTransferred
-        - event: PremiumMemberSubscribed(address)
+        - event: PremiumMemberSubscribed(address,address)
           handler: handlePremiumMemberSubscribed
         - event: Transfer(indexed address,indexed address,indexed uint256)
           handler: handleTransfer

@@ -66,6 +66,7 @@ export function handlePremiumMemberSubscribed(
     event.transaction.hash.concatI32(event.logIndex.toI32())
   )
   entity.subscriber = event.params.param0
+  // entity.creator = event.params.
   entity.blockNumber = event.block.number
   entity.blockTimestamp = event.block.timestamp
   entity.transactionHash = event.transaction.hash
