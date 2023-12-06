@@ -81,19 +81,18 @@ query getAllCollectionByAddress($address: String) {
   }
 `;
 
-// In progress
-export const queryCollOwnerAndBuyers = `
-query getPromptBoughts($address: String, $tokenId: String) {
-    promptBoughts(where: {nftAddress: $address, tokenId: $tokenId}) {
-        buyer
-    }
-    itemBoughts(where: {nftAddress: $address, tokenId: $tokenId}) {
-        buyer
-    }
-    transfers(where: {from: "0x0000000000000000000000000000000000000000", contract: $address, tokenId: $tokenId}) {
-        to
-    }
+/* getCollectionByDeployer: 
+input: deployer address
+return: list Premium NFT
+*/
+// (bo vao address user => list Exclusive NFT)
+export const getCollectionByDeployer = `
+query getCollectionByDeployer($deployerAddr: String) {
+  premiumNFTTransfers(where: {to: $deployerAddr}) {
+    contract
+    id
   }
+}
 `;
 
 /* address = userAddress
@@ -121,23 +120,32 @@ query getPromptBoughts($address: String) {
     // Premium NFT //
     /////////////////////
 /* getAllSubscriber: 
-input: address PremiumNFT 
+input: creator address
 return: buyers (subscribers) of that NFT
 */
 // bo vao address creator => danh sach nhung follower
 export const getAllSubscriber = `
 query getAllSubscriber($creatorAddr: String) {
-  transfersTo: transfers(where: {contract: $premiumAddr}) {
-    to
-    tokenId
-  }
-  
-  transfersFrom: transfers(where: {contract: $premiumAddr}) {
-    from
-    tokenId
+  premiumMemberSubscribeds(where: {creator: $creatorAddr}) {
+    subscriber
   }
 }
 `
+
+/* getAllSubscriber: 
+input: user (subscriber) address
+return: list Premium NFT
+*/
+// bo vao address user => list Exclusive NFT
+export const getAllSubscribing = `
+query getAllSubscribing($userAddr: String) {
+  premiumNFTTransfers(where: {to: userAddr}) {
+    contract
+    id
+  }
+}
+`
+
 
 /* getMySubscribing: 
 input: userAddress

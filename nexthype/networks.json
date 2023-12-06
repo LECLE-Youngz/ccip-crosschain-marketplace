@@ -3,6 +3,21 @@
     "Marketplace": {
       "address": "0xD9799F37a6e5310d2261cfC66e9994C6B30E5446",
       "startBlock": 28232245
+    },
+    "nexthypeNFT": {
+      "address": "0xF579d4f36aa6ED63aEb325ee8a3A37eDDCAE01Cb"
+    },
+    "GenFactory": {
+      "address": "0x6C8E612528656899a8Ea62263C201BF73F4cA3DA"
+    },
+    "PremiumFactory": {
+      "address": "0x347654538f81414D217dc91c93318B0f8AEdA13F"
+    },
+    "Contract": {
+      "address": "0xC426FE88A27741F85455abD8fe1A35534EEb6B69"
+    },
+    "PremiumNFT": {
+      "address": "0x23b356fa35941DA89f9ae0b5d1fd86c3d9fD2B7B"
     }
   }
 }

@@ -1,6 +1,6 @@
 specVersion: 0.0.5
 schema:
-  file: ./schema.graphql
+  file: schema.graphql
 dataSources:
   - kind: ethereum
     name: Marketplace
@@ -20,7 +20,7 @@ dataSources:
         - PromptBought
       abis:
         - name: Marketplace
-          file: ./abis/Marketplace.json
+          file: Marketplace\abis\Marketplace.json
       eventHandlers:
         - event: ItemBought(indexed address,indexed address,indexed uint256,uint256,uint256)
           handler: handleItemBought
@@ -30,7 +30,7 @@ dataSources:
           handler: handleItemListed
         - event: PromptBought(indexed address,indexed address,indexed uint256,uint256,uint256)
           handler: handlePromptBought
-      file: ./src/marketplace.ts
+      file: Marketplace\Marketplace.wasm
   - kind: ethereum
     name: nexthypeNFT
     network: fuji
@@ -49,7 +49,7 @@ dataSources:
         - Transfer
       abis:
         - name: nexthypeNFT
-          file: ./abis/nexthypeNFT.json
+          file: nexthypeNFT\abis\nexthypeNFT.json
       eventHandlers:
         - event: Approval(indexed address,indexed address,indexed uint256)
           handler: handleApproval
@@ -59,7 +59,7 @@ dataSources:
           handler: handleOwnershipTransferred
         - event: Transfer(indexed address,indexed address,indexed uint256)
           handler: handleTransfer
-      file: ./src/nexthype-nft.ts
+      file: nexthypeNFT\nexthypeNFT.wasm
   - kind: ethereum
     name: GenFactory
     network: fuji
@@ -75,11 +75,11 @@ dataSources:
         - ERC721TokenCreated
       abis:
         - name: GenFactory
-          file: ./abis/GenFactory.json
+          file: GenFactory\abis\GenFactory.json
       eventHandlers:
         - event: ERC721TokenCreated(address,address)
           handler: handleERC721TokenCreated
-      file: ./src/gen-factory.ts
+      file: GenFactory\GenFactory.wasm
   - kind: ethereum
     name: PremiumFactory
     network: fuji
@@ -95,11 +95,11 @@ dataSources:
         - PremiumTokenCreated
       abis:
         - name: PremiumFactory
-          file: ./abis/PremiumFactory.json
+          file: PremiumFactory\abis\PremiumFactory.json
       eventHandlers:
         - event: PremiumTokenCreated(address,address)
           handler: handlePremiumTokenCreated
-      file: ./src/premium-factory.ts
+      file: PremiumFactory\PremiumFactory.wasm
 templates:
   - kind: ethereum
     name: Contract
@@ -117,7 +117,7 @@ templates:
         - ContractTransfer
       abis:
         - name: Contract
-          file: ./abis/Contract.json
+          file: Contract\abis\Contract.json
       eventHandlers:
         - event: Approval(indexed address,indexed address,indexed uint256)
           handler: handleApproval
@@ -127,7 +127,7 @@ templates:
           handler: handleOwnershipTransferred
         - event: Transfer(indexed address,indexed address,indexed uint256)
           handler: handleTransfer
-      file: ./src/contract.ts
+      file: templates\Contract\Contract.wasm
   - kind: ethereum
     name: PremiumNFT
     network: fuji
@@ -145,7 +145,7 @@ templates:
         - PremiumNFTTransfer
       abis:
         - name: PremiumNFT
-          file: ./abis/PremiumNFT.json
+          file: PremiumNFT\abis\PremiumNFT.json
       eventHandlers:
         - event: Approval(indexed address,indexed address,indexed uint256)
           handler: handleApproval
@@ -157,4 +157,4 @@ templates:
           handler: handlePremiumMemberSubscribed
         - event: Transfer(indexed address,indexed address,indexed uint256)
           handler: handleTransfer
-      file: ./src/premium-nft.ts
+      file: templates\PremiumNFT\PremiumNFT.wasm
