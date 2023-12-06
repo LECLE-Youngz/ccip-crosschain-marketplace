@@ -139,20 +139,23 @@ return: list Premium NFT
 // bo vao address user => list Premium NFT
 export const getAllSubscribing = `
 query getAllSubscribing($userAddr: String) {
-  premiumNFTTransfers(where: {to: userAddr}) {
+  premiumNFTTransfers(where: {to: $userAddr}) {
     contract
     id
   }
 }
 `
 
-
-/* getMySubscribing: 
-input: userAddress
-return: bought PremiumNFT address list
-*/
+export const getCreatorStatus = `
+query getCreatorStatus($address: String) {
+  premiumTokenCreateds(where: {owner: $address}) {
+    tokenAddress
+  }
+}
+`
 
     /////////////////////
-    // Premium NFT //
+    // Buy and Sell NFT/Prompt //
     /////////////////////
+
 
