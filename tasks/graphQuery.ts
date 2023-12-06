@@ -136,7 +136,7 @@ query getAllSubscriber($creatorAddr: String) {
 input: user (subscriber) address
 return: list Premium NFT
 */
-// bo vao address user => list Exclusive NFT
+// bo vao address user => list Premium NFT
 export const getAllSubscribing = `
 query getAllSubscribing($userAddr: String) {
   premiumNFTTransfers(where: {to: userAddr}) {
