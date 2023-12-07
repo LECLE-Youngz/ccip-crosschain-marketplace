@@ -97,7 +97,7 @@ contract ExclusiveNFT is ERC721URIStorage, Ownable, AutomationCompatibleInterfac
     function getTokenURI(uint256 tokenId) external view returns (string memory) {
         address caller = msg.sender;
 
-        if (premiumNFT.balanceOf(caller) >= 1) {
+        if (premiumNFT.balanceOf(caller) > 0) {
             return s_tokenURIStorage[tokenId];
         } else {
             return unrevealURI;
