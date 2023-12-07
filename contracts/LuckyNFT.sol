@@ -54,7 +54,8 @@ contract LuckyNFT is ERC721, VRFConsumerBaseV2 {
     constructor(
         uint64 subscriptionId,
         bytes32 vrfKeyhash,
-        string memory baseURI
+        string memory baseURI,
+        address _premiumNFT
     )
         ERC721("LuckyNFT", "LTC")
         VRFConsumerBaseV2(0x2eD832Ba664535e5886b75D64C46EB9a228C2610)
@@ -66,6 +67,7 @@ contract LuckyNFT is ERC721, VRFConsumerBaseV2 {
         );
         i_vrfSubscriptionId = subscriptionId;
         s_baseURI = baseURI;
+        premiumNFT = _premiumNFT;
     }
 
     IERC721 nft = IERC721(premiumNFT);
