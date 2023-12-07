@@ -4,7 +4,6 @@ pragma solidity 0.8.19;
 import "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "@chainlink/contracts/src/v0.8/automation/AutomationCompatible.sol";
-import "./PremiumNFT.sol";
 /**
  * THIS IS AN EXAMPLE CONTRACT THAT USES HARDCODED VALUES FOR CLARITY.
  * THIS IS AN EXAMPLE CONTRACT THAT USES UN-AUDITED CODE.
@@ -15,8 +14,8 @@ contract ExclusiveNFT is ERC721URIStorage, Ownable, AutomationCompatibleInterfac
 
     // Chainlink Forwarder Address
     address public s_forwarderAddress;
-    PremiumNFT public premiumNFT;
 
+    IERC721 public premiumNFT;
     mapping(uint256 => string) internal s_tokenURIStorage;
     mapping(uint256 => bool) public s_isSold;
     uint256[] public keys;
@@ -27,7 +26,7 @@ contract ExclusiveNFT is ERC721URIStorage, Ownable, AutomationCompatibleInterfac
     {
         transferOwnership(tx.origin);
         unrevealURI = _unrevealURI;
-        premiumNFT = PremiumNFT(_premiumNFT);
+        premiumNFT = IERC721(_premiumNFT);
     }
 
     function safeMint(address _to, string memory _revealURI) public onlyOwner() {
