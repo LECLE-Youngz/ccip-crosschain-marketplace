@@ -10,17 +10,17 @@ import "./ExclusiveNFT.sol";
  * DO NOT USE THIS CODE IN PRODUCTION.
  */
 contract ExclusiveNFTFactory {
-    event ExclusiveNFTCreated(address owner, address tokenAddress);
+    event ExclusiveNFTCreated(address owner, address tokenAddress, string unrevealURI, address premiumNFT);
 
     ExclusiveNFT[] public tokens; //an array that contains different GenerativeNFT tokens deployed
 
-    function deployExclusiveToken(string memory name, string memory symbol, string memory unrevealURI)
+    function deployExclusiveToken(string memory name, string memory symbol, string memory unrevealURI, address premiumNFT)
         public
         returns (address)
     {
-        ExclusiveNFT t = new ExclusiveNFT(name, symbol, unrevealURI);
+        ExclusiveNFT t = new ExclusiveNFT(name, symbol, unrevealURI, premiumNFT);
         tokens.push(t);
-        emit ExclusiveNFTCreated(msg.sender, address(t));
+        emit ExclusiveNFTCreated(msg.sender, address(t), unrevealURI, premiumNFT);
         return address(t);
     }
 

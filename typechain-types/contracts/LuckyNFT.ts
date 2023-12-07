@@ -27,35 +27,30 @@ import type {
   PromiseOrValue,
 } from "../common";
 
-export interface ExclusiveNFTInterface extends utils.Interface {
+export interface LuckyNFTInterface extends utils.Interface {
   functions: {
     "_nextTokenId()": FunctionFragment;
     "approve(address,uint256)": FunctionFragment;
     "balanceOf(address)": FunctionFragment;
-    "checkUpkeep(bytes)": FunctionFragment;
+    "drawLottery()": FunctionFragment;
     "getApproved(uint256)": FunctionFragment;
-    "getTokenURI(uint256)": FunctionFragment;
+    "getRequestStatus(uint256)": FunctionFragment;
     "isApprovedForAll(address,address)": FunctionFragment;
-    "keys(uint256)": FunctionFragment;
+    "lastRequestId()": FunctionFragment;
     "name()": FunctionFragment;
-    "owner()": FunctionFragment;
     "ownerOf(uint256)": FunctionFragment;
-    "performUpkeep(bytes)": FunctionFragment;
     "premiumNFT()": FunctionFragment;
-    "renounceOwnership()": FunctionFragment;
-    "s_forwarderAddress()": FunctionFragment;
-    "s_isSold(uint256)": FunctionFragment;
-    "safeMint(address,string)": FunctionFragment;
+    "rawFulfillRandomWords(uint256,uint256[])": FunctionFragment;
+    "requestIds(uint256)": FunctionFragment;
+    "s_baseURI()": FunctionFragment;
+    "s_requests(uint256)": FunctionFragment;
     "safeTransferFrom(address,address,uint256)": FunctionFragment;
     "safeTransferFrom(address,address,uint256,bytes)": FunctionFragment;
     "setApprovalForAll(address,bool)": FunctionFragment;
-    "setForwarderAddress(address)": FunctionFragment;
     "supportsInterface(bytes4)": FunctionFragment;
     "symbol()": FunctionFragment;
     "tokenURI(uint256)": FunctionFragment;
     "transferFrom(address,address,uint256)": FunctionFragment;
-    "transferOwnership(address)": FunctionFragment;
-    "unrevealURI()": FunctionFragment;
   };
 
   getFunction(
@@ -63,30 +58,25 @@ export interface ExclusiveNFTInterface extends utils.Interface {
       | "_nextTokenId"
       | "approve"
       | "balanceOf"
-      | "checkUpkeep"
+      | "drawLottery"
       | "getApproved"
-      | "getTokenURI"
+      | "getRequestStatus"
       | "isApprovedForAll"
-      | "keys"
+      | "lastRequestId"
       | "name"
-      | "owner"
       | "ownerOf"
-      | "performUpkeep"
       | "premiumNFT"
-      | "renounceOwnership"
-      | "s_forwarderAddress"
-      | "s_isSold"
-      | "safeMint"
+      | "rawFulfillRandomWords"
+      | "requestIds"
+      | "s_baseURI"
+      | "s_requests"
       | "safeTransferFrom(address,address,uint256)"
       | "safeTransferFrom(address,address,uint256,bytes)"
       | "setApprovalForAll"
-      | "setForwarderAddress"
       | "supportsInterface"
       | "symbol"
       | "tokenURI"
       | "transferFrom"
-      | "transferOwnership"
-      | "unrevealURI"
   ): FunctionFragment;
 
   encodeFunctionData(
@@ -102,15 +92,15 @@ export interface ExclusiveNFTInterface extends utils.Interface {
     values: [PromiseOrValue<string>]
   ): string;
   encodeFunctionData(
-    functionFragment: "checkUpkeep",
-    values: [PromiseOrValue<BytesLike>]
+    functionFragment: "drawLottery",
+    values?: undefined
   ): string;
   encodeFunctionData(
     functionFragment: "getApproved",
     values: [PromiseOrValue<BigNumberish>]
   ): string;
   encodeFunctionData(
-    functionFragment: "getTokenURI",
+    functionFragment: "getRequestStatus",
     values: [PromiseOrValue<BigNumberish>]
   ): string;
   encodeFunctionData(
@@ -118,38 +108,30 @@ export interface ExclusiveNFTInterface extends utils.Interface {
     values: [PromiseOrValue<string>, PromiseOrValue<string>]
   ): string;
   encodeFunctionData(
-    functionFragment: "keys",
-    values: [PromiseOrValue<BigNumberish>]
+    functionFragment: "lastRequestId",
+    values?: undefined
   ): string;
   encodeFunctionData(functionFragment: "name", values?: undefined): string;
-  encodeFunctionData(functionFragment: "owner", values?: undefined): string;
   encodeFunctionData(
     functionFragment: "ownerOf",
     values: [PromiseOrValue<BigNumberish>]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "performUpkeep",
-    values: [PromiseOrValue<BytesLike>]
   ): string;
   encodeFunctionData(
     functionFragment: "premiumNFT",
     values?: undefined
   ): string;
   encodeFunctionData(
-    functionFragment: "renounceOwnership",
-    values?: undefined
+    functionFragment: "rawFulfillRandomWords",
+    values: [PromiseOrValue<BigNumberish>, PromiseOrValue<BigNumberish>[]]
   ): string;
   encodeFunctionData(
-    functionFragment: "s_forwarderAddress",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
-    functionFragment: "s_isSold",
+    functionFragment: "requestIds",
     values: [PromiseOrValue<BigNumberish>]
   ): string;
+  encodeFunctionData(functionFragment: "s_baseURI", values?: undefined): string;
   encodeFunctionData(
-    functionFragment: "safeMint",
-    values: [PromiseOrValue<string>, PromiseOrValue<string>]
+    functionFragment: "s_requests",
+    values: [PromiseOrValue<BigNumberish>]
   ): string;
   encodeFunctionData(
     functionFragment: "safeTransferFrom(address,address,uint256)",
@@ -173,10 +155,6 @@ export interface ExclusiveNFTInterface extends utils.Interface {
     values: [PromiseOrValue<string>, PromiseOrValue<boolean>]
   ): string;
   encodeFunctionData(
-    functionFragment: "setForwarderAddress",
-    values: [PromiseOrValue<string>]
-  ): string;
-  encodeFunctionData(
     functionFragment: "supportsInterface",
     values: [PromiseOrValue<BytesLike>]
   ): string;
@@ -193,14 +171,6 @@ export interface ExclusiveNFTInterface extends utils.Interface {
       PromiseOrValue<BigNumberish>
     ]
   ): string;
-  encodeFunctionData(
-    functionFragment: "transferOwnership",
-    values: [PromiseOrValue<string>]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "unrevealURI",
-    values?: undefined
-  ): string;
 
   decodeFunctionResult(
     functionFragment: "_nextTokenId",
@@ -209,7 +179,7 @@ export interface ExclusiveNFTInterface extends utils.Interface {
   decodeFunctionResult(functionFragment: "approve", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "balanceOf", data: BytesLike): Result;
   decodeFunctionResult(
-    functionFragment: "checkUpkeep",
+    functionFragment: "drawLottery",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
@@ -217,32 +187,27 @@ export interface ExclusiveNFTInterface extends utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: "getTokenURI",
+    functionFragment: "getRequestStatus",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
     functionFragment: "isApprovedForAll",
     data: BytesLike
   ): Result;
-  decodeFunctionResult(functionFragment: "keys", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "name", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "owner", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "ownerOf", data: BytesLike): Result;
   decodeFunctionResult(
-    functionFragment: "performUpkeep",
+    functionFragment: "lastRequestId",
     data: BytesLike
   ): Result;
+  decodeFunctionResult(functionFragment: "name", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "ownerOf", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "premiumNFT", data: BytesLike): Result;
   decodeFunctionResult(
-    functionFragment: "renounceOwnership",
+    functionFragment: "rawFulfillRandomWords",
     data: BytesLike
   ): Result;
-  decodeFunctionResult(
-    functionFragment: "s_forwarderAddress",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(functionFragment: "s_isSold", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "safeMint", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "requestIds", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "s_baseURI", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "s_requests", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "safeTransferFrom(address,address,uint256)",
     data: BytesLike
@@ -256,10 +221,6 @@ export interface ExclusiveNFTInterface extends utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: "setForwarderAddress",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
     functionFragment: "supportsInterface",
     data: BytesLike
   ): Result;
@@ -269,25 +230,19 @@ export interface ExclusiveNFTInterface extends utils.Interface {
     functionFragment: "transferFrom",
     data: BytesLike
   ): Result;
-  decodeFunctionResult(
-    functionFragment: "transferOwnership",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "unrevealURI",
-    data: BytesLike
-  ): Result;
 
   events: {
     "Approval(address,address,uint256)": EventFragment;
     "ApprovalForAll(address,address,bool)": EventFragment;
-    "OwnershipTransferred(address,address)": EventFragment;
+    "LotteryRequestFulfilled(uint256,address,uint256,uint256)": EventFragment;
+    "LotteryRequestSent(uint256,address)": EventFragment;
     "Transfer(address,address,uint256)": EventFragment;
   };
 
   getEvent(nameOrSignatureOrTopic: "Approval"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "ApprovalForAll"): EventFragment;
-  getEvent(nameOrSignatureOrTopic: "OwnershipTransferred"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "LotteryRequestFulfilled"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "LotteryRequestSent"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "Transfer"): EventFragment;
 }
 
@@ -315,17 +270,31 @@ export type ApprovalForAllEvent = TypedEvent<
 
 export type ApprovalForAllEventFilter = TypedEventFilter<ApprovalForAllEvent>;
 
-export interface OwnershipTransferredEventObject {
-  previousOwner: string;
-  newOwner: string;
+export interface LotteryRequestFulfilledEventObject {
+  requestId: BigNumber;
+  subscriber: string;
+  tokenId: BigNumber;
+  result: BigNumber;
 }
-export type OwnershipTransferredEvent = TypedEvent<
-  [string, string],
-  OwnershipTransferredEventObject
+export type LotteryRequestFulfilledEvent = TypedEvent<
+  [BigNumber, string, BigNumber, BigNumber],
+  LotteryRequestFulfilledEventObject
 >;
 
-export type OwnershipTransferredEventFilter =
-  TypedEventFilter<OwnershipTransferredEvent>;
+export type LotteryRequestFulfilledEventFilter =
+  TypedEventFilter<LotteryRequestFulfilledEvent>;
+
+export interface LotteryRequestSentEventObject {
+  requestId: BigNumber;
+  subscriber: string;
+}
+export type LotteryRequestSentEvent = TypedEvent<
+  [BigNumber, string],
+  LotteryRequestSentEventObject
+>;
+
+export type LotteryRequestSentEventFilter =
+  TypedEventFilter<LotteryRequestSentEvent>;
 
 export interface TransferEventObject {
   from: string;
@@ -339,12 +308,12 @@ export type TransferEvent = TypedEvent<
 
 export type TransferEventFilter = TypedEventFilter<TransferEvent>;
 
-export interface ExclusiveNFT extends BaseContract {
+export interface LuckyNFT extends BaseContract {
   connect(signerOrProvider: Signer | Provider | string): this;
   attach(addressOrName: string): this;
   deployed(): Promise<this>;
 
-  interface: ExclusiveNFTInterface;
+  interface: LuckyNFTInterface;
 
   queryFilter<TEvent extends TypedEvent>(
     event: TypedEventFilter<TEvent>,
@@ -379,20 +348,21 @@ export interface ExclusiveNFT extends BaseContract {
       overrides?: CallOverrides
     ): Promise<[BigNumber]>;
 
-    checkUpkeep(
-      arg0: PromiseOrValue<BytesLike>,
-      overrides?: CallOverrides
-    ): Promise<[boolean, string] & { upkeepNeeded: boolean }>;
+    drawLottery(
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<ContractTransaction>;
 
     getApproved(
       tokenId: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<[string]>;
 
-    getTokenURI(
-      tokenId: PromiseOrValue<BigNumberish>,
+    getRequestStatus(
+      _requestId: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
-    ): Promise<[string]>;
+    ): Promise<
+      [boolean, BigNumber[]] & { fulfilled: boolean; randomWords: BigNumber[] }
+    >;
 
     isApprovedForAll(
       owner: PromiseOrValue<string>,
@@ -400,43 +370,34 @@ export interface ExclusiveNFT extends BaseContract {
       overrides?: CallOverrides
     ): Promise<[boolean]>;
 
-    keys(
-      arg0: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
-    ): Promise<[BigNumber]>;
+    lastRequestId(overrides?: CallOverrides): Promise<[BigNumber]>;
 
     name(overrides?: CallOverrides): Promise<[string]>;
-
-    owner(overrides?: CallOverrides): Promise<[string]>;
 
     ownerOf(
       tokenId: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<[string]>;
 
-    performUpkeep(
-      arg0: PromiseOrValue<BytesLike>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<ContractTransaction>;
-
     premiumNFT(overrides?: CallOverrides): Promise<[string]>;
 
-    renounceOwnership(
+    rawFulfillRandomWords(
+      requestId: PromiseOrValue<BigNumberish>,
+      randomWords: PromiseOrValue<BigNumberish>[],
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
-    s_forwarderAddress(overrides?: CallOverrides): Promise<[string]>;
-
-    s_isSold(
+    requestIds(
       arg0: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
-    ): Promise<[boolean]>;
+    ): Promise<[BigNumber]>;
 
-    safeMint(
-      _to: PromiseOrValue<string>,
-      _revealURI: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<ContractTransaction>;
+    s_baseURI(overrides?: CallOverrides): Promise<[string]>;
+
+    s_requests(
+      arg0: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<[boolean, boolean] & { fulfilled: boolean; exists: boolean }>;
 
     "safeTransferFrom(address,address,uint256)"(
       from: PromiseOrValue<string>,
@@ -459,11 +420,6 @@ export interface ExclusiveNFT extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
-    setForwarderAddress(
-      forwarderAddress: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<ContractTransaction>;
-
     supportsInterface(
       interfaceId: PromiseOrValue<BytesLike>,
       overrides?: CallOverrides
@@ -482,13 +438,6 @@ export interface ExclusiveNFT extends BaseContract {
       tokenId: PromiseOrValue<BigNumberish>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
-
-    transferOwnership(
-      newOwner: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<ContractTransaction>;
-
-    unrevealURI(overrides?: CallOverrides): Promise<[string]>;
   };
 
   _nextTokenId(overrides?: CallOverrides): Promise<BigNumber>;
@@ -504,20 +453,21 @@ export interface ExclusiveNFT extends BaseContract {
     overrides?: CallOverrides
   ): Promise<BigNumber>;
 
-  checkUpkeep(
-    arg0: PromiseOrValue<BytesLike>,
-    overrides?: CallOverrides
-  ): Promise<[boolean, string] & { upkeepNeeded: boolean }>;
+  drawLottery(
+    overrides?: Overrides & { from?: PromiseOrValue<string> }
+  ): Promise<ContractTransaction>;
 
   getApproved(
     tokenId: PromiseOrValue<BigNumberish>,
     overrides?: CallOverrides
   ): Promise<string>;
 
-  getTokenURI(
-    tokenId: PromiseOrValue<BigNumberish>,
+  getRequestStatus(
+    _requestId: PromiseOrValue<BigNumberish>,
     overrides?: CallOverrides
-  ): Promise<string>;
+  ): Promise<
+    [boolean, BigNumber[]] & { fulfilled: boolean; randomWords: BigNumber[] }
+  >;
 
   isApprovedForAll(
     owner: PromiseOrValue<string>,
@@ -525,43 +475,34 @@ export interface ExclusiveNFT extends BaseContract {
     overrides?: CallOverrides
   ): Promise<boolean>;
 
-  keys(
-    arg0: PromiseOrValue<BigNumberish>,
-    overrides?: CallOverrides
-  ): Promise<BigNumber>;
+  lastRequestId(overrides?: CallOverrides): Promise<BigNumber>;
 
   name(overrides?: CallOverrides): Promise<string>;
-
-  owner(overrides?: CallOverrides): Promise<string>;
 
   ownerOf(
     tokenId: PromiseOrValue<BigNumberish>,
     overrides?: CallOverrides
   ): Promise<string>;
 
-  performUpkeep(
-    arg0: PromiseOrValue<BytesLike>,
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
-  ): Promise<ContractTransaction>;
-
   premiumNFT(overrides?: CallOverrides): Promise<string>;
 
-  renounceOwnership(
+  rawFulfillRandomWords(
+    requestId: PromiseOrValue<BigNumberish>,
+    randomWords: PromiseOrValue<BigNumberish>[],
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
-  s_forwarderAddress(overrides?: CallOverrides): Promise<string>;
-
-  s_isSold(
+  requestIds(
     arg0: PromiseOrValue<BigNumberish>,
     overrides?: CallOverrides
-  ): Promise<boolean>;
+  ): Promise<BigNumber>;
 
-  safeMint(
-    _to: PromiseOrValue<string>,
-    _revealURI: PromiseOrValue<string>,
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
-  ): Promise<ContractTransaction>;
+  s_baseURI(overrides?: CallOverrides): Promise<string>;
+
+  s_requests(
+    arg0: PromiseOrValue<BigNumberish>,
+    overrides?: CallOverrides
+  ): Promise<[boolean, boolean] & { fulfilled: boolean; exists: boolean }>;
 
   "safeTransferFrom(address,address,uint256)"(
     from: PromiseOrValue<string>,
@@ -584,11 +525,6 @@ export interface ExclusiveNFT extends BaseContract {
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
-  setForwarderAddress(
-    forwarderAddress: PromiseOrValue<string>,
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
-  ): Promise<ContractTransaction>;
-
   supportsInterface(
     interfaceId: PromiseOrValue<BytesLike>,
     overrides?: CallOverrides
@@ -608,13 +544,6 @@ export interface ExclusiveNFT extends BaseContract {
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
-  transferOwnership(
-    newOwner: PromiseOrValue<string>,
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
-  ): Promise<ContractTransaction>;
-
-  unrevealURI(overrides?: CallOverrides): Promise<string>;
-
   callStatic: {
     _nextTokenId(overrides?: CallOverrides): Promise<BigNumber>;
 
@@ -629,20 +558,19 @@ export interface ExclusiveNFT extends BaseContract {
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
-    checkUpkeep(
-      arg0: PromiseOrValue<BytesLike>,
-      overrides?: CallOverrides
-    ): Promise<[boolean, string] & { upkeepNeeded: boolean }>;
+    drawLottery(overrides?: CallOverrides): Promise<BigNumber>;
 
     getApproved(
       tokenId: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<string>;
 
-    getTokenURI(
-      tokenId: PromiseOrValue<BigNumberish>,
+    getRequestStatus(
+      _requestId: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
-    ): Promise<string>;
+    ): Promise<
+      [boolean, BigNumber[]] & { fulfilled: boolean; randomWords: BigNumber[] }
+    >;
 
     isApprovedForAll(
       owner: PromiseOrValue<string>,
@@ -650,41 +578,34 @@ export interface ExclusiveNFT extends BaseContract {
       overrides?: CallOverrides
     ): Promise<boolean>;
 
-    keys(
-      arg0: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
+    lastRequestId(overrides?: CallOverrides): Promise<BigNumber>;
 
     name(overrides?: CallOverrides): Promise<string>;
-
-    owner(overrides?: CallOverrides): Promise<string>;
 
     ownerOf(
       tokenId: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<string>;
 
-    performUpkeep(
-      arg0: PromiseOrValue<BytesLike>,
-      overrides?: CallOverrides
-    ): Promise<void>;
-
     premiumNFT(overrides?: CallOverrides): Promise<string>;
 
-    renounceOwnership(overrides?: CallOverrides): Promise<void>;
-
-    s_forwarderAddress(overrides?: CallOverrides): Promise<string>;
-
-    s_isSold(
-      arg0: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
-    ): Promise<boolean>;
-
-    safeMint(
-      _to: PromiseOrValue<string>,
-      _revealURI: PromiseOrValue<string>,
+    rawFulfillRandomWords(
+      requestId: PromiseOrValue<BigNumberish>,
+      randomWords: PromiseOrValue<BigNumberish>[],
       overrides?: CallOverrides
     ): Promise<void>;
+
+    requestIds(
+      arg0: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    s_baseURI(overrides?: CallOverrides): Promise<string>;
+
+    s_requests(
+      arg0: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<[boolean, boolean] & { fulfilled: boolean; exists: boolean }>;
 
     "safeTransferFrom(address,address,uint256)"(
       from: PromiseOrValue<string>,
@@ -707,11 +628,6 @@ export interface ExclusiveNFT extends BaseContract {
       overrides?: CallOverrides
     ): Promise<void>;
 
-    setForwarderAddress(
-      forwarderAddress: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<void>;
-
     supportsInterface(
       interfaceId: PromiseOrValue<BytesLike>,
       overrides?: CallOverrides
@@ -730,13 +646,6 @@ export interface ExclusiveNFT extends BaseContract {
       tokenId: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<void>;
-
-    transferOwnership(
-      newOwner: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<void>;
-
-    unrevealURI(overrides?: CallOverrides): Promise<string>;
   };
 
   filters: {
@@ -762,14 +671,27 @@ export interface ExclusiveNFT extends BaseContract {
       approved?: null
     ): ApprovalForAllEventFilter;
 
-    "OwnershipTransferred(address,address)"(
-      previousOwner?: PromiseOrValue<string> | null,
-      newOwner?: PromiseOrValue<string> | null
-    ): OwnershipTransferredEventFilter;
-    OwnershipTransferred(
-      previousOwner?: PromiseOrValue<string> | null,
-      newOwner?: PromiseOrValue<string> | null
-    ): OwnershipTransferredEventFilter;
+    "LotteryRequestFulfilled(uint256,address,uint256,uint256)"(
+      requestId?: null,
+      subscriber?: null,
+      tokenId?: null,
+      result?: null
+    ): LotteryRequestFulfilledEventFilter;
+    LotteryRequestFulfilled(
+      requestId?: null,
+      subscriber?: null,
+      tokenId?: null,
+      result?: null
+    ): LotteryRequestFulfilledEventFilter;
+
+    "LotteryRequestSent(uint256,address)"(
+      requestId?: null,
+      subscriber?: null
+    ): LotteryRequestSentEventFilter;
+    LotteryRequestSent(
+      requestId?: null,
+      subscriber?: null
+    ): LotteryRequestSentEventFilter;
 
     "Transfer(address,address,uint256)"(
       from?: PromiseOrValue<string> | null,
@@ -797,9 +719,8 @@ export interface ExclusiveNFT extends BaseContract {
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
-    checkUpkeep(
-      arg0: PromiseOrValue<BytesLike>,
-      overrides?: CallOverrides
+    drawLottery(
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
     getApproved(
@@ -807,8 +728,8 @@ export interface ExclusiveNFT extends BaseContract {
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
-    getTokenURI(
-      tokenId: PromiseOrValue<BigNumberish>,
+    getRequestStatus(
+      _requestId: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
@@ -818,42 +739,33 @@ export interface ExclusiveNFT extends BaseContract {
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
-    keys(
-      arg0: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
+    lastRequestId(overrides?: CallOverrides): Promise<BigNumber>;
 
     name(overrides?: CallOverrides): Promise<BigNumber>;
-
-    owner(overrides?: CallOverrides): Promise<BigNumber>;
 
     ownerOf(
       tokenId: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
-    performUpkeep(
-      arg0: PromiseOrValue<BytesLike>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<BigNumber>;
-
     premiumNFT(overrides?: CallOverrides): Promise<BigNumber>;
 
-    renounceOwnership(
+    rawFulfillRandomWords(
+      requestId: PromiseOrValue<BigNumberish>,
+      randomWords: PromiseOrValue<BigNumberish>[],
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
-    s_forwarderAddress(overrides?: CallOverrides): Promise<BigNumber>;
-
-    s_isSold(
+    requestIds(
       arg0: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
-    safeMint(
-      _to: PromiseOrValue<string>,
-      _revealURI: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    s_baseURI(overrides?: CallOverrides): Promise<BigNumber>;
+
+    s_requests(
+      arg0: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
     ): Promise<BigNumber>;
 
     "safeTransferFrom(address,address,uint256)"(
@@ -874,11 +786,6 @@ export interface ExclusiveNFT extends BaseContract {
     setApprovalForAll(
       operator: PromiseOrValue<string>,
       approved: PromiseOrValue<boolean>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<BigNumber>;
-
-    setForwarderAddress(
-      forwarderAddress: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
@@ -900,13 +807,6 @@ export interface ExclusiveNFT extends BaseContract {
       tokenId: PromiseOrValue<BigNumberish>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
-
-    transferOwnership(
-      newOwner: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<BigNumber>;
-
-    unrevealURI(overrides?: CallOverrides): Promise<BigNumber>;
   };
 
   populateTransaction: {
@@ -923,9 +823,8 @@ export interface ExclusiveNFT extends BaseContract {
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
-    checkUpkeep(
-      arg0: PromiseOrValue<BytesLike>,
-      overrides?: CallOverrides
+    drawLottery(
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 
     getApproved(
@@ -933,8 +832,8 @@ export interface ExclusiveNFT extends BaseContract {
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
-    getTokenURI(
-      tokenId: PromiseOrValue<BigNumberish>,
+    getRequestStatus(
+      _requestId: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
@@ -944,44 +843,33 @@ export interface ExclusiveNFT extends BaseContract {
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
-    keys(
-      arg0: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
+    lastRequestId(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     name(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
-    owner(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     ownerOf(
       tokenId: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
-    performUpkeep(
-      arg0: PromiseOrValue<BytesLike>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<PopulatedTransaction>;
-
     premiumNFT(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
-    renounceOwnership(
+    rawFulfillRandomWords(
+      requestId: PromiseOrValue<BigNumberish>,
+      randomWords: PromiseOrValue<BigNumberish>[],
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 
-    s_forwarderAddress(
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
-
-    s_isSold(
+    requestIds(
       arg0: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
-    safeMint(
-      _to: PromiseOrValue<string>,
-      _revealURI: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    s_baseURI(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    s_requests(
+      arg0: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
     "safeTransferFrom(address,address,uint256)"(
@@ -1005,11 +893,6 @@ export interface ExclusiveNFT extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 
-    setForwarderAddress(
-      forwarderAddress: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<PopulatedTransaction>;
-
     supportsInterface(
       interfaceId: PromiseOrValue<BytesLike>,
       overrides?: CallOverrides
@@ -1028,12 +911,5 @@ export interface ExclusiveNFT extends BaseContract {
       tokenId: PromiseOrValue<BigNumberish>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
-
-    transferOwnership(
-      newOwner: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<PopulatedTransaction>;
-
-    unrevealURI(overrides?: CallOverrides): Promise<PopulatedTransaction>;
   };
 }

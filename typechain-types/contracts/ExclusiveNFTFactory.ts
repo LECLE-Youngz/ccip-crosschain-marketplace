@@ -3,36 +3,52 @@
 /* eslint-disable */
 import type {
   BaseContract,
+  BigNumber,
   BigNumberish,
   BytesLike,
-  FunctionFragment,
-  Result,
-  Interface,
-  EventFragment,
-  AddressLike,
-  ContractRunner,
-  ContractMethod,
-  Listener,
+  CallOverrides,
+  ContractTransaction,
+  Overrides,
+  PopulatedTransaction,
+  Signer,
+  utils,
 } from "ethers";
 import type {
-  TypedContractEvent,
-  TypedDeferredTopicFilter,
-  TypedEventLog,
-  TypedLogDescription,
+  FunctionFragment,
+  Result,
+  EventFragment,
+} from "@ethersproject/abi";
+import type { Listener, Provider } from "@ethersproject/providers";
+import type {
+  TypedEventFilter,
+  TypedEvent,
   TypedListener,
-  TypedContractMethod,
+  OnEvent,
+  PromiseOrValue,
 } from "../common";
 
-export interface ExclusiveNFTFactoryInterface extends Interface {
-  getFunction(
-    nameOrSignature: "deployExclusiveToken" | "getTotalCollection" | "tokens"
-  ): FunctionFragment;
+export interface ExclusiveNFTFactoryInterface extends utils.Interface {
+  functions: {
+    "deployExclusiveToken(string,string,string,address)": FunctionFragment;
+    "getTotalCollection()": FunctionFragment;
+    "tokens(uint256)": FunctionFragment;
+  };
 
-  getEvent(nameOrSignatureOrTopic: "ExclusiveNFTCreated"): EventFragment;
+  getFunction(
+    nameOrSignatureOrTopic:
+      | "deployExclusiveToken"
+      | "getTotalCollection"
+      | "tokens"
+  ): FunctionFragment;
 
   encodeFunctionData(
     functionFragment: "deployExclusiveToken",
-    values: [string, string, string]
+    values: [
+      PromiseOrValue<string>,
+      PromiseOrValue<string>,
+      PromiseOrValue<string>,
+      PromiseOrValue<string>
+    ]
   ): string;
   encodeFunctionData(
     functionFragment: "getTotalCollection",
@@ -40,7 +56,7 @@ export interface ExclusiveNFTFactoryInterface extends Interface {
   ): string;
   encodeFunctionData(
     functionFragment: "tokens",
-    values: [BigNumberish]
+    values: [PromiseOrValue<BigNumberish>]
   ): string;
 
   decodeFunctionResult(
@@ -52,110 +68,153 @@ export interface ExclusiveNFTFactoryInterface extends Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "tokens", data: BytesLike): Result;
+
+  events: {
+    "ExclusiveNFTCreated(address,address,string,address)": EventFragment;
+  };
+
+  getEvent(nameOrSignatureOrTopic: "ExclusiveNFTCreated"): EventFragment;
 }
 
-export namespace ExclusiveNFTCreatedEvent {
-  export type InputTuple = [owner: AddressLike, tokenAddress: AddressLike];
-  export type OutputTuple = [owner: string, tokenAddress: string];
-  export interface OutputObject {
-    owner: string;
-    tokenAddress: string;
-  }
-  export type Event = TypedContractEvent<InputTuple, OutputTuple, OutputObject>;
-  export type Filter = TypedDeferredTopicFilter<Event>;
-  export type Log = TypedEventLog<Event>;
-  export type LogDescription = TypedLogDescription<Event>;
+export interface ExclusiveNFTCreatedEventObject {
+  owner: string;
+  tokenAddress: string;
+  unrevealURI: string;
+  premiumNFT: string;
 }
+export type ExclusiveNFTCreatedEvent = TypedEvent<
+  [string, string, string, string],
+  ExclusiveNFTCreatedEventObject
+>;
+
+export type ExclusiveNFTCreatedEventFilter =
+  TypedEventFilter<ExclusiveNFTCreatedEvent>;
 
 export interface ExclusiveNFTFactory extends BaseContract {
-  connect(runner?: ContractRunner | null): ExclusiveNFTFactory;
-  waitForDeployment(): Promise<this>;
+  connect(signerOrProvider: Signer | Provider | string): this;
+  attach(addressOrName: string): this;
+  deployed(): Promise<this>;
 
   interface: ExclusiveNFTFactoryInterface;
 
-  queryFilter<TCEvent extends TypedContractEvent>(
-    event: TCEvent,
+  queryFilter<TEvent extends TypedEvent>(
+    event: TypedEventFilter<TEvent>,
     fromBlockOrBlockhash?: string | number | undefined,
     toBlock?: string | number | undefined
-  ): Promise<Array<TypedEventLog<TCEvent>>>;
-  queryFilter<TCEvent extends TypedContractEvent>(
-    filter: TypedDeferredTopicFilter<TCEvent>,
-    fromBlockOrBlockhash?: string | number | undefined,
-    toBlock?: string | number | undefined
-  ): Promise<Array<TypedEventLog<TCEvent>>>;
+  ): Promise<Array<TEvent>>;
 
-  on<TCEvent extends TypedContractEvent>(
-    event: TCEvent,
-    listener: TypedListener<TCEvent>
-  ): Promise<this>;
-  on<TCEvent extends TypedContractEvent>(
-    filter: TypedDeferredTopicFilter<TCEvent>,
-    listener: TypedListener<TCEvent>
-  ): Promise<this>;
+  listeners<TEvent extends TypedEvent>(
+    eventFilter?: TypedEventFilter<TEvent>
+  ): Array<TypedListener<TEvent>>;
+  listeners(eventName?: string): Array<Listener>;
+  removeAllListeners<TEvent extends TypedEvent>(
+    eventFilter: TypedEventFilter<TEvent>
+  ): this;
+  removeAllListeners(eventName?: string): this;
+  off: OnEvent<this>;
+  on: OnEvent<this>;
+  once: OnEvent<this>;
+  removeListener: OnEvent<this>;
 
-  once<TCEvent extends TypedContractEvent>(
-    event: TCEvent,
-    listener: TypedListener<TCEvent>
-  ): Promise<this>;
-  once<TCEvent extends TypedContractEvent>(
-    filter: TypedDeferredTopicFilter<TCEvent>,
-    listener: TypedListener<TCEvent>
-  ): Promise<this>;
+  functions: {
+    deployExclusiveToken(
+      name: PromiseOrValue<string>,
+      symbol: PromiseOrValue<string>,
+      unrevealURI: PromiseOrValue<string>,
+      premiumNFT: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<ContractTransaction>;
 
-  listeners<TCEvent extends TypedContractEvent>(
-    event: TCEvent
-  ): Promise<Array<TypedListener<TCEvent>>>;
-  listeners(eventName?: string): Promise<Array<Listener>>;
-  removeAllListeners<TCEvent extends TypedContractEvent>(
-    event?: TCEvent
-  ): Promise<this>;
+    getTotalCollection(
+      overrides?: CallOverrides
+    ): Promise<[BigNumber] & { amount: BigNumber }>;
 
-  deployExclusiveToken: TypedContractMethod<
-    [name: string, symbol: string, unrevealURI: string],
-    [string],
-    "nonpayable"
-  >;
+    tokens(
+      arg0: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<[string]>;
+  };
 
-  getTotalCollection: TypedContractMethod<[], [bigint], "view">;
+  deployExclusiveToken(
+    name: PromiseOrValue<string>,
+    symbol: PromiseOrValue<string>,
+    unrevealURI: PromiseOrValue<string>,
+    premiumNFT: PromiseOrValue<string>,
+    overrides?: Overrides & { from?: PromiseOrValue<string> }
+  ): Promise<ContractTransaction>;
 
-  tokens: TypedContractMethod<[arg0: BigNumberish], [string], "view">;
+  getTotalCollection(overrides?: CallOverrides): Promise<BigNumber>;
 
-  getFunction<T extends ContractMethod = ContractMethod>(
-    key: string | FunctionFragment
-  ): T;
+  tokens(
+    arg0: PromiseOrValue<BigNumberish>,
+    overrides?: CallOverrides
+  ): Promise<string>;
 
-  getFunction(
-    nameOrSignature: "deployExclusiveToken"
-  ): TypedContractMethod<
-    [name: string, symbol: string, unrevealURI: string],
-    [string],
-    "nonpayable"
-  >;
-  getFunction(
-    nameOrSignature: "getTotalCollection"
-  ): TypedContractMethod<[], [bigint], "view">;
-  getFunction(
-    nameOrSignature: "tokens"
-  ): TypedContractMethod<[arg0: BigNumberish], [string], "view">;
+  callStatic: {
+    deployExclusiveToken(
+      name: PromiseOrValue<string>,
+      symbol: PromiseOrValue<string>,
+      unrevealURI: PromiseOrValue<string>,
+      premiumNFT: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<string>;
 
-  getEvent(
-    key: "ExclusiveNFTCreated"
-  ): TypedContractEvent<
-    ExclusiveNFTCreatedEvent.InputTuple,
-    ExclusiveNFTCreatedEvent.OutputTuple,
-    ExclusiveNFTCreatedEvent.OutputObject
-  >;
+    getTotalCollection(overrides?: CallOverrides): Promise<BigNumber>;
+
+    tokens(
+      arg0: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<string>;
+  };
 
   filters: {
-    "ExclusiveNFTCreated(address,address)": TypedContractEvent<
-      ExclusiveNFTCreatedEvent.InputTuple,
-      ExclusiveNFTCreatedEvent.OutputTuple,
-      ExclusiveNFTCreatedEvent.OutputObject
-    >;
-    ExclusiveNFTCreated: TypedContractEvent<
-      ExclusiveNFTCreatedEvent.InputTuple,
-      ExclusiveNFTCreatedEvent.OutputTuple,
-      ExclusiveNFTCreatedEvent.OutputObject
-    >;
+    "ExclusiveNFTCreated(address,address,string,address)"(
+      owner?: null,
+      tokenAddress?: null,
+      unrevealURI?: null,
+      premiumNFT?: null
+    ): ExclusiveNFTCreatedEventFilter;
+    ExclusiveNFTCreated(
+      owner?: null,
+      tokenAddress?: null,
+      unrevealURI?: null,
+      premiumNFT?: null
+    ): ExclusiveNFTCreatedEventFilter;
+  };
+
+  estimateGas: {
+    deployExclusiveToken(
+      name: PromiseOrValue<string>,
+      symbol: PromiseOrValue<string>,
+      unrevealURI: PromiseOrValue<string>,
+      premiumNFT: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<BigNumber>;
+
+    getTotalCollection(overrides?: CallOverrides): Promise<BigNumber>;
+
+    tokens(
+      arg0: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+  };
+
+  populateTransaction: {
+    deployExclusiveToken(
+      name: PromiseOrValue<string>,
+      symbol: PromiseOrValue<string>,
+      unrevealURI: PromiseOrValue<string>,
+      premiumNFT: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<PopulatedTransaction>;
+
+    getTotalCollection(
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    tokens(
+      arg0: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
   };
 }

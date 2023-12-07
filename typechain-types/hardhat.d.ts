@@ -73,6 +73,18 @@ declare module "hardhat/types/runtime" {
       signerOrOptions?: ethers.Signer | FactoryOptions
     ): Promise<Contracts.VRFCoordinatorV2Interface__factory>;
     getContractFactory(
+      name: "ConfirmedOwner",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.ConfirmedOwner__factory>;
+    getContractFactory(
+      name: "ConfirmedOwnerWithProposal",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.ConfirmedOwnerWithProposal__factory>;
+    getContractFactory(
+      name: "IOwnable",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.IOwnable__factory>;
+    getContractFactory(
       name: "LinkTokenInterface",
       signerOrOptions?: ethers.Signer | FactoryOptions
     ): Promise<Contracts.LinkTokenInterface__factory>;
@@ -149,6 +161,10 @@ declare module "hardhat/types/runtime" {
       signerOrOptions?: ethers.Signer | FactoryOptions
     ): Promise<Contracts.GenerativeNFTFactory__factory>;
     getContractFactory(
+      name: "LuckyNFT",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.LuckyNFT__factory>;
+    getContractFactory(
       name: "NftMarketplace",
       signerOrOptions?: ethers.Signer | FactoryOptions
     ): Promise<Contracts.NftMarketplace__factory>;
@@ -172,6 +188,10 @@ declare module "hardhat/types/runtime" {
       name: "SourceMinter",
       signerOrOptions?: ethers.Signer | FactoryOptions
     ): Promise<Contracts.SourceMinter__factory>;
+    getContractFactory(
+      name: "VRFv2Consumer",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.VRFv2Consumer__factory>;
     getContractFactory(
       name: "Withdraw",
       signerOrOptions?: ethers.Signer | FactoryOptions
@@ -256,6 +276,21 @@ declare module "hardhat/types/runtime" {
       address: string,
       signer?: ethers.Signer
     ): Promise<Contracts.VRFCoordinatorV2Interface>;
+    getContractAt(
+      name: "ConfirmedOwner",
+      address: string,
+      signer?: ethers.Signer
+    ): Promise<Contracts.ConfirmedOwner>;
+    getContractAt(
+      name: "ConfirmedOwnerWithProposal",
+      address: string,
+      signer?: ethers.Signer
+    ): Promise<Contracts.ConfirmedOwnerWithProposal>;
+    getContractAt(
+      name: "IOwnable",
+      address: string,
+      signer?: ethers.Signer
+    ): Promise<Contracts.IOwnable>;
     getContractAt(
       name: "LinkTokenInterface",
       address: string,
@@ -352,6 +387,11 @@ declare module "hardhat/types/runtime" {
       signer?: ethers.Signer
     ): Promise<Contracts.GenerativeNFTFactory>;
     getContractAt(
+      name: "LuckyNFT",
+      address: string,
+      signer?: ethers.Signer
+    ): Promise<Contracts.LuckyNFT>;
+    getContractAt(
       name: "NftMarketplace",
       address: string,
       signer?: ethers.Signer
@@ -381,6 +421,11 @@ declare module "hardhat/types/runtime" {
       address: string,
       signer?: ethers.Signer
     ): Promise<Contracts.SourceMinter>;
+    getContractAt(
+      name: "VRFv2Consumer",
+      address: string,
+      signer?: ethers.Signer
+    ): Promise<Contracts.VRFv2Consumer>;
     getContractAt(
       name: "Withdraw",
       address: string,
