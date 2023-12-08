@@ -21,6 +21,14 @@ contract MysteryDropEvent is ERC721PsiMysteryBox, ConfirmedOwner, FunctionsClien
     bytes public s_lastResponse;
     bytes public s_lastError;
 
+    //Callback gas limit
+    uint32 gasLimit = 300000;
+
+    // donID - Hardcoded for AvalancheFuji
+    bytes32 donID =
+        0x66756e2d6176616c616e6368652d66756a692d31000000000000000000000000;
+
+
     /// @notice The subscription ID for Chainlink Function
     uint64 private immutable i_CLSubscriptionId;
 
@@ -43,6 +51,7 @@ contract MysteryDropEvent is ERC721PsiMysteryBox, ConfirmedOwner, FunctionsClien
     string private s_baseURI;
     /// @notice The Amount of NFTs required Subscriber to buy in order to participate in the MysteryDropEvent
     uint64 public nftPurchasedRequired;
+    address[] public s_subscriber;
 
     /// @notice The URI for all tokens before reveal
     string private s_unrevealedURI;
@@ -90,37 +99,36 @@ contract MysteryDropEvent is ERC721PsiMysteryBox, ConfirmedOwner, FunctionsClien
         s_baseURI = baseURI;
     }
 
+    string source = 
+"const addressCreator = args[0]"
+"const addressBuyer = args[1]"
+"const checkNFTPurchasedRequest = await Functions.makeHttpRequest({"
+"url: `https://metadata-storage.azurewebsites.net/api/v1/socials/creator/${addressCreator}/buyer/${addressBuyer}`"
+"})"
+"if (checkNFTPurchasedRequest.error) {"
+"console.error(checkNFTPurchasedRequest.error)"
+"throw Error('Request failed')}"
+"const { data } = checkNFTPurchasedRequest"
+"const nftBought = data.numBuy"
+"return Functions.encodeUint256(nftBought)";
+
+    string[] public args;
+
     // Chainlink Function
-    function sendRequest(
-        string memory source,
-        string[] memory args,
-        bytes[] memory bytesArgs,
-        uint32 gasLimit,
-        bytes32 donID
-    ) external returns (bytes32 requestId) {
+    function sendRequest() external returns (bytes32 requestId) {
+        delete args;
+
         FunctionsRequest.Request memory req;
         req.initializeRequestForInlineJavaScript(source);
-    
+
+        args.push("");
+        // args.push(msg.sender);
+
         if (args.length > 0) req.setArgs(args);
-        if (bytesArgs.length > 0) req.setBytesArgs(bytesArgs);
+
         s_lastRequestId = _sendRequest(
             req.encodeCBOR(),
             i_CLSubscriptionId,
-            gasLimit,
-            donID
-        );
-        return s_lastRequestId;
-    }
-
-    function sendRequestCBOR(
-        bytes memory request,
-        uint64 subscriptionId,
-        uint32 gasLimit,
-        bytes32 donID
-    ) external onlyOwner returns (bytes32 requestId) {
-        s_lastRequestId = _sendRequest(
-            request,
-            subscriptionId,
             gasLimit,
             donID
         );
@@ -144,8 +152,15 @@ contract MysteryDropEvent is ERC721PsiMysteryBox, ConfirmedOwner, FunctionsClien
         }
         s_lastResponse = response;
         s_lastError = err;
+        safeMint();
         emit Response(requestId, s_lastResponse, s_lastError);
     }
+
+    function safeMint(address subscriber) internal  {
+    if (_revealed()) revert NotAllowed();
+
+    _safeMint(subscriber, 1);
+  }
 
     /*//////////////////////////////////////////////////////////////
                      ERC721PsiMysteryBox LOGIC

@@ -31,6 +31,7 @@ export interface MysteryDropEventInterface extends utils.Interface {
   functions: {
     "acceptOwnership()": FunctionFragment;
     "approve(address,uint256)": FunctionFragment;
+    "args(uint256)": FunctionFragment;
     "balanceOf(address)": FunctionFragment;
     "getApproved(uint256)": FunctionFragment;
     "getBaseURI()": FunctionFragment;
@@ -48,8 +49,7 @@ export interface MysteryDropEventInterface extends utils.Interface {
     "s_lastResponse()": FunctionFragment;
     "safeTransferFrom(address,address,uint256)": FunctionFragment;
     "safeTransferFrom(address,address,uint256,bytes)": FunctionFragment;
-    "sendRequest(string,string[],bytes[],uint32,bytes32)": FunctionFragment;
-    "sendRequestCBOR(bytes,uint64,uint32,bytes32)": FunctionFragment;
+    "sendRequest()": FunctionFragment;
     "setApprovalForAll(address,bool)": FunctionFragment;
     "supportsInterface(bytes4)": FunctionFragment;
     "symbol()": FunctionFragment;
@@ -64,6 +64,7 @@ export interface MysteryDropEventInterface extends utils.Interface {
     nameOrSignatureOrTopic:
       | "acceptOwnership"
       | "approve"
+      | "args"
       | "balanceOf"
       | "getApproved"
       | "getBaseURI"
@@ -82,7 +83,6 @@ export interface MysteryDropEventInterface extends utils.Interface {
       | "safeTransferFrom(address,address,uint256)"
       | "safeTransferFrom(address,address,uint256,bytes)"
       | "sendRequest"
-      | "sendRequestCBOR"
       | "setApprovalForAll"
       | "supportsInterface"
       | "symbol"
@@ -100,6 +100,10 @@ export interface MysteryDropEventInterface extends utils.Interface {
   encodeFunctionData(
     functionFragment: "approve",
     values: [PromiseOrValue<string>, PromiseOrValue<BigNumberish>]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "args",
+    values: [PromiseOrValue<BigNumberish>]
   ): string;
   encodeFunctionData(
     functionFragment: "balanceOf",
@@ -175,22 +179,7 @@ export interface MysteryDropEventInterface extends utils.Interface {
   ): string;
   encodeFunctionData(
     functionFragment: "sendRequest",
-    values: [
-      PromiseOrValue<string>,
-      PromiseOrValue<string>[],
-      PromiseOrValue<BytesLike>[],
-      PromiseOrValue<BigNumberish>,
-      PromiseOrValue<BytesLike>
-    ]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "sendRequestCBOR",
-    values: [
-      PromiseOrValue<BytesLike>,
-      PromiseOrValue<BigNumberish>,
-      PromiseOrValue<BigNumberish>,
-      PromiseOrValue<BytesLike>
-    ]
+    values?: undefined
   ): string;
   encodeFunctionData(
     functionFragment: "setApprovalForAll",
@@ -231,6 +220,7 @@ export interface MysteryDropEventInterface extends utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "approve", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "args", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "balanceOf", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "getApproved",
@@ -283,10 +273,6 @@ export interface MysteryDropEventInterface extends utils.Interface {
   ): Result;
   decodeFunctionResult(
     functionFragment: "sendRequest",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "sendRequestCBOR",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
@@ -477,6 +463,11 @@ export interface MysteryDropEvent extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
+    args(
+      arg0: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<[string]>;
+
     balanceOf(
       owner: PromiseOrValue<string>,
       overrides?: CallOverrides
@@ -547,19 +538,6 @@ export interface MysteryDropEvent extends BaseContract {
     ): Promise<ContractTransaction>;
 
     sendRequest(
-      source: PromiseOrValue<string>,
-      args: PromiseOrValue<string>[],
-      bytesArgs: PromiseOrValue<BytesLike>[],
-      gasLimit: PromiseOrValue<BigNumberish>,
-      donID: PromiseOrValue<BytesLike>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<ContractTransaction>;
-
-    sendRequestCBOR(
-      request: PromiseOrValue<BytesLike>,
-      subscriptionId: PromiseOrValue<BigNumberish>,
-      gasLimit: PromiseOrValue<BigNumberish>,
-      donID: PromiseOrValue<BytesLike>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
@@ -610,6 +588,11 @@ export interface MysteryDropEvent extends BaseContract {
     tokenId: PromiseOrValue<BigNumberish>,
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
+
+  args(
+    arg0: PromiseOrValue<BigNumberish>,
+    overrides?: CallOverrides
+  ): Promise<string>;
 
   balanceOf(
     owner: PromiseOrValue<string>,
@@ -681,19 +664,6 @@ export interface MysteryDropEvent extends BaseContract {
   ): Promise<ContractTransaction>;
 
   sendRequest(
-    source: PromiseOrValue<string>,
-    args: PromiseOrValue<string>[],
-    bytesArgs: PromiseOrValue<BytesLike>[],
-    gasLimit: PromiseOrValue<BigNumberish>,
-    donID: PromiseOrValue<BytesLike>,
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
-  ): Promise<ContractTransaction>;
-
-  sendRequestCBOR(
-    request: PromiseOrValue<BytesLike>,
-    subscriptionId: PromiseOrValue<BigNumberish>,
-    gasLimit: PromiseOrValue<BigNumberish>,
-    donID: PromiseOrValue<BytesLike>,
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
@@ -742,6 +712,11 @@ export interface MysteryDropEvent extends BaseContract {
       tokenId: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<void>;
+
+    args(
+      arg0: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<string>;
 
     balanceOf(
       owner: PromiseOrValue<string>,
@@ -810,22 +785,7 @@ export interface MysteryDropEvent extends BaseContract {
       overrides?: CallOverrides
     ): Promise<void>;
 
-    sendRequest(
-      source: PromiseOrValue<string>,
-      args: PromiseOrValue<string>[],
-      bytesArgs: PromiseOrValue<BytesLike>[],
-      gasLimit: PromiseOrValue<BigNumberish>,
-      donID: PromiseOrValue<BytesLike>,
-      overrides?: CallOverrides
-    ): Promise<string>;
-
-    sendRequestCBOR(
-      request: PromiseOrValue<BytesLike>,
-      subscriptionId: PromiseOrValue<BigNumberish>,
-      gasLimit: PromiseOrValue<BigNumberish>,
-      donID: PromiseOrValue<BytesLike>,
-      overrides?: CallOverrides
-    ): Promise<string>;
+    sendRequest(overrides?: CallOverrides): Promise<string>;
 
     setApprovalForAll(
       operator: PromiseOrValue<string>,
@@ -957,6 +917,11 @@ export interface MysteryDropEvent extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
+    args(
+      arg0: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
     balanceOf(
       owner: PromiseOrValue<string>,
       overrides?: CallOverrides
@@ -1027,19 +992,6 @@ export interface MysteryDropEvent extends BaseContract {
     ): Promise<BigNumber>;
 
     sendRequest(
-      source: PromiseOrValue<string>,
-      args: PromiseOrValue<string>[],
-      bytesArgs: PromiseOrValue<BytesLike>[],
-      gasLimit: PromiseOrValue<BigNumberish>,
-      donID: PromiseOrValue<BytesLike>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<BigNumber>;
-
-    sendRequestCBOR(
-      request: PromiseOrValue<BytesLike>,
-      subscriptionId: PromiseOrValue<BigNumberish>,
-      gasLimit: PromiseOrValue<BigNumberish>,
-      donID: PromiseOrValue<BytesLike>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
@@ -1090,6 +1042,11 @@ export interface MysteryDropEvent extends BaseContract {
       to: PromiseOrValue<string>,
       tokenId: PromiseOrValue<BigNumberish>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<PopulatedTransaction>;
+
+    args(
+      arg0: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
     balanceOf(
@@ -1164,19 +1121,6 @@ export interface MysteryDropEvent extends BaseContract {
     ): Promise<PopulatedTransaction>;
 
     sendRequest(
-      source: PromiseOrValue<string>,
-      args: PromiseOrValue<string>[],
-      bytesArgs: PromiseOrValue<BytesLike>[],
-      gasLimit: PromiseOrValue<BigNumberish>,
-      donID: PromiseOrValue<BytesLike>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<PopulatedTransaction>;
-
-    sendRequestCBOR(
-      request: PromiseOrValue<BytesLike>,
-      subscriptionId: PromiseOrValue<BigNumberish>,
-      gasLimit: PromiseOrValue<BigNumberish>,
-      donID: PromiseOrValue<BytesLike>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 

@@ -9,6 +9,9 @@ import { MerkleTree } from 'merkletreejs'
 import keccak256 from 'keccak256'
 import { networkConfig } from '../network-config'
 import whitelist from './data/whitelist.json'
+import * as dotenv from 'dotenv';
+dotenv.config();
+
 
 const name = process.env.NFT_NAME
 const symbol = process.env.NFT_SYMBOL
@@ -26,6 +29,7 @@ async function main() {
   // If this script is run directly using `node` you may want to call compile
   // manually to make sure everything is compiled
   // await hre.run('compile');
+  console.log(fee)
   if (
     !name ||
     !symbol ||
