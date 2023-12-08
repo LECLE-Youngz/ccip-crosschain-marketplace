@@ -42,9 +42,9 @@ query queryPromptBuyers($address: String, $tokenId: String) {
 `;
 
 
-    /////////////////////
-    // Generative NFT //
-    /////////////////////
+/////////////////////
+// Generative NFT //
+/////////////////////
 export const queryAllCollection = `
 query getAllCollection {
     erc721TokenCreateds {
@@ -116,9 +116,9 @@ query getPromptBoughts($address: String) {
   }
 `;
 
-    /////////////////////
-    // Premium NFT //
-    /////////////////////
+/////////////////////
+// Premium NFT //
+/////////////////////
 /* getAllSubscriber: 
 input: creator address
 return: buyers (subscribers) of that NFT
@@ -165,9 +165,19 @@ query getVerified($seller: String, $buyer: String, $tokenId: String, $collection
 }
 `
 
+/////////////////////
+// Exclusive NFT //
+/////////////////////
+export const getExclusiveContract = `
+    query getCreatorStatus($address: String) {
+      exclusiveNFTCreateds(where: {owner: address}) {
+        tokenAddress
+      }
+    }
+    `
 
-    /////////////////////
-    // Buy and Sell NFT/Prompt //
-    /////////////////////
+/////////////////////
+// Buy and Sell NFT/Prompt //
+/////////////////////
 
 

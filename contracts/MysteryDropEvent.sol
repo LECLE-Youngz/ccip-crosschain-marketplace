@@ -7,13 +7,18 @@ import {VRFConsumerBaseV2} from "@chainlink/contracts/src/v0.8/vrf/VRFConsumerBa
 import {ERC721Psi, ERC721PsiMysteryBox} from "./ERC721Psi/ERC721PsiMysteryBox.sol";
 import {FunctionsClient} from "@chainlink/contracts/src/v0.8/functions/dev/v1_0_0/FunctionsClient.sol";
 import {FunctionsRequest} from "@chainlink/contracts/src/v0.8/functions/dev/v1_0_0/libraries/FunctionsRequest.sol";
+import "@openzeppelin/contracts/token/ERC721/IERC721.sol";
 
 /// @title MysteryDropEvent
 /// based on MysteryBox.sol contract from @author HackBG Team (https://hack.bg)
 /// @notice NFT collection with random token distribution, only for user who have bought minimum 5 NFTs from a specific Creator from NEXTHYPE
 /// @dev Using Chainlink VRF for randomness
 /// @dev Using Chainlink Function for verifying User's purchasing
-contract MysteryDropEvent is ERC721PsiMysteryBox, ConfirmedOwner, FunctionsClient {
+contract MysteryDropEvent is
+    ERC721PsiMysteryBox,
+    ConfirmedOwner,
+    FunctionsClient
+{
     // Chainlink Function
     using FunctionsRequest for FunctionsRequest.Request;
 
@@ -28,10 +33,10 @@ contract MysteryDropEvent is ERC721PsiMysteryBox, ConfirmedOwner, FunctionsClien
     bytes32 donID =
         0x66756e2d6176616c616e6368652d66756a692d31000000000000000000000000;
 
-
     /// @notice The subscription ID for Chainlink Function
     uint64 private immutable i_CLSubscriptionId;
 
+    event LuckyNFTRequest(address subscriber, bytes32 requestId);
     event Response(bytes32 indexed requestId, bytes response, bytes err);
 
     // Chainlink VRF
@@ -51,7 +56,9 @@ contract MysteryDropEvent is ERC721PsiMysteryBox, ConfirmedOwner, FunctionsClien
     string private s_baseURI;
     /// @notice The Amount of NFTs required Subscriber to buy in order to participate in the MysteryDropEvent
     uint64 public nftPurchasedRequired;
-    address[] public s_subscriber;
+    mapping(address => bytes32) public s_subscriberToRequestId;
+    mapping(bytes32 => address) public s_requestIdToSubscriber;
+
 
     /// @notice The URI for all tokens before reveal
     string private s_unrevealedURI;
@@ -78,6 +85,7 @@ contract MysteryDropEvent is ERC721PsiMysteryBox, ConfirmedOwner, FunctionsClien
         string memory name,
         string memory symbol,
         string memory unrevealedURI,
+        address premiumNFT,
         uint64 _nftPurchasedRequired,
         uint256 maxSupply,
         string memory baseURI,
@@ -97,32 +105,40 @@ contract MysteryDropEvent is ERC721PsiMysteryBox, ConfirmedOwner, FunctionsClien
         i_vrfSubscriptionId = 814;
         nftPurchasedRequired = _nftPurchasedRequired;
         s_baseURI = baseURI;
+        nft = IERC721(premiumNFT);
+        transferOwnership(tx.origin);
     }
 
-    string source = 
-"const addressCreator = args[0]"
-"const addressBuyer = args[1]"
-"const checkNFTPurchasedRequest = await Functions.makeHttpRequest({"
-"url: `https://metadata-storage.azurewebsites.net/api/v1/socials/creator/${addressCreator}/buyer/${addressBuyer}`"
-"})"
-"if (checkNFTPurchasedRequest.error) {"
-"console.error(checkNFTPurchasedRequest.error)"
-"throw Error('Request failed')}"
-"const { data } = checkNFTPurchasedRequest"
-"const nftBought = data.numBuy"
-"return Functions.encodeUint256(nftBought)";
+    IERC721 nft;
 
-    string[] public args;
+    string source =
+        "const addressCreator = args[0]"
+        "const addressBuyer = args[1]"
+        "const checkNFTPurchasedRequest = await Functions.makeHttpRequest({"
+        "url: `https://metadata-storage.azurewebsites.net/api/v1/socials/creator/${addressCreator}/buyer/${addressBuyer}`"
+        "})"
+        "if (checkNFTPurchasedRequest.error) {"
+        "console.error(checkNFTPurchasedRequest.error)"
+        "throw Error('Request failed')}"
+        "const { data } = checkNFTPurchasedRequest"
+        "const nftBought = data.numBuy"
+        "return Functions.encodeUint256(nftBought)";
 
     // Chainlink Function
-    function sendRequest() external returns (bytes32 requestId) {
-        delete args;
+    function sendRequest(string[] memory args) external returns (bytes32 requestId) {
+        require(
+            nft.balanceOf(msg.sender) > 0,
+            "Sender haven't subscribed to creator"
+        );
+
+        // Subscriber can only call the Request once so they have to make sure they buy enough NFTs of that creator
+        require(
+            s_subscriberToRequestId[msg.sender] != 0,
+            "The Subscriber's already requested Lucky minting"
+        );
 
         FunctionsRequest.Request memory req;
         req.initializeRequestForInlineJavaScript(source);
-
-        args.push("");
-        // args.push(msg.sender);
 
         if (args.length > 0) req.setArgs(args);
 
@@ -132,6 +148,10 @@ contract MysteryDropEvent is ERC721PsiMysteryBox, ConfirmedOwner, FunctionsClien
             gasLimit,
             donID
         );
+
+        s_subscriberToRequestId[msg.sender] = s_lastRequestId;
+        s_requestIdToSubscriber[s_lastRequestId] = msg.sender;
+        emit LuckyNFTRequest(msg.sender, s_lastRequestId);
         return s_lastRequestId;
     }
 
@@ -152,15 +172,15 @@ contract MysteryDropEvent is ERC721PsiMysteryBox, ConfirmedOwner, FunctionsClien
         }
         s_lastResponse = response;
         s_lastError = err;
-        safeMint();
+        safeMint(s_requestIdToSubscriber[s_lastRequestId]);
         emit Response(requestId, s_lastResponse, s_lastError);
     }
 
-    function safeMint(address subscriber) internal  {
-    if (_revealed()) revert NotAllowed();
+    function safeMint(address subscriber) internal {
+        if (_revealed()) revert NotAllowed();
 
-    _safeMint(subscriber, 1);
-  }
+        _safeMint(subscriber, 1);
+    }
 
     /*//////////////////////////////////////////////////////////////
                      ERC721PsiMysteryBox LOGIC

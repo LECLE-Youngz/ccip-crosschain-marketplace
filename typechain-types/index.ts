@@ -94,8 +94,8 @@ export type { NftMarketplace } from "./contracts/Marketplace.sol/NftMarketplace"
 export { NftMarketplace__factory } from "./factories/contracts/Marketplace.sol/NftMarketplace__factory";
 export type { MysteryBox } from "./contracts/MysteryBox";
 export { MysteryBox__factory } from "./factories/contracts/MysteryBox__factory";
-export type { MysteryDropEvent } from "./contracts/MysteryEvent.sol/MysteryDropEvent";
-export { MysteryDropEvent__factory } from "./factories/contracts/MysteryEvent.sol/MysteryDropEvent__factory";
+export type { MysteryDropEvent } from "./contracts/MysteryDropEvent";
+export { MysteryDropEvent__factory } from "./factories/contracts/MysteryDropEvent__factory";
 export type { NEXTHYPE } from "./contracts/NexthypeNFT.sol/NEXTHYPE";
 export { NEXTHYPE__factory } from "./factories/contracts/NexthypeNFT.sol/NEXTHYPE__factory";
 export type { PremiumFactory } from "./contracts/PremiumFactory";
