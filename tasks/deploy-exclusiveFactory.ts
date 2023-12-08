@@ -25,7 +25,7 @@ task(`deploy-exclusiveFactory`, `Deploys ExclusiveNFTFactory.sol smart contract`
 
         const factory = await Factory.deploy()
         await factory.deployed()
-        console.log('MysteryBox deployed to', factory.address, hre.network.name)
+        console.log('ExclusiveNFTFactory deployed to', factory.address, hre.network.name)
 
         spinner.stop();
         console.log(`✅ ExclusiveNFTFactory contract deployed at address ${factory.address} on the ${hre.network.name} blockchain`)

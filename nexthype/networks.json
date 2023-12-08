@@ -18,6 +18,12 @@
     },
     "PremiumNFT": {
       "address": "0x23b356fa35941DA89f9ae0b5d1fd86c3d9fD2B7B"
+    },
+    "ExclusiveFactory": {
+      "address": "0xc17EE3A5aFeBb3726E00E7bc809EE3AcA26827f9"
+    },
+    "ExclusiveNFT": {
+      "address": "0xD2770e174CD9Ca1e670E1cA5B008d3DbA298DFcA"
     }
   }
 }

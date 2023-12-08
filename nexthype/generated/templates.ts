@@ -33,3 +33,17 @@ export class PremiumNFT extends DataSourceTemplate {
     );
   }
 }
+
+export class ExclusiveNFT extends DataSourceTemplate {
+  static create(address: Address): void {
+    DataSourceTemplate.create("ExclusiveNFT", [address.toHex()]);
+  }
+
+  static createWithContext(address: Address, context: DataSourceContext): void {
+    DataSourceTemplate.createWithContext(
+      "ExclusiveNFT",
+      [address.toHex()],
+      context
+    );
+  }
+}

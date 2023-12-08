@@ -100,6 +100,26 @@ dataSources:
         - event: PremiumTokenCreated(address,address)
           handler: handlePremiumTokenCreated
       file: PremiumFactory\PremiumFactory.wasm
+  - kind: ethereum
+    name: ExclusiveFactory
+    network: fuji
+    source:
+      address: "0xc17EE3A5aFeBb3726E00E7bc809EE3AcA26827f9"
+      abi: ExclusiveFactory
+      startBlock: 28380580
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - ExclusiveNFTCreated
+      abis:
+        - name: ExclusiveFactory
+          file: ExclusiveFactory\abis\ExclusiveFactory.json
+      eventHandlers:
+        - event: ExclusiveNFTCreated(address,address,string,address)
+          handler: handleExclusiveNFTCreated
+      file: ExclusiveFactory\ExclusiveFactory.wasm
 templates:
   - kind: ethereum
     name: Contract
@@ -158,3 +178,30 @@ templates:
         - event: Transfer(indexed address,indexed address,indexed uint256)
           handler: handleTransfer
       file: templates\PremiumNFT\PremiumNFT.wasm
+  - kind: ethereum
+    name: ExclusiveNFT
+    network: fuji
+    source:
+      abi: ExclusiveNFT
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - ExclusiveNFTApproval
+        - ExclusiveNFTApprovalForAll
+        - ExclusiveNFTOwnershipTransferred
+        - ExclusiveNFTTransfer
+      abis:
+        - name: ExclusiveNFT
+          file: ExclusiveNFT\abis\ExclusiveNFT.json
+      eventHandlers:
+        - event: Approval(indexed address,indexed address,indexed uint256)
+          handler: handleApproval
+        - event: ApprovalForAll(indexed address,indexed address,bool)
+          handler: handleApprovalForAll
+        - event: OwnershipTransferred(indexed address,indexed address)
+          handler: handleOwnershipTransferred
+        - event: Transfer(indexed address,indexed address,indexed uint256)
+          handler: handleTransfer
+      file: templates\ExclusiveNFT\ExclusiveNFT.wasm

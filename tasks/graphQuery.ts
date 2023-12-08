@@ -154,6 +154,18 @@ query getCreatorStatus($address: String) {
 }
 `
 
+export const getVerified = `
+query getVerified($seller: String, $buyer: String, $tokenId: String, $collection: String,) {
+  itemBoughts(where: {nftAddress: $collection, tokenId: $tokenId, buyer: $buyer}) {
+    nftPrice
+  }
+  itemListeds(where: {nftAddress: $collection, tokenId: $tokenId, seller: $seller}) {
+    nftPrice
+  }
+}
+`
+
+
     /////////////////////
     // Buy and Sell NFT/Prompt //
     /////////////////////

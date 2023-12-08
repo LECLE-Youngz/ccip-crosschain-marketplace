@@ -65,6 +65,26 @@ declare module "hardhat/types/runtime" {
       signerOrOptions?: ethers.Signer | FactoryOptions
     ): Promise<Contracts.AutomationCompatibleInterface__factory>;
     getContractFactory(
+      name: "FunctionsClient",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.FunctionsClient__factory>;
+    getContractFactory(
+      name: "IFunctionsClient",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.IFunctionsClient__factory>;
+    getContractFactory(
+      name: "IFunctionsRouter",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.IFunctionsRouter__factory>;
+    getContractFactory(
+      name: "IFunctionsSubscriptions",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.IFunctionsSubscriptions__factory>;
+    getContractFactory(
+      name: "FunctionsRequest",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.FunctionsRequest__factory>;
+    getContractFactory(
       name: "AggregatorV3Interface",
       signerOrOptions?: ethers.Signer | FactoryOptions
     ): Promise<Contracts.AggregatorV3Interface__factory>;
@@ -165,6 +185,10 @@ declare module "hardhat/types/runtime" {
       signerOrOptions?: ethers.Signer | FactoryOptions
     ): Promise<Contracts.LuckyNFT__factory>;
     getContractFactory(
+      name: "LuckyNFTFactory",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.LuckyNFTFactory__factory>;
+    getContractFactory(
       name: "NftMarketplace",
       signerOrOptions?: ethers.Signer | FactoryOptions
     ): Promise<Contracts.NftMarketplace__factory>;
@@ -172,6 +196,10 @@ declare module "hardhat/types/runtime" {
       name: "MysteryBox",
       signerOrOptions?: ethers.Signer | FactoryOptions
     ): Promise<Contracts.MysteryBox__factory>;
+    getContractFactory(
+      name: "MysteryDropEvent",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.MysteryDropEvent__factory>;
     getContractFactory(
       name: "NEXTHYPE",
       signerOrOptions?: ethers.Signer | FactoryOptions
@@ -266,6 +294,31 @@ declare module "hardhat/types/runtime" {
       address: string,
       signer?: ethers.Signer
     ): Promise<Contracts.AutomationCompatibleInterface>;
+    getContractAt(
+      name: "FunctionsClient",
+      address: string,
+      signer?: ethers.Signer
+    ): Promise<Contracts.FunctionsClient>;
+    getContractAt(
+      name: "IFunctionsClient",
+      address: string,
+      signer?: ethers.Signer
+    ): Promise<Contracts.IFunctionsClient>;
+    getContractAt(
+      name: "IFunctionsRouter",
+      address: string,
+      signer?: ethers.Signer
+    ): Promise<Contracts.IFunctionsRouter>;
+    getContractAt(
+      name: "IFunctionsSubscriptions",
+      address: string,
+      signer?: ethers.Signer
+    ): Promise<Contracts.IFunctionsSubscriptions>;
+    getContractAt(
+      name: "FunctionsRequest",
+      address: string,
+      signer?: ethers.Signer
+    ): Promise<Contracts.FunctionsRequest>;
     getContractAt(
       name: "AggregatorV3Interface",
       address: string,
@@ -392,6 +445,11 @@ declare module "hardhat/types/runtime" {
       signer?: ethers.Signer
     ): Promise<Contracts.LuckyNFT>;
     getContractAt(
+      name: "LuckyNFTFactory",
+      address: string,
+      signer?: ethers.Signer
+    ): Promise<Contracts.LuckyNFTFactory>;
+    getContractAt(
       name: "NftMarketplace",
       address: string,
       signer?: ethers.Signer
@@ -401,6 +459,11 @@ declare module "hardhat/types/runtime" {
       address: string,
       signer?: ethers.Signer
     ): Promise<Contracts.MysteryBox>;
+    getContractAt(
+      name: "MysteryDropEvent",
+      address: string,
+      signer?: ethers.Signer
+    ): Promise<Contracts.MysteryDropEvent>;
     getContractAt(
       name: "NEXTHYPE",
       address: string,

@@ -32,9 +32,10 @@ export interface LuckyNFTInterface extends utils.Interface {
     "_nextTokenId()": FunctionFragment;
     "approve(address,uint256)": FunctionFragment;
     "balanceOf(address)": FunctionFragment;
-    "drawLottery()": FunctionFragment;
+    "drawLottery(address)": FunctionFragment;
     "getApproved(uint256)": FunctionFragment;
     "getRequestStatus(uint256)": FunctionFragment;
+    "getSubscribingStatus(address)": FunctionFragment;
     "isApprovedForAll(address,address)": FunctionFragment;
     "lastRequestId()": FunctionFragment;
     "name()": FunctionFragment;
@@ -44,6 +45,9 @@ export interface LuckyNFTInterface extends utils.Interface {
     "requestIds(uint256)": FunctionFragment;
     "s_baseURI()": FunctionFragment;
     "s_requests(uint256)": FunctionFragment;
+    "s_results(address)": FunctionFragment;
+    "s_subscribers(uint256)": FunctionFragment;
+    "s_tokenIdToFortune(uint256)": FunctionFragment;
     "safeTransferFrom(address,address,uint256)": FunctionFragment;
     "safeTransferFrom(address,address,uint256,bytes)": FunctionFragment;
     "setApprovalForAll(address,bool)": FunctionFragment;
@@ -61,6 +65,7 @@ export interface LuckyNFTInterface extends utils.Interface {
       | "drawLottery"
       | "getApproved"
       | "getRequestStatus"
+      | "getSubscribingStatus"
       | "isApprovedForAll"
       | "lastRequestId"
       | "name"
@@ -70,6 +75,9 @@ export interface LuckyNFTInterface extends utils.Interface {
       | "requestIds"
       | "s_baseURI"
       | "s_requests"
+      | "s_results"
+      | "s_subscribers"
+      | "s_tokenIdToFortune"
       | "safeTransferFrom(address,address,uint256)"
       | "safeTransferFrom(address,address,uint256,bytes)"
       | "setApprovalForAll"
@@ -93,7 +101,7 @@ export interface LuckyNFTInterface extends utils.Interface {
   ): string;
   encodeFunctionData(
     functionFragment: "drawLottery",
-    values?: undefined
+    values: [PromiseOrValue<string>]
   ): string;
   encodeFunctionData(
     functionFragment: "getApproved",
@@ -102,6 +110,10 @@ export interface LuckyNFTInterface extends utils.Interface {
   encodeFunctionData(
     functionFragment: "getRequestStatus",
     values: [PromiseOrValue<BigNumberish>]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "getSubscribingStatus",
+    values: [PromiseOrValue<string>]
   ): string;
   encodeFunctionData(
     functionFragment: "isApprovedForAll",
@@ -131,6 +143,18 @@ export interface LuckyNFTInterface extends utils.Interface {
   encodeFunctionData(functionFragment: "s_baseURI", values?: undefined): string;
   encodeFunctionData(
     functionFragment: "s_requests",
+    values: [PromiseOrValue<BigNumberish>]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "s_results",
+    values: [PromiseOrValue<string>]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "s_subscribers",
+    values: [PromiseOrValue<BigNumberish>]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "s_tokenIdToFortune",
     values: [PromiseOrValue<BigNumberish>]
   ): string;
   encodeFunctionData(
@@ -191,6 +215,10 @@ export interface LuckyNFTInterface extends utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(
+    functionFragment: "getSubscribingStatus",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
     functionFragment: "isApprovedForAll",
     data: BytesLike
   ): Result;
@@ -208,6 +236,15 @@ export interface LuckyNFTInterface extends utils.Interface {
   decodeFunctionResult(functionFragment: "requestIds", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "s_baseURI", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "s_requests", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "s_results", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "s_subscribers",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "s_tokenIdToFortune",
+    data: BytesLike
+  ): Result;
   decodeFunctionResult(
     functionFragment: "safeTransferFrom(address,address,uint256)",
     data: BytesLike
@@ -349,6 +386,7 @@ export interface LuckyNFT extends BaseContract {
     ): Promise<[BigNumber]>;
 
     drawLottery(
+      caller: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
@@ -363,6 +401,11 @@ export interface LuckyNFT extends BaseContract {
     ): Promise<
       [boolean, BigNumber[]] & { fulfilled: boolean; randomWords: BigNumber[] }
     >;
+
+    getSubscribingStatus(
+      user: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<[BigNumber]>;
 
     isApprovedForAll(
       owner: PromiseOrValue<string>,
@@ -398,6 +441,21 @@ export interface LuckyNFT extends BaseContract {
       arg0: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<[boolean, boolean] & { fulfilled: boolean; exists: boolean }>;
+
+    s_results(
+      arg0: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<[BigNumber]>;
+
+    s_subscribers(
+      arg0: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<[string]>;
+
+    s_tokenIdToFortune(
+      arg0: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<[BigNumber]>;
 
     "safeTransferFrom(address,address,uint256)"(
       from: PromiseOrValue<string>,
@@ -454,6 +512,7 @@ export interface LuckyNFT extends BaseContract {
   ): Promise<BigNumber>;
 
   drawLottery(
+    caller: PromiseOrValue<string>,
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
@@ -468,6 +527,11 @@ export interface LuckyNFT extends BaseContract {
   ): Promise<
     [boolean, BigNumber[]] & { fulfilled: boolean; randomWords: BigNumber[] }
   >;
+
+  getSubscribingStatus(
+    user: PromiseOrValue<string>,
+    overrides?: CallOverrides
+  ): Promise<BigNumber>;
 
   isApprovedForAll(
     owner: PromiseOrValue<string>,
@@ -503,6 +567,21 @@ export interface LuckyNFT extends BaseContract {
     arg0: PromiseOrValue<BigNumberish>,
     overrides?: CallOverrides
   ): Promise<[boolean, boolean] & { fulfilled: boolean; exists: boolean }>;
+
+  s_results(
+    arg0: PromiseOrValue<string>,
+    overrides?: CallOverrides
+  ): Promise<BigNumber>;
+
+  s_subscribers(
+    arg0: PromiseOrValue<BigNumberish>,
+    overrides?: CallOverrides
+  ): Promise<string>;
+
+  s_tokenIdToFortune(
+    arg0: PromiseOrValue<BigNumberish>,
+    overrides?: CallOverrides
+  ): Promise<BigNumber>;
 
   "safeTransferFrom(address,address,uint256)"(
     from: PromiseOrValue<string>,
@@ -558,7 +637,10 @@ export interface LuckyNFT extends BaseContract {
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
-    drawLottery(overrides?: CallOverrides): Promise<BigNumber>;
+    drawLottery(
+      caller: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
 
     getApproved(
       tokenId: PromiseOrValue<BigNumberish>,
@@ -571,6 +653,11 @@ export interface LuckyNFT extends BaseContract {
     ): Promise<
       [boolean, BigNumber[]] & { fulfilled: boolean; randomWords: BigNumber[] }
     >;
+
+    getSubscribingStatus(
+      user: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
 
     isApprovedForAll(
       owner: PromiseOrValue<string>,
@@ -606,6 +693,21 @@ export interface LuckyNFT extends BaseContract {
       arg0: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<[boolean, boolean] & { fulfilled: boolean; exists: boolean }>;
+
+    s_results(
+      arg0: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    s_subscribers(
+      arg0: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<string>;
+
+    s_tokenIdToFortune(
+      arg0: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
 
     "safeTransferFrom(address,address,uint256)"(
       from: PromiseOrValue<string>,
@@ -720,6 +822,7 @@ export interface LuckyNFT extends BaseContract {
     ): Promise<BigNumber>;
 
     drawLottery(
+      caller: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
@@ -730,6 +833,11 @@ export interface LuckyNFT extends BaseContract {
 
     getRequestStatus(
       _requestId: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    getSubscribingStatus(
+      user: PromiseOrValue<string>,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
@@ -764,6 +872,21 @@ export interface LuckyNFT extends BaseContract {
     s_baseURI(overrides?: CallOverrides): Promise<BigNumber>;
 
     s_requests(
+      arg0: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    s_results(
+      arg0: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    s_subscribers(
+      arg0: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    s_tokenIdToFortune(
       arg0: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
@@ -824,6 +947,7 @@ export interface LuckyNFT extends BaseContract {
     ): Promise<PopulatedTransaction>;
 
     drawLottery(
+      caller: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 
@@ -834,6 +958,11 @@ export interface LuckyNFT extends BaseContract {
 
     getRequestStatus(
       _requestId: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    getSubscribingStatus(
+      user: PromiseOrValue<string>,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
@@ -868,6 +997,21 @@ export interface LuckyNFT extends BaseContract {
     s_baseURI(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     s_requests(
+      arg0: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    s_results(
+      arg0: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    s_subscribers(
+      arg0: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    s_tokenIdToFortune(
       arg0: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;

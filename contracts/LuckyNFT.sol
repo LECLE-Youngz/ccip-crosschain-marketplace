@@ -5,11 +5,12 @@ import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 import "@chainlink/contracts/src/v0.8/interfaces/VRFCoordinatorV2Interface.sol";
 import "@chainlink/contracts/src/v0.8/vrf/VRFConsumerBaseV2.sol";
 import "@openzeppelin/contracts/utils/Strings.sol";
-
+import "@openzeppelin/contracts/token/ERC721/IERC721.sol";
 
 contract LuckyNFT is ERC721, VRFConsumerBaseV2 {
     /// @notice The keyhash for Chainlink VRF
     bytes32 private immutable i_vrfKeyHash;
+    uint256 private constant ROLL_IN_PROGRESS = 101;
 
     /// @notice The Chainlink VRF Coordinator
     VRFCoordinatorV2Interface COORDINATOR;
@@ -28,7 +29,7 @@ contract LuckyNFT is ERC721, VRFConsumerBaseV2 {
     uint256 public lastRequestId;
 
     // Chainlink VRF values
-    uint32 callbackGasLimit = 100000;
+    uint32 callbackGasLimit = 400000;
     uint16 requestConfirmations = 3;
     uint32 numWords = 1;
 
@@ -36,52 +37,45 @@ contract LuckyNFT is ERC721, VRFConsumerBaseV2 {
     using Strings for uint256;
     string public s_baseURI;
     uint256 public _nextTokenId;
-    mapping(uint256 => uint256) s_tokenIdToFortune;
+    mapping(uint256 => uint256) public s_tokenIdToFortune;
     /// @notice map subscribers to requestIds
-    mapping(uint256 => address) private s_subscribers;
+    mapping(uint256 => address) public s_subscribers;
     // map vrf Fortune results to subscribers
-    mapping(address => uint256) private s_results;
+    mapping(address => uint256) public s_results;
     address public premiumNFT;
-
-    /// @notice The user is not allowed to mint
-    error NotAllowed();
-    /// @notice The user has exceeded the limit of tokens per address
-    error LimitPerUserExceeded();
+    IERC721 nft;
 
     event LotteryRequestSent(uint256 requestId, address subscriber);
-    event LotteryRequestFulfilled(uint256 requestId, address subscriber, uint256 tokenId, uint256 result);
+    event LotteryRequestFulfilled(
+        uint256 requestId,
+        address subscriber,
+        uint256 tokenId,
+        uint256 result
+    );
 
     constructor(
         uint64 subscriptionId,
-        bytes32 vrfKeyhash,
         string memory baseURI,
         address _premiumNFT
     )
         ERC721("LuckyNFT", "LTC")
         VRFConsumerBaseV2(0x2eD832Ba664535e5886b75D64C46EB9a228C2610)
     {
-        i_vrfKeyHash = vrfKeyhash;
         // Hardcoded for Avalanche Fuji test network
+        i_vrfKeyHash = 0x354d2f95da55398f44b7cff77da56283d9c6c829a4bdf1bbcaf2ad6a4d081f61;
         COORDINATOR = VRFCoordinatorV2Interface(
             0x2eD832Ba664535e5886b75D64C46EB9a228C2610
         );
         i_vrfSubscriptionId = subscriptionId;
         s_baseURI = baseURI;
         premiumNFT = _premiumNFT;
+        nft = IERC721(_premiumNFT);
     }
 
-    IERC721 nft = IERC721(premiumNFT);
-
-    /**
-     * @notice Requests randomness
-     * @dev Warning: if the VRF response is delayed, avoid calling requestRandomness repeatedly
-     * as that would give miners/VRF operators latitude about which VRF response arrives first.
-     * @dev You must review your implementation details with extreme care.
-     */
-    function drawLottery() public returns (uint256 requestId) {
-        require(s_results[msg.sender] == 0, "Already drawed");
+    function drawLottery(address caller) public returns (uint256 requestId) {
+        require(s_results[caller] == 0, "Already drawed");
         require(
-            nft.balanceOf(msg.sender) >= 1,
+            nft.balanceOf(caller) > 0,
             "Sender haven't subscribed to creator"
         );
 
@@ -94,9 +88,19 @@ contract LuckyNFT is ERC721, VRFConsumerBaseV2 {
             numWords
         );
 
-        s_subscribers[requestId] = msg.sender;
-        // s_results[roller] = ROLL_IN_PROGRESS;
-        emit LotteryRequestSent(requestId, msg.sender);
+        s_requests[requestId] = RequestStatus({
+            randomWords: new uint256[](0),
+            exists: true,
+            fulfilled: false
+        });
+        requestIds.push(requestId);
+        lastRequestId = requestId;
+
+        s_subscribers[requestId] = caller;
+        s_results[caller] = ROLL_IN_PROGRESS;
+
+        emit LotteryRequestSent(requestId, caller);
+        return requestId;
     }
 
     /**
@@ -117,11 +121,19 @@ contract LuckyNFT is ERC721, VRFConsumerBaseV2 {
         uint256[] memory randomWords
     ) internal override {
         uint256 d100Value = (randomWords[0] % 100) + 1;
-        s_results[s_subscribers[requestId]] = d100Value;
+        s_requests[requestId].fulfilled = true;
+        s_requests[requestId].randomWords = randomWords;
+
         uint256 tokenId = _nextTokenId++;
+        s_results[s_subscribers[requestId]] = d100Value;
         _safeMint(s_subscribers[requestId], tokenId);
         s_tokenIdToFortune[tokenId] = d100Value;
-        emit LotteryRequestFulfilled(requestId, s_subscribers[requestId], tokenId, d100Value);
+        emit LotteryRequestFulfilled(
+            requestId,
+            s_subscribers[requestId],
+            tokenId,
+            d100Value
+        );
     }
 
     /////////////////////
@@ -140,10 +152,22 @@ contract LuckyNFT is ERC721, VRFConsumerBaseV2 {
     }
 
     // TODO: return Nexthype Metadata for LuckyNFT
-    function tokenURI(uint256 tokenId) public view virtual override(ERC721) returns (string memory) {
-        require(_exists(tokenId), "ERC721Metadata: URI query for nonexistent token");
+    function tokenURI(
+        uint256 tokenId
+    ) public view virtual override(ERC721) returns (string memory) {
+        require(
+            _exists(tokenId),
+            "ERC721Metadata: URI query for nonexistent token"
+        );
 
         string memory baseURI = _baseURI();
-        return bytes(baseURI).length > 0 ? string(abi.encodePacked(baseURI, tokenId.toString())) : "";
+        return
+            bytes(baseURI).length > 0
+                ? string(abi.encodePacked(baseURI, tokenId.toString()))
+                : "";
+    }
+
+    function getSubscribingStatus(address user) public view returns (uint256) {
+        return nft.balanceOf(user);
     }
 }

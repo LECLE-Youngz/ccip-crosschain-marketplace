@@ -42,3 +42,40 @@
 
         (graph codegen) -and (graph build)
         graph deploy --studio nexthype
+
+
+function drawLottery() public returns (uint256 requestId) {
+        require(s_results[msg.sender] == 0, "Already drawed");
+        // require(
+        //     nft.balanceOf(msg.sender) > 0,
+        //     "Sender haven't subscribed to creator"
+        // );
+
+        // Will revert if subscription is not set and funded.
+        requestId = COORDINATOR.requestRandomWords(
+            i_vrfKeyHash,
+            i_vrfSubscriptionId,
+            requestConfirmations,
+            callbackGasLimit,
+            numWords
+        );
+
+        s_requests[requestId] = RequestStatus({
+            randomWords: new uint256[](0),
+            exists: true,
+            fulfilled: false
+        });
+        requestIds.push(requestId);
+        lastRequestId = requestId;
+
+        s_subscribers[requestId] = msg.sender;
+        s_results[msg.sender] = ROLL_IN_PROGRESS;
+        emit LotteryRequestSent(requestId, msg.sender);
+        return requestId;
+
+        require(
+            nft.balanceOf(caller) > 0,
+            "Sender haven't subscribed to creator"
+        );
+
+    }
