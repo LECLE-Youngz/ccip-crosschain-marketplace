@@ -15,6 +15,7 @@ export { LuckyNFT__factory } from "./LuckyNFT__factory";
 export { LuckyNFTFactory__factory } from "./LuckyNFTFactory__factory";
 export { MysteryBox__factory } from "./MysteryBox__factory";
 export { MysteryDropEvent__factory } from "./MysteryDropEvent__factory";
+export { MysteryEventFactory__factory } from "./MysteryEventFactory__factory";
 export { PremiumFactory__factory } from "./PremiumFactory__factory";
 export { PremiumNFT__factory } from "./PremiumNFT__factory";
 export { SourceMinter__factory } from "./SourceMinter__factory";

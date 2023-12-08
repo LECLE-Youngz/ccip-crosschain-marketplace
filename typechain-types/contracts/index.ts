@@ -20,6 +20,7 @@ export type { LuckyNFT } from "./LuckyNFT";
 export type { LuckyNFTFactory } from "./LuckyNFTFactory";
 export type { MysteryBox } from "./MysteryBox";
 export type { MysteryDropEvent } from "./MysteryDropEvent";
+export type { MysteryEventFactory } from "./MysteryEventFactory";
 export type { PremiumFactory } from "./PremiumFactory";
 export type { PremiumNFT } from "./PremiumNFT";
 export type { SourceMinter } from "./SourceMinter";

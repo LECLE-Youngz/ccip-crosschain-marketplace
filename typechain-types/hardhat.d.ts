@@ -201,6 +201,10 @@ declare module "hardhat/types/runtime" {
       signerOrOptions?: ethers.Signer | FactoryOptions
     ): Promise<Contracts.MysteryDropEvent__factory>;
     getContractFactory(
+      name: "MysteryEventFactory",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.MysteryEventFactory__factory>;
+    getContractFactory(
       name: "NEXTHYPE",
       signerOrOptions?: ethers.Signer | FactoryOptions
     ): Promise<Contracts.NEXTHYPE__factory>;
@@ -464,6 +468,11 @@ declare module "hardhat/types/runtime" {
       address: string,
       signer?: ethers.Signer
     ): Promise<Contracts.MysteryDropEvent>;
+    getContractAt(
+      name: "MysteryEventFactory",
+      address: string,
+      signer?: ethers.Signer
+    ): Promise<Contracts.MysteryEventFactory>;
     getContractAt(
       name: "NEXTHYPE",
       address: string,

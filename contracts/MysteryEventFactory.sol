@@ -24,7 +24,7 @@ contract MysteryEventFactory {
         string memory baseURI,
         uint64 clSubscriptionId
     ) public returns (address) {
-        MysteryEvent t = new MysteryEvent(name, symbol, unrevealedURI, premiumNFT, _nftPurchasedRequired, maxSupply, baseURI, clSubscriptionId);
+        MysteryDropEvent t = new MysteryDropEvent(name, symbol, unrevealedURI, premiumNFT, _nftPurchasedRequired, maxSupply, baseURI, clSubscriptionId);
         events.push(t);
         emit MysteryEventCreated(msg.sender, address(t));
         return address(t);
@@ -34,6 +34,6 @@ contract MysteryEventFactory {
     // Getter Functions //
     /////////////////////
     function getTotalEvents() public view returns (uint amount) {
-        return tokens.length;
+        return events.length;
     }
 }

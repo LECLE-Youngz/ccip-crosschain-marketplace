@@ -96,6 +96,8 @@ export type { MysteryBox } from "./contracts/MysteryBox";
 export { MysteryBox__factory } from "./factories/contracts/MysteryBox__factory";
 export type { MysteryDropEvent } from "./contracts/MysteryDropEvent";
 export { MysteryDropEvent__factory } from "./factories/contracts/MysteryDropEvent__factory";
+export type { MysteryEventFactory } from "./contracts/MysteryEventFactory";
+export { MysteryEventFactory__factory } from "./factories/contracts/MysteryEventFactory__factory";
 export type { NEXTHYPE } from "./contracts/NexthypeNFT.sol/NEXTHYPE";
 export { NEXTHYPE__factory } from "./factories/contracts/NexthypeNFT.sol/NEXTHYPE__factory";
 export type { PremiumFactory } from "./contracts/PremiumFactory";
