@@ -32,6 +32,7 @@ export interface MysteryDropEventInterface extends utils.Interface {
     "acceptOwnership()": FunctionFragment;
     "approve(address,uint256)": FunctionFragment;
     "balanceOf(address)": FunctionFragment;
+    "bytesToUint(bytes)": FunctionFragment;
     "getApproved(uint256)": FunctionFragment;
     "getBaseURI()": FunctionFragment;
     "getProvenanceHash()": FunctionFragment;
@@ -45,9 +46,9 @@ export interface MysteryDropEventInterface extends utils.Interface {
     "reveal()": FunctionFragment;
     "s_lastError()": FunctionFragment;
     "s_lastRequestId()": FunctionFragment;
-    "s_lastResponse()": FunctionFragment;
     "s_requestIdToSubscriber(bytes32)": FunctionFragment;
     "s_subscriberToRequestId(address)": FunctionFragment;
+    "s_subscriberToResponse(address)": FunctionFragment;
     "safeTransferFrom(address,address,uint256)": FunctionFragment;
     "safeTransferFrom(address,address,uint256,bytes)": FunctionFragment;
     "sendRequest(string[])": FunctionFragment;
@@ -66,6 +67,7 @@ export interface MysteryDropEventInterface extends utils.Interface {
       | "acceptOwnership"
       | "approve"
       | "balanceOf"
+      | "bytesToUint"
       | "getApproved"
       | "getBaseURI"
       | "getProvenanceHash"
@@ -79,9 +81,9 @@ export interface MysteryDropEventInterface extends utils.Interface {
       | "reveal"
       | "s_lastError"
       | "s_lastRequestId"
-      | "s_lastResponse"
       | "s_requestIdToSubscriber"
       | "s_subscriberToRequestId"
+      | "s_subscriberToResponse"
       | "safeTransferFrom(address,address,uint256)"
       | "safeTransferFrom(address,address,uint256,bytes)"
       | "sendRequest"
@@ -106,6 +108,10 @@ export interface MysteryDropEventInterface extends utils.Interface {
   encodeFunctionData(
     functionFragment: "balanceOf",
     values: [PromiseOrValue<string>]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "bytesToUint",
+    values: [PromiseOrValue<BytesLike>]
   ): string;
   encodeFunctionData(
     functionFragment: "getApproved",
@@ -155,15 +161,15 @@ export interface MysteryDropEventInterface extends utils.Interface {
     values?: undefined
   ): string;
   encodeFunctionData(
-    functionFragment: "s_lastResponse",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
     functionFragment: "s_requestIdToSubscriber",
     values: [PromiseOrValue<BytesLike>]
   ): string;
   encodeFunctionData(
     functionFragment: "s_subscriberToRequestId",
+    values: [PromiseOrValue<string>]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "s_subscriberToResponse",
     values: [PromiseOrValue<string>]
   ): string;
   encodeFunctionData(
@@ -228,6 +234,10 @@ export interface MysteryDropEventInterface extends utils.Interface {
   decodeFunctionResult(functionFragment: "approve", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "balanceOf", data: BytesLike): Result;
   decodeFunctionResult(
+    functionFragment: "bytesToUint",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
     functionFragment: "getApproved",
     data: BytesLike
   ): Result;
@@ -265,15 +275,15 @@ export interface MysteryDropEventInterface extends utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: "s_lastResponse",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
     functionFragment: "s_requestIdToSubscriber",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
     functionFragment: "s_subscriberToRequestId",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "s_subscriberToResponse",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
@@ -318,7 +328,7 @@ export interface MysteryDropEventInterface extends utils.Interface {
   events: {
     "Approval(address,address,uint256)": EventFragment;
     "ApprovalForAll(address,address,bool)": EventFragment;
-    "LuckyNFTRequest(address,bytes32)": EventFragment;
+    "MysteryNFTRequest(address,bytes32)": EventFragment;
     "OwnershipTransferRequested(address,address)": EventFragment;
     "OwnershipTransferred(address,address)": EventFragment;
     "RandomnessRequest(uint256)": EventFragment;
@@ -330,7 +340,7 @@ export interface MysteryDropEventInterface extends utils.Interface {
 
   getEvent(nameOrSignatureOrTopic: "Approval"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "ApprovalForAll"): EventFragment;
-  getEvent(nameOrSignatureOrTopic: "LuckyNFTRequest"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "MysteryNFTRequest"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "OwnershipTransferRequested"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "OwnershipTransferred"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "RandomnessRequest"): EventFragment;
@@ -364,16 +374,17 @@ export type ApprovalForAllEvent = TypedEvent<
 
 export type ApprovalForAllEventFilter = TypedEventFilter<ApprovalForAllEvent>;
 
-export interface LuckyNFTRequestEventObject {
+export interface MysteryNFTRequestEventObject {
   subscriber: string;
   requestId: string;
 }
-export type LuckyNFTRequestEvent = TypedEvent<
+export type MysteryNFTRequestEvent = TypedEvent<
   [string, string],
-  LuckyNFTRequestEventObject
+  MysteryNFTRequestEventObject
 >;
 
-export type LuckyNFTRequestEventFilter = TypedEventFilter<LuckyNFTRequestEvent>;
+export type MysteryNFTRequestEventFilter =
+  TypedEventFilter<MysteryNFTRequestEvent>;
 
 export interface OwnershipTransferRequestedEventObject {
   from: string;
@@ -494,6 +505,11 @@ export interface MysteryDropEvent extends BaseContract {
       overrides?: CallOverrides
     ): Promise<[BigNumber]>;
 
+    bytesToUint(
+      data: PromiseOrValue<BytesLike>,
+      overrides?: CallOverrides
+    ): Promise<[BigNumber]>;
+
     getApproved(
       tokenId: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
@@ -541,8 +557,6 @@ export interface MysteryDropEvent extends BaseContract {
 
     s_lastRequestId(overrides?: CallOverrides): Promise<[string]>;
 
-    s_lastResponse(overrides?: CallOverrides): Promise<[string]>;
-
     s_requestIdToSubscriber(
       arg0: PromiseOrValue<BytesLike>,
       overrides?: CallOverrides
@@ -552,6 +566,11 @@ export interface MysteryDropEvent extends BaseContract {
       arg0: PromiseOrValue<string>,
       overrides?: CallOverrides
     ): Promise<[string]>;
+
+    s_subscriberToResponse(
+      arg0: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<[BigNumber]>;
 
     "safeTransferFrom(address,address,uint256)"(
       from: PromiseOrValue<string>,
@@ -626,6 +645,11 @@ export interface MysteryDropEvent extends BaseContract {
     overrides?: CallOverrides
   ): Promise<BigNumber>;
 
+  bytesToUint(
+    data: PromiseOrValue<BytesLike>,
+    overrides?: CallOverrides
+  ): Promise<BigNumber>;
+
   getApproved(
     tokenId: PromiseOrValue<BigNumberish>,
     overrides?: CallOverrides
@@ -673,8 +697,6 @@ export interface MysteryDropEvent extends BaseContract {
 
   s_lastRequestId(overrides?: CallOverrides): Promise<string>;
 
-  s_lastResponse(overrides?: CallOverrides): Promise<string>;
-
   s_requestIdToSubscriber(
     arg0: PromiseOrValue<BytesLike>,
     overrides?: CallOverrides
@@ -684,6 +706,11 @@ export interface MysteryDropEvent extends BaseContract {
     arg0: PromiseOrValue<string>,
     overrides?: CallOverrides
   ): Promise<string>;
+
+  s_subscriberToResponse(
+    arg0: PromiseOrValue<string>,
+    overrides?: CallOverrides
+  ): Promise<BigNumber>;
 
   "safeTransferFrom(address,address,uint256)"(
     from: PromiseOrValue<string>,
@@ -756,6 +783,11 @@ export interface MysteryDropEvent extends BaseContract {
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
+    bytesToUint(
+      data: PromiseOrValue<BytesLike>,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
     getApproved(
       tokenId: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
@@ -801,8 +833,6 @@ export interface MysteryDropEvent extends BaseContract {
 
     s_lastRequestId(overrides?: CallOverrides): Promise<string>;
 
-    s_lastResponse(overrides?: CallOverrides): Promise<string>;
-
     s_requestIdToSubscriber(
       arg0: PromiseOrValue<BytesLike>,
       overrides?: CallOverrides
@@ -812,6 +842,11 @@ export interface MysteryDropEvent extends BaseContract {
       arg0: PromiseOrValue<string>,
       overrides?: CallOverrides
     ): Promise<string>;
+
+    s_subscriberToResponse(
+      arg0: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
 
     "safeTransferFrom(address,address,uint256)"(
       from: PromiseOrValue<string>,
@@ -894,14 +929,14 @@ export interface MysteryDropEvent extends BaseContract {
       approved?: null
     ): ApprovalForAllEventFilter;
 
-    "LuckyNFTRequest(address,bytes32)"(
+    "MysteryNFTRequest(address,bytes32)"(
       subscriber?: null,
       requestId?: null
-    ): LuckyNFTRequestEventFilter;
-    LuckyNFTRequest(
+    ): MysteryNFTRequestEventFilter;
+    MysteryNFTRequest(
       subscriber?: null,
       requestId?: null
-    ): LuckyNFTRequestEventFilter;
+    ): MysteryNFTRequestEventFilter;
 
     "OwnershipTransferRequested(address,address)"(
       from?: PromiseOrValue<string> | null,
@@ -977,6 +1012,11 @@ export interface MysteryDropEvent extends BaseContract {
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
+    bytesToUint(
+      data: PromiseOrValue<BytesLike>,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
     getApproved(
       tokenId: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
@@ -1024,14 +1064,17 @@ export interface MysteryDropEvent extends BaseContract {
 
     s_lastRequestId(overrides?: CallOverrides): Promise<BigNumber>;
 
-    s_lastResponse(overrides?: CallOverrides): Promise<BigNumber>;
-
     s_requestIdToSubscriber(
       arg0: PromiseOrValue<BytesLike>,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
     s_subscriberToRequestId(
+      arg0: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    s_subscriberToResponse(
       arg0: PromiseOrValue<string>,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
@@ -1110,6 +1153,11 @@ export interface MysteryDropEvent extends BaseContract {
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
+    bytesToUint(
+      data: PromiseOrValue<BytesLike>,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
     getApproved(
       tokenId: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
@@ -1159,14 +1207,17 @@ export interface MysteryDropEvent extends BaseContract {
 
     s_lastRequestId(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
-    s_lastResponse(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
     s_requestIdToSubscriber(
       arg0: PromiseOrValue<BytesLike>,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
     s_subscriberToRequestId(
+      arg0: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    s_subscriberToResponse(
       arg0: PromiseOrValue<string>,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;

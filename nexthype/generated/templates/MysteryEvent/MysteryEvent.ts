@@ -62,16 +62,16 @@ export class ApprovalForAll__Params {
   }
 }
 
-export class LuckyNFTRequest extends ethereum.Event {
-  get params(): LuckyNFTRequest__Params {
-    return new LuckyNFTRequest__Params(this);
+export class MysteryNFTRequest extends ethereum.Event {
+  get params(): MysteryNFTRequest__Params {
+    return new MysteryNFTRequest__Params(this);
   }
 }
 
-export class LuckyNFTRequest__Params {
-  _event: LuckyNFTRequest;
+export class MysteryNFTRequest__Params {
+  _event: MysteryNFTRequest;
 
-  constructor(event: LuckyNFTRequest) {
+  constructor(event: MysteryNFTRequest) {
     this._event = event;
   }
 
@@ -250,6 +250,25 @@ export class MysteryEvent extends ethereum.SmartContract {
   try_balanceOf(owner: Address): ethereum.CallResult<BigInt> {
     let result = super.tryCall("balanceOf", "balanceOf(address):(uint256)", [
       ethereum.Value.fromAddress(owner)
+    ]);
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(value[0].toBigInt());
+  }
+
+  bytesToUint(data: Bytes): BigInt {
+    let result = super.call("bytesToUint", "bytesToUint(bytes):(uint256)", [
+      ethereum.Value.fromBytes(data)
+    ]);
+
+    return result[0].toBigInt();
+  }
+
+  try_bytesToUint(data: Bytes): ethereum.CallResult<BigInt> {
+    let result = super.tryCall("bytesToUint", "bytesToUint(bytes):(uint256)", [
+      ethereum.Value.fromBytes(data)
     ]);
     if (result.reverted) {
       return new ethereum.CallResult();
@@ -453,25 +472,6 @@ export class MysteryEvent extends ethereum.SmartContract {
     return ethereum.CallResult.fromValue(value[0].toBytes());
   }
 
-  s_lastResponse(): Bytes {
-    let result = super.call("s_lastResponse", "s_lastResponse():(bytes)", []);
-
-    return result[0].toBytes();
-  }
-
-  try_s_lastResponse(): ethereum.CallResult<Bytes> {
-    let result = super.tryCall(
-      "s_lastResponse",
-      "s_lastResponse():(bytes)",
-      []
-    );
-    if (result.reverted) {
-      return new ethereum.CallResult();
-    }
-    let value = result.value;
-    return ethereum.CallResult.fromValue(value[0].toBytes());
-  }
-
   s_requestIdToSubscriber(param0: Bytes): Address {
     let result = super.call(
       "s_requestIdToSubscriber",
@@ -516,6 +516,29 @@ export class MysteryEvent extends ethereum.SmartContract {
     }
     let value = result.value;
     return ethereum.CallResult.fromValue(value[0].toBytes());
+  }
+
+  s_subscriberToResponse(param0: Address): BigInt {
+    let result = super.call(
+      "s_subscriberToResponse",
+      "s_subscriberToResponse(address):(uint256)",
+      [ethereum.Value.fromAddress(param0)]
+    );
+
+    return result[0].toBigInt();
+  }
+
+  try_s_subscriberToResponse(param0: Address): ethereum.CallResult<BigInt> {
+    let result = super.tryCall(
+      "s_subscriberToResponse",
+      "s_subscriberToResponse(address):(uint256)",
+      [ethereum.Value.fromAddress(param0)]
+    );
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(value[0].toBigInt());
   }
 
   sendRequest(args: Array<string>): Bytes {

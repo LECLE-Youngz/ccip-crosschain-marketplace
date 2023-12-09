@@ -20,26 +20,66 @@
   },
   {
     "inputs": [
-      { "internalType": "string", "name": "name", "type": "string" },
-      { "internalType": "string", "name": "symbol", "type": "string" },
-      { "internalType": "string", "name": "unrevealedURI", "type": "string" },
-      { "internalType": "address", "name": "premiumNFT", "type": "address" },
+      {
+        "internalType": "string",
+        "name": "name",
+        "type": "string"
+      },
+      {
+        "internalType": "string",
+        "name": "symbol",
+        "type": "string"
+      },
+      {
+        "internalType": "string",
+        "name": "unrevealedURI",
+        "type": "string"
+      },
+      {
+        "internalType": "address",
+        "name": "premiumNFT",
+        "type": "address"
+      },
       {
         "internalType": "uint64",
         "name": "_nftPurchasedRequired",
         "type": "uint64"
       },
-      { "internalType": "uint256", "name": "maxSupply", "type": "uint256" },
-      { "internalType": "string", "name": "baseURI", "type": "string" },
-      { "internalType": "uint64", "name": "clSubscriptionId", "type": "uint64" }
+      {
+        "internalType": "uint256",
+        "name": "maxSupply",
+        "type": "uint256"
+      },
+      {
+        "internalType": "string",
+        "name": "baseURI",
+        "type": "string"
+      },
+      {
+        "internalType": "uint64",
+        "name": "clSubscriptionId",
+        "type": "uint64"
+      }
     ],
     "name": "deployMysteryEvent",
-    "outputs": [{ "internalType": "address", "name": "", "type": "address" }],
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
     "stateMutability": "nonpayable",
     "type": "function"
   },
   {
-    "inputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
     "name": "events",
     "outputs": [
       {
@@ -55,7 +95,11 @@
     "inputs": [],
     "name": "getTotalEvents",
     "outputs": [
-      { "internalType": "uint256", "name": "amount", "type": "uint256" }
+      {
+        "internalType": "uint256",
+        "name": "amount",
+        "type": "uint256"
+      }
     ],
     "stateMutability": "view",
     "type": "function"

@@ -23,7 +23,6 @@ contract MysteryDropEvent is
     using FunctionsRequest for FunctionsRequest.Request;
 
     bytes32 public s_lastRequestId;
-    bytes public s_lastResponse;
     bytes public s_lastError;
 
     uint32 gasLimit = 300000;
@@ -34,7 +33,7 @@ contract MysteryDropEvent is
 
     uint64 private immutable i_CLSubscriptionId;
 
-    event LuckyNFTRequest(address subscriber, bytes32 requestId);
+    event MysteryNFTRequest(address subscriber, bytes32 requestId);
     event Response(bytes32 indexed requestId, bytes response, bytes err);
 
     // Chainlink VRF
@@ -52,7 +51,7 @@ contract MysteryDropEvent is
     uint64 public nftPurchasedRequired;
     mapping(address => bytes32) public s_subscriberToRequestId;
     mapping(bytes32 => address) public s_requestIdToSubscriber;
-
+    mapping(address => uint256) public s_subscriberToResponse;
 
     /// @notice The URI for all tokens before reveal
     string private s_unrevealedURI;
@@ -117,7 +116,9 @@ contract MysteryDropEvent is
         "return Functions.encodeUint256(nftBought)";
 
     // Chainlink Function
-    function sendRequest(string[] memory args) external returns (bytes32 requestId) {
+    function sendRequest(
+        string[] memory args
+    ) external returns (bytes32 requestId) {
         require(
             nft.balanceOf(msg.sender) > 0,
             "Sender haven't subscribed to creator"
@@ -126,7 +127,7 @@ contract MysteryDropEvent is
         // Subscriber can only call the Request once so they have to make sure they buy enough NFTs of that creator
         require(
             s_subscriberToRequestId[msg.sender] != 0,
-            "The Subscriber's already requested Lucky minting"
+            "The Subscriber's already requested Mystery minting"
         );
 
         FunctionsRequest.Request memory req;
@@ -143,7 +144,7 @@ contract MysteryDropEvent is
 
         s_subscriberToRequestId[msg.sender] = s_lastRequestId;
         s_requestIdToSubscriber[s_lastRequestId] = msg.sender;
-        emit LuckyNFTRequest(msg.sender, s_lastRequestId);
+        emit MysteryNFTRequest(msg.sender, s_lastRequestId);
         return s_lastRequestId;
     }
 
@@ -155,10 +156,15 @@ contract MysteryDropEvent is
         if (s_lastRequestId != requestId) {
             revert UnexpectedRequestID(requestId);
         }
-        s_lastResponse = response;
         s_lastError = err;
-        safeMint(s_requestIdToSubscriber[s_lastRequestId]);
-        emit Response(requestId, s_lastResponse, s_lastError);
+        if (bytesToUint(response) >= nftPurchasedRequired) {
+            safeMint(s_requestIdToSubscriber[s_lastRequestId]);
+            s_subscriberToResponse[s_requestIdToSubscriber[s_lastRequestId]] = bytesToUint(response);
+        }
+        else {
+            s_subscriberToResponse[s_requestIdToSubscriber[s_lastRequestId]] = bytesToUint(response);
+        }
+        emit Response(requestId, response, s_lastError);
     }
 
     function safeMint(address subscriber) internal {
@@ -207,5 +213,15 @@ contract MysteryDropEvent is
 
     function reveal() external onlyOwner {
         _reveal();
+    }
+
+    function bytesToUint(bytes memory data) public pure returns (uint256) {
+        require(data.length == 32, "Invalid data length");
+
+        uint256 result;
+        assembly {
+            result := mload(add(data, 0x20))
+        }
+        return result;
     }
 }
