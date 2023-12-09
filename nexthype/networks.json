@@ -24,6 +24,12 @@
     },
     "ExclusiveNFT": {
       "address": "0xD2770e174CD9Ca1e670E1cA5B008d3DbA298DFcA"
+    },
+    "MysteryFactory": {
+      "address": "0x747c50201d070c86a11EAa1e34fCDf7a2D99e7B9"
+    },
+    "MysteryEvent": {
+      "address": "0xD2B433BACf01ABeA6A5B09A583c4a3f15DFA1808"
     }
   }
 }

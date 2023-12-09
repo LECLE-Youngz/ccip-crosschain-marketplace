@@ -120,6 +120,26 @@ dataSources:
         - event: ExclusiveNFTCreated(address,address,string,address)
           handler: handleExclusiveNFTCreated
       file: ExclusiveFactory\ExclusiveFactory.wasm
+  - kind: ethereum
+    name: MysteryFactory
+    network: fuji
+    source:
+      address: "0x747c50201d070c86a11EAa1e34fCDf7a2D99e7B9"
+      abi: MysteryFactory
+      startBlock: 28428276
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - MysteryEventCreated
+      abis:
+        - name: MysteryFactory
+          file: MysteryFactory\abis\MysteryFactory.json
+      eventHandlers:
+        - event: MysteryEventCreated(address,address)
+          handler: handleMysteryEventCreated
+      file: MysteryFactory\MysteryFactory.wasm
 templates:
   - kind: ethereum
     name: Contract
@@ -205,3 +225,46 @@ templates:
         - event: Transfer(indexed address,indexed address,indexed uint256)
           handler: handleTransfer
       file: templates\ExclusiveNFT\ExclusiveNFT.wasm
+  - kind: ethereum
+    name: MysteryEvent
+    network: fuji
+    source:
+      abi: MysteryEvent
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - MysteryEventApproval
+        - MysteryEventApprovalForAll
+        - LuckyNFTRequest
+        - OwnershipTransferRequested
+        - MysteryEventOwnershipTransferred
+        - RandomnessRequest
+        - RequestFulfilled
+        - RequestSent
+        - Response
+        - MysteryEventTransfer
+      abis:
+        - name: MysteryEvent
+          file: MysteryEvent\abis\MysteryEvent.json
+      eventHandlers:
+        - event: Approval(indexed address,indexed address,indexed uint256)
+          handler: handleApproval
+        - event: ApprovalForAll(indexed address,indexed address,bool)
+          handler: handleApprovalForAll
+        - event: LuckyNFTRequest(address,bytes32)
+          handler: handleLuckyNFTRequest
+        - event: OwnershipTransferRequested(indexed address,indexed address)
+          handler: handleOwnershipTransferRequested
+        - event: RandomnessRequest(uint256)
+          handler: handleRandomnessRequest
+        - event: RequestFulfilled(indexed bytes32)
+          handler: handleRequestFulfilled
+        - event: RequestSent(indexed bytes32)
+          handler: handleRequestSent
+        - event: Response(indexed bytes32,bytes,bytes)
+          handler: handleResponse
+        - event: Transfer(indexed address,indexed address,indexed uint256)
+          handler: handleTransfer
+      file: templates\MysteryEvent\MysteryEvent.wasm

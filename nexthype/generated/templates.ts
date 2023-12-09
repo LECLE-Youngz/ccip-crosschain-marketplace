@@ -47,3 +47,17 @@ export class ExclusiveNFT extends DataSourceTemplate {
     );
   }
 }
+
+export class MysteryEvent extends DataSourceTemplate {
+  static create(address: Address): void {
+    DataSourceTemplate.create("MysteryEvent", [address.toHex()]);
+  }
+
+  static createWithContext(address: Address, context: DataSourceContext): void {
+    DataSourceTemplate.createWithContext(
+      "MysteryEvent",
+      [address.toHex()],
+      context
+    );
+  }
+}
