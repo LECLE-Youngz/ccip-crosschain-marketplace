@@ -117,6 +117,18 @@ declare module "hardhat/types/runtime" {
       signerOrOptions?: ethers.Signer | FactoryOptions
     ): Promise<Contracts.Ownable__factory>;
     getContractFactory(
+      name: "ERC20",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.ERC20__factory>;
+    getContractFactory(
+      name: "ERC20Burnable",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.ERC20Burnable__factory>;
+    getContractFactory(
+      name: "IERC20Metadata",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.IERC20Metadata__factory>;
+    getContractFactory(
       name: "IERC20",
       signerOrOptions?: ethers.Signer | FactoryOptions
     ): Promise<Contracts.IERC20__factory>;
@@ -208,6 +220,10 @@ declare module "hardhat/types/runtime" {
       name: "NEXTHYPE",
       signerOrOptions?: ethers.Signer | FactoryOptions
     ): Promise<Contracts.NEXTHYPE__factory>;
+    getContractFactory(
+      name: "Nexthype",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.Nexthype__factory>;
     getContractFactory(
       name: "PremiumFactory",
       signerOrOptions?: ethers.Signer | FactoryOptions
@@ -364,6 +380,21 @@ declare module "hardhat/types/runtime" {
       signer?: ethers.Signer
     ): Promise<Contracts.Ownable>;
     getContractAt(
+      name: "ERC20",
+      address: string,
+      signer?: ethers.Signer
+    ): Promise<Contracts.ERC20>;
+    getContractAt(
+      name: "ERC20Burnable",
+      address: string,
+      signer?: ethers.Signer
+    ): Promise<Contracts.ERC20Burnable>;
+    getContractAt(
+      name: "IERC20Metadata",
+      address: string,
+      signer?: ethers.Signer
+    ): Promise<Contracts.IERC20Metadata>;
+    getContractAt(
       name: "IERC20",
       address: string,
       signer?: ethers.Signer
@@ -478,6 +509,11 @@ declare module "hardhat/types/runtime" {
       address: string,
       signer?: ethers.Signer
     ): Promise<Contracts.NEXTHYPE>;
+    getContractAt(
+      name: "Nexthype",
+      address: string,
+      signer?: ethers.Signer
+    ): Promise<Contracts.Nexthype>;
     getContractAt(
       name: "PremiumFactory",
       address: string,

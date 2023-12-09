@@ -4,6 +4,7 @@
 export * as erc721Psi from "./ERC721Psi";
 export * as marketplaceSol from "./Marketplace.sol";
 export * as nexthypeNftSol from "./NexthypeNFT.sol";
+export * as nexthypeTokenSol from "./NexthypeToken.sol";
 export * as testSol from "./Test.sol";
 export * as utils from "./utils";
 export { DestinationMinter__factory } from "./DestinationMinter__factory";

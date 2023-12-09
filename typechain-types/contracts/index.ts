@@ -7,6 +7,8 @@ import type * as marketplaceSol from "./Marketplace.sol";
 export type { marketplaceSol };
 import type * as nexthypeNftSol from "./NexthypeNFT.sol";
 export type { nexthypeNftSol };
+import type * as nexthypeTokenSol from "./NexthypeToken.sol";
+export type { nexthypeTokenSol };
 import type * as testSol from "./Test.sol";
 export type { testSol };
 import type * as utils from "./utils";
