@@ -26,31 +26,25 @@ contract MysteryDropEvent is
     bytes public s_lastResponse;
     bytes public s_lastError;
 
-    //Callback gas limit
     uint32 gasLimit = 300000;
 
     // donID - Hardcoded for AvalancheFuji
     bytes32 donID =
         0x66756e2d6176616c616e6368652d66756a692d31000000000000000000000000;
 
-    /// @notice The subscription ID for Chainlink Function
     uint64 private immutable i_CLSubscriptionId;
 
     event LuckyNFTRequest(address subscriber, bytes32 requestId);
     event Response(bytes32 indexed requestId, bytes response, bytes err);
 
     // Chainlink VRF
-    /// @notice The keyhash for Chainlink VRF
     bytes32 private immutable i_vrfKeyHash;
 
-    /// @notice The address of Chainlink VRF Coordinator
     address private immutable i_vrfCoordinatorV2;
 
-    /// @notice The subscription ID for Chainlink VRF
     uint64 private immutable i_vrfSubscriptionId;
 
     // MisteryEvent STATE
-    /// @notice The maximum amount of tokens that can be minted
     uint256 private immutable i_maxSupply;
     /// @notice The base URI for tokens after it is revealed
     string private s_baseURI;
@@ -69,10 +63,8 @@ contract MysteryDropEvent is
     // Errors
     error UnexpectedRequestID(bytes32 requestId);
 
-    /// @notice The user is not allowed to mint
     error NotAllowed();
 
-    /// @notice The user has exceeded the limit of tokens per address
     error LimitPerUserExceeded();
 
     /* @note Hardcoded Chainlink Service for Avalanche Fuji network
@@ -155,13 +147,6 @@ contract MysteryDropEvent is
         return s_lastRequestId;
     }
 
-    /**
-     * @notice Store latest result/error
-     * @param requestId The request ID, returned by sendRequest()
-     * @param response Aggregated response from the user code
-     * @param err Aggregated error from the user code or from the execution pipeline
-     * Either response or error parameter will be set, but never both
-     */
     function fulfillRequest(
         bytes32 requestId,
         bytes memory response,
@@ -181,10 +166,6 @@ contract MysteryDropEvent is
 
         _safeMint(subscriber, 1);
     }
-
-    /*//////////////////////////////////////////////////////////////
-                     ERC721PsiMysteryBox LOGIC
-  //////////////////////////////////////////////////////////////*/
 
     /// @inheritdoc ERC721Psi
     function _baseURI() internal view override returns (string memory) {
@@ -216,26 +197,14 @@ contract MysteryDropEvent is
         return i_vrfSubscriptionId;
     }
 
-    /*//////////////////////////////////////////////////////////////
-                           PUBLIC GETTERS
-    //////////////////////////////////////////////////////////////*/
-
-    /// @notice Get the provenance hash of all images in the collection
-    /// @return The provenance hash of all images in the collection
     function getProvenanceHash() external view returns (string memory) {
         return s_provenanceHash;
     }
 
-    /// @notice Get the URI for the revealed collection
-    /// @return The base URI of the collection
     function getBaseURI() external view returns (string memory) {
         return s_baseURI;
     }
 
-    /// @notice Reveal the collection
-    /// @dev This action is irreversible
-    /// @dev The VRF subscription must be funded with LINK
-    /// @dev After reveal the tokenURI will use the baseURI
     function reveal() external onlyOwner {
         _reveal();
     }
