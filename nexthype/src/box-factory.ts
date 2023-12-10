@@ -10,6 +10,13 @@ export function handleMysteryBoxCreated(event: MysteryBoxCreatedEvent): void {
   let events = new EventCreated(
     event.transaction.hash.concatI32(event.logIndex.toI32())
   )
+  events.owner = event.params.owner
+  events.tokenAddress = event.params.tokenAddress
+
+  events.blockNumber = event.block.number
+  events.blockTimestamp = event.block.timestamp
+  events.transactionHash = event.transaction.hash
+  events.save()
 
   MysteryBox.create(event.params.tokenAddress)
   entity.owner = event.params.owner
