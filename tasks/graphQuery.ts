@@ -131,6 +131,31 @@ query getAllSubscriber($creatorAddr: String) {
   }
 }
 `
+export const getOwnerByEvent = `
+query getOwnerByEvent($eventAddress: String) {
+  eventCreateds(where: {tokenAddress: $eventAddress}) {
+    owner
+  }
+}
+`
+
+export const getEventTag = `
+query getEventTag($eventAddress: String) {
+  mysteryBoxCreateds(where: {tokenAddress: $eventAddress}) {
+    id
+  }
+  luckyTokenCreateds(where: {tokenAddress: $eventAddress}) {
+    id
+  }
+  mysteryEventCreateds(where: {tokenAddress: $eventAddress}) {
+    id
+  }
+  luckyTreasuryCreateds(where: {tokenAddress: $eventAddress}) {
+    id
+  }
+}
+`
+
 
 /* getAllSubscriber: 
 input: user (subscriber) address
