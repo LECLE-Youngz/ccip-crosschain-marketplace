@@ -93,8 +93,6 @@ async function main() {
     maxMintPerUser,
     feeInWei,
     whitelistRoot,
-    vrfCoordinatorV2,
-    keyHash,
     subscriptionId,
   ]
   const mysteryBox = await mysteryBoxFactory.deploy(...constructorArguments)

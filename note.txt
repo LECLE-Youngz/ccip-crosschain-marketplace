@@ -43,46 +43,5 @@
         (graph codegen) -and (graph build)
         graph deploy --studio nexthype
 
-
-function drawLottery() public returns (uint256 requestId) {
-        require(s_results[msg.sender] == 0, "Already drawed");
-        // require(
-        //     nft.balanceOf(msg.sender) > 0,
-        //     "Sender haven't subscribed to creator"
-        // );
-
-        // Will revert if subscription is not set and funded.
-        requestId = COORDINATOR.requestRandomWords(
-            i_vrfKeyHash,
-            i_vrfSubscriptionId,
-            requestConfirmations,
-            callbackGasLimit,
-            numWords
-        );
-
-        s_requests[requestId] = RequestStatus({
-            randomWords: new uint256[](0),
-            exists: true,
-            fulfilled: false
-        });
-        requestIds.push(requestId);
-        lastRequestId = requestId;
-
-        s_subscribers[requestId] = msg.sender;
-        s_results[msg.sender] = ROLL_IN_PROGRESS;
-        emit LotteryRequestSent(requestId, msg.sender);
-        return requestId;
-
-        require(
-            nft.balanceOf(caller) > 0,
-            "Sender haven't subscribed to creator"
-        );
-
-    }
-
-{
-  "description": "Friendly OpenSea Creature that enjoys long swims in the ocean.", 
-  "image": "https://storage.googleapis.com/opensea-prod.appspot.com/puffs/3.png", 
-  "name": "Dave Starbelly",
-  "attributes": [ ... ]
-}
+0xD2156E1443066c41E3D8580B0a14b01B8f48a880 mstryBox
+0x29e74c72C83E2CEfdF031DFE1397981cAE93D805 trsr

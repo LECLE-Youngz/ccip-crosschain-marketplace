@@ -2,7 +2,8 @@
 /* tslint:disable */
 /* eslint-disable */
 
-import { Contract, Interface, type ContractRunner } from "ethers";
+import { Contract, Signer, utils } from "ethers";
+import type { Provider } from "@ethersproject/providers";
 import type {
   ERC721PsiMysteryBox,
   ERC721PsiMysteryBoxInterface,
@@ -423,16 +424,12 @@ const _abi = [
 export class ERC721PsiMysteryBox__factory {
   static readonly abi = _abi;
   static createInterface(): ERC721PsiMysteryBoxInterface {
-    return new Interface(_abi) as ERC721PsiMysteryBoxInterface;
+    return new utils.Interface(_abi) as ERC721PsiMysteryBoxInterface;
   }
   static connect(
     address: string,
-    runner?: ContractRunner | null
+    signerOrProvider: Signer | Provider
   ): ERC721PsiMysteryBox {
-    return new Contract(
-      address,
-      _abi,
-      runner
-    ) as unknown as ERC721PsiMysteryBox;
+    return new Contract(address, _abi, signerOrProvider) as ERC721PsiMysteryBox;
   }
 }

@@ -20,8 +20,9 @@ import {
   RequestFulfilled,
   RequestSent,
   Response,
-  Transfer,
-  NFTTransfer
+  MysteryEventTransfer,
+  NFTTransfer,
+  EventTransfer
 } from "../generated/schema"
 
 export function handleApproval(event: ApprovalEvent): void {
@@ -140,13 +141,13 @@ export function handleResponse(event: ResponseEvent): void {
 }
 
 export function handleTransfer(event: TransferEvent): void {
-  let entity = new Transfer(
+  let entity = new MysteryEventTransfer(
     event.transaction.hash.concatI32(event.logIndex.toI32())
   )
   entity.from = event.params.from
   entity.to = event.params.to
   entity.tokenId = event.params.tokenId
-
+  entity.contract = event.address
   entity.blockNumber = event.block.number
   entity.blockTimestamp = event.block.timestamp
   entity.transactionHash = event.transaction.hash
@@ -161,8 +162,19 @@ export function handleTransfer(event: TransferEvent): void {
   nftEntity.blockNumber = event.block.number
   nftEntity.blockTimestamp = event.block.timestamp
   nftEntity.transactionHash = event.transaction.hash
-  
-  nftEntity.save()
 
+  let eventTransfer = new EventTransfer(
+    event.transaction.hash.concatI32(event.logIndex.toI32())
+  )
+  eventTransfer.from = event.params.from
+  eventTransfer.to = event.params.to
+  eventTransfer.tokenId = event.params.tokenId
+  eventTransfer.contract = event.address
+  eventTransfer.blockNumber = event.block.number
+  eventTransfer.blockTimestamp = event.block.timestamp
+  eventTransfer.transactionHash = event.transaction.hash
+  
+  eventTransfer.save()
+  nftEntity.save()
   entity.save()
 }

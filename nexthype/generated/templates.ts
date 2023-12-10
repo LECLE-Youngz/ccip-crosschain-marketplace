@@ -61,3 +61,45 @@ export class MysteryEvent extends DataSourceTemplate {
     );
   }
 }
+
+export class LuckyNFT extends DataSourceTemplate {
+  static create(address: Address): void {
+    DataSourceTemplate.create("LuckyNFT", [address.toHex()]);
+  }
+
+  static createWithContext(address: Address, context: DataSourceContext): void {
+    DataSourceTemplate.createWithContext(
+      "LuckyNFT",
+      [address.toHex()],
+      context
+    );
+  }
+}
+
+export class MysteryBox extends DataSourceTemplate {
+  static create(address: Address): void {
+    DataSourceTemplate.create("MysteryBox", [address.toHex()]);
+  }
+
+  static createWithContext(address: Address, context: DataSourceContext): void {
+    DataSourceTemplate.createWithContext(
+      "MysteryBox",
+      [address.toHex()],
+      context
+    );
+  }
+}
+
+export class LuckyTreasury extends DataSourceTemplate {
+  static create(address: Address): void {
+    DataSourceTemplate.create("LuckyTreasury", [address.toHex()]);
+  }
+
+  static createWithContext(address: Address, context: DataSourceContext): void {
+    DataSourceTemplate.createWithContext(
+      "LuckyTreasury",
+      [address.toHex()],
+      context
+    );
+  }
+}

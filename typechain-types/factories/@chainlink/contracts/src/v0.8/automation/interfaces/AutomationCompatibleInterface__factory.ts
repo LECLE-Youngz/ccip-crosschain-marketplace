@@ -2,7 +2,8 @@
 /* tslint:disable */
 /* eslint-disable */
 
-import { Contract, Interface, type ContractRunner } from "ethers";
+import { Contract, Signer, utils } from "ethers";
+import type { Provider } from "@ethersproject/providers";
 import type {
   AutomationCompatibleInterface,
   AutomationCompatibleInterfaceInterface,
@@ -51,16 +52,16 @@ const _abi = [
 export class AutomationCompatibleInterface__factory {
   static readonly abi = _abi;
   static createInterface(): AutomationCompatibleInterfaceInterface {
-    return new Interface(_abi) as AutomationCompatibleInterfaceInterface;
+    return new utils.Interface(_abi) as AutomationCompatibleInterfaceInterface;
   }
   static connect(
     address: string,
-    runner?: ContractRunner | null
+    signerOrProvider: Signer | Provider
   ): AutomationCompatibleInterface {
     return new Contract(
       address,
       _abi,
-      runner
-    ) as unknown as AutomationCompatibleInterface;
+      signerOrProvider
+    ) as AutomationCompatibleInterface;
   }
 }

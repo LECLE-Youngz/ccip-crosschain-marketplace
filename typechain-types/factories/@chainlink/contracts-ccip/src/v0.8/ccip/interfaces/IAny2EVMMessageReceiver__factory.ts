@@ -2,7 +2,8 @@
 /* tslint:disable */
 /* eslint-disable */
 
-import { Contract, Interface, type ContractRunner } from "ethers";
+import { Contract, Signer, utils } from "ethers";
+import type { Provider } from "@ethersproject/providers";
 import type {
   IAny2EVMMessageReceiver,
   IAny2EVMMessageReceiverInterface,
@@ -66,16 +67,16 @@ const _abi = [
 export class IAny2EVMMessageReceiver__factory {
   static readonly abi = _abi;
   static createInterface(): IAny2EVMMessageReceiverInterface {
-    return new Interface(_abi) as IAny2EVMMessageReceiverInterface;
+    return new utils.Interface(_abi) as IAny2EVMMessageReceiverInterface;
   }
   static connect(
     address: string,
-    runner?: ContractRunner | null
+    signerOrProvider: Signer | Provider
   ): IAny2EVMMessageReceiver {
     return new Contract(
       address,
       _abi,
-      runner
-    ) as unknown as IAny2EVMMessageReceiver;
+      signerOrProvider
+    ) as IAny2EVMMessageReceiver;
   }
 }

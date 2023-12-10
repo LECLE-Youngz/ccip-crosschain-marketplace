@@ -6,8 +6,9 @@ import "@chainlink/contracts/src/v0.8/interfaces/VRFCoordinatorV2Interface.sol";
 import "@chainlink/contracts/src/v0.8/vrf/VRFConsumerBaseV2.sol";
 import "@openzeppelin/contracts/utils/Strings.sol";
 import "@openzeppelin/contracts/token/ERC721/IERC721.sol";
+import "@openzeppelin/contracts/access/Ownable.sol";
 
-contract LuckyNFT is ERC721, VRFConsumerBaseV2 {
+contract LuckyNFT is ERC721, VRFConsumerBaseV2, Ownable {
     /// @notice The keyhash for Chainlink VRF
     bytes32 private immutable i_vrfKeyHash;
     uint256 private constant ROLL_IN_PROGRESS = 101;
@@ -70,6 +71,7 @@ contract LuckyNFT is ERC721, VRFConsumerBaseV2 {
         s_baseURI = baseURI;
         premiumNFT = _premiumNFT;
         nft = IERC721(_premiumNFT);
+        transferOwnership(tx.origin);
     }
 
     function drawLottery(address caller) public returns (uint256 requestId) {

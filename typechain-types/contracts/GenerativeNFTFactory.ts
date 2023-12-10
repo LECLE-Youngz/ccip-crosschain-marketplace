@@ -3,36 +3,47 @@
 /* eslint-disable */
 import type {
   BaseContract,
+  BigNumber,
   BigNumberish,
   BytesLike,
-  FunctionFragment,
-  Result,
-  Interface,
-  EventFragment,
-  AddressLike,
-  ContractRunner,
-  ContractMethod,
-  Listener,
+  CallOverrides,
+  ContractTransaction,
+  Overrides,
+  PopulatedTransaction,
+  Signer,
+  utils,
 } from "ethers";
 import type {
-  TypedContractEvent,
-  TypedDeferredTopicFilter,
-  TypedEventLog,
-  TypedLogDescription,
+  FunctionFragment,
+  Result,
+  EventFragment,
+} from "@ethersproject/abi";
+import type { Listener, Provider } from "@ethersproject/providers";
+import type {
+  TypedEventFilter,
+  TypedEvent,
   TypedListener,
-  TypedContractMethod,
+  OnEvent,
+  PromiseOrValue,
 } from "../common";
 
-export interface GenerativeNFTFactoryInterface extends Interface {
-  getFunction(
-    nameOrSignature: "deployGenerativeToken" | "getTotalCollection" | "tokens"
-  ): FunctionFragment;
+export interface GenerativeNFTFactoryInterface extends utils.Interface {
+  functions: {
+    "deployGenerativeToken(string,string)": FunctionFragment;
+    "getTotalCollection()": FunctionFragment;
+    "tokens(uint256)": FunctionFragment;
+  };
 
-  getEvent(nameOrSignatureOrTopic: "ERC721TokenCreated"): EventFragment;
+  getFunction(
+    nameOrSignatureOrTopic:
+      | "deployGenerativeToken"
+      | "getTotalCollection"
+      | "tokens"
+  ): FunctionFragment;
 
   encodeFunctionData(
     functionFragment: "deployGenerativeToken",
-    values: [string, string]
+    values: [PromiseOrValue<string>, PromiseOrValue<string>]
   ): string;
   encodeFunctionData(
     functionFragment: "getTotalCollection",
@@ -40,7 +51,7 @@ export interface GenerativeNFTFactoryInterface extends Interface {
   ): string;
   encodeFunctionData(
     functionFragment: "tokens",
-    values: [BigNumberish]
+    values: [PromiseOrValue<BigNumberish>]
   ): string;
 
   decodeFunctionResult(
@@ -52,110 +63,137 @@ export interface GenerativeNFTFactoryInterface extends Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "tokens", data: BytesLike): Result;
+
+  events: {
+    "ERC721TokenCreated(address,address)": EventFragment;
+  };
+
+  getEvent(nameOrSignatureOrTopic: "ERC721TokenCreated"): EventFragment;
 }
 
-export namespace ERC721TokenCreatedEvent {
-  export type InputTuple = [owner: AddressLike, tokenAddress: AddressLike];
-  export type OutputTuple = [owner: string, tokenAddress: string];
-  export interface OutputObject {
-    owner: string;
-    tokenAddress: string;
-  }
-  export type Event = TypedContractEvent<InputTuple, OutputTuple, OutputObject>;
-  export type Filter = TypedDeferredTopicFilter<Event>;
-  export type Log = TypedEventLog<Event>;
-  export type LogDescription = TypedLogDescription<Event>;
+export interface ERC721TokenCreatedEventObject {
+  owner: string;
+  tokenAddress: string;
 }
+export type ERC721TokenCreatedEvent = TypedEvent<
+  [string, string],
+  ERC721TokenCreatedEventObject
+>;
+
+export type ERC721TokenCreatedEventFilter =
+  TypedEventFilter<ERC721TokenCreatedEvent>;
 
 export interface GenerativeNFTFactory extends BaseContract {
-  connect(runner?: ContractRunner | null): GenerativeNFTFactory;
-  waitForDeployment(): Promise<this>;
+  connect(signerOrProvider: Signer | Provider | string): this;
+  attach(addressOrName: string): this;
+  deployed(): Promise<this>;
 
   interface: GenerativeNFTFactoryInterface;
 
-  queryFilter<TCEvent extends TypedContractEvent>(
-    event: TCEvent,
+  queryFilter<TEvent extends TypedEvent>(
+    event: TypedEventFilter<TEvent>,
     fromBlockOrBlockhash?: string | number | undefined,
     toBlock?: string | number | undefined
-  ): Promise<Array<TypedEventLog<TCEvent>>>;
-  queryFilter<TCEvent extends TypedContractEvent>(
-    filter: TypedDeferredTopicFilter<TCEvent>,
-    fromBlockOrBlockhash?: string | number | undefined,
-    toBlock?: string | number | undefined
-  ): Promise<Array<TypedEventLog<TCEvent>>>;
+  ): Promise<Array<TEvent>>;
 
-  on<TCEvent extends TypedContractEvent>(
-    event: TCEvent,
-    listener: TypedListener<TCEvent>
-  ): Promise<this>;
-  on<TCEvent extends TypedContractEvent>(
-    filter: TypedDeferredTopicFilter<TCEvent>,
-    listener: TypedListener<TCEvent>
-  ): Promise<this>;
+  listeners<TEvent extends TypedEvent>(
+    eventFilter?: TypedEventFilter<TEvent>
+  ): Array<TypedListener<TEvent>>;
+  listeners(eventName?: string): Array<Listener>;
+  removeAllListeners<TEvent extends TypedEvent>(
+    eventFilter: TypedEventFilter<TEvent>
+  ): this;
+  removeAllListeners(eventName?: string): this;
+  off: OnEvent<this>;
+  on: OnEvent<this>;
+  once: OnEvent<this>;
+  removeListener: OnEvent<this>;
 
-  once<TCEvent extends TypedContractEvent>(
-    event: TCEvent,
-    listener: TypedListener<TCEvent>
-  ): Promise<this>;
-  once<TCEvent extends TypedContractEvent>(
-    filter: TypedDeferredTopicFilter<TCEvent>,
-    listener: TypedListener<TCEvent>
-  ): Promise<this>;
+  functions: {
+    deployGenerativeToken(
+      name: PromiseOrValue<string>,
+      symbol: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<ContractTransaction>;
 
-  listeners<TCEvent extends TypedContractEvent>(
-    event: TCEvent
-  ): Promise<Array<TypedListener<TCEvent>>>;
-  listeners(eventName?: string): Promise<Array<Listener>>;
-  removeAllListeners<TCEvent extends TypedContractEvent>(
-    event?: TCEvent
-  ): Promise<this>;
+    getTotalCollection(
+      overrides?: CallOverrides
+    ): Promise<[BigNumber] & { amount: BigNumber }>;
 
-  deployGenerativeToken: TypedContractMethod<
-    [name: string, symbol: string],
-    [string],
-    "nonpayable"
-  >;
+    tokens(
+      arg0: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<[string]>;
+  };
 
-  getTotalCollection: TypedContractMethod<[], [bigint], "view">;
+  deployGenerativeToken(
+    name: PromiseOrValue<string>,
+    symbol: PromiseOrValue<string>,
+    overrides?: Overrides & { from?: PromiseOrValue<string> }
+  ): Promise<ContractTransaction>;
 
-  tokens: TypedContractMethod<[arg0: BigNumberish], [string], "view">;
+  getTotalCollection(overrides?: CallOverrides): Promise<BigNumber>;
 
-  getFunction<T extends ContractMethod = ContractMethod>(
-    key: string | FunctionFragment
-  ): T;
+  tokens(
+    arg0: PromiseOrValue<BigNumberish>,
+    overrides?: CallOverrides
+  ): Promise<string>;
 
-  getFunction(
-    nameOrSignature: "deployGenerativeToken"
-  ): TypedContractMethod<
-    [name: string, symbol: string],
-    [string],
-    "nonpayable"
-  >;
-  getFunction(
-    nameOrSignature: "getTotalCollection"
-  ): TypedContractMethod<[], [bigint], "view">;
-  getFunction(
-    nameOrSignature: "tokens"
-  ): TypedContractMethod<[arg0: BigNumberish], [string], "view">;
+  callStatic: {
+    deployGenerativeToken(
+      name: PromiseOrValue<string>,
+      symbol: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<string>;
 
-  getEvent(
-    key: "ERC721TokenCreated"
-  ): TypedContractEvent<
-    ERC721TokenCreatedEvent.InputTuple,
-    ERC721TokenCreatedEvent.OutputTuple,
-    ERC721TokenCreatedEvent.OutputObject
-  >;
+    getTotalCollection(overrides?: CallOverrides): Promise<BigNumber>;
+
+    tokens(
+      arg0: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<string>;
+  };
 
   filters: {
-    "ERC721TokenCreated(address,address)": TypedContractEvent<
-      ERC721TokenCreatedEvent.InputTuple,
-      ERC721TokenCreatedEvent.OutputTuple,
-      ERC721TokenCreatedEvent.OutputObject
-    >;
-    ERC721TokenCreated: TypedContractEvent<
-      ERC721TokenCreatedEvent.InputTuple,
-      ERC721TokenCreatedEvent.OutputTuple,
-      ERC721TokenCreatedEvent.OutputObject
-    >;
+    "ERC721TokenCreated(address,address)"(
+      owner?: null,
+      tokenAddress?: null
+    ): ERC721TokenCreatedEventFilter;
+    ERC721TokenCreated(
+      owner?: null,
+      tokenAddress?: null
+    ): ERC721TokenCreatedEventFilter;
+  };
+
+  estimateGas: {
+    deployGenerativeToken(
+      name: PromiseOrValue<string>,
+      symbol: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<BigNumber>;
+
+    getTotalCollection(overrides?: CallOverrides): Promise<BigNumber>;
+
+    tokens(
+      arg0: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+  };
+
+  populateTransaction: {
+    deployGenerativeToken(
+      name: PromiseOrValue<string>,
+      symbol: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<PopulatedTransaction>;
+
+    getTotalCollection(
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    tokens(
+      arg0: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
   };
 }

@@ -3,35 +3,39 @@
 /* eslint-disable */
 import type {
   BaseContract,
+  BigNumber,
   BytesLike,
-  FunctionFragment,
-  Result,
-  Interface,
-  EventFragment,
-  AddressLike,
-  ContractRunner,
-  ContractMethod,
-  Listener,
+  CallOverrides,
+  ContractTransaction,
+  Overrides,
+  PopulatedTransaction,
+  Signer,
+  utils,
 } from "ethers";
 import type {
-  TypedContractEvent,
-  TypedDeferredTopicFilter,
-  TypedEventLog,
-  TypedLogDescription,
+  FunctionFragment,
+  Result,
+  EventFragment,
+} from "@ethersproject/abi";
+import type { Listener, Provider } from "@ethersproject/providers";
+import type {
+  TypedEventFilter,
+  TypedEvent,
   TypedListener,
-  TypedContractMethod,
+  OnEvent,
+  PromiseOrValue,
 } from "../../../../common";
 
-export interface ConfirmedOwnerInterface extends Interface {
-  getFunction(
-    nameOrSignature: "acceptOwnership" | "owner" | "transferOwnership"
-  ): FunctionFragment;
+export interface ConfirmedOwnerInterface extends utils.Interface {
+  functions: {
+    "acceptOwnership()": FunctionFragment;
+    "owner()": FunctionFragment;
+    "transferOwnership(address)": FunctionFragment;
+  };
 
-  getEvent(
-    nameOrSignatureOrTopic:
-      | "OwnershipTransferRequested"
-      | "OwnershipTransferred"
-  ): EventFragment;
+  getFunction(
+    nameOrSignatureOrTopic: "acceptOwnership" | "owner" | "transferOwnership"
+  ): FunctionFragment;
 
   encodeFunctionData(
     functionFragment: "acceptOwnership",
@@ -40,7 +44,7 @@ export interface ConfirmedOwnerInterface extends Interface {
   encodeFunctionData(functionFragment: "owner", values?: undefined): string;
   encodeFunctionData(
     functionFragment: "transferOwnership",
-    values: [AddressLike]
+    values: [PromiseOrValue<string>]
   ): string;
 
   decodeFunctionResult(
@@ -52,137 +56,144 @@ export interface ConfirmedOwnerInterface extends Interface {
     functionFragment: "transferOwnership",
     data: BytesLike
   ): Result;
+
+  events: {
+    "OwnershipTransferRequested(address,address)": EventFragment;
+    "OwnershipTransferred(address,address)": EventFragment;
+  };
+
+  getEvent(nameOrSignatureOrTopic: "OwnershipTransferRequested"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "OwnershipTransferred"): EventFragment;
 }
 
-export namespace OwnershipTransferRequestedEvent {
-  export type InputTuple = [from: AddressLike, to: AddressLike];
-  export type OutputTuple = [from: string, to: string];
-  export interface OutputObject {
-    from: string;
-    to: string;
-  }
-  export type Event = TypedContractEvent<InputTuple, OutputTuple, OutputObject>;
-  export type Filter = TypedDeferredTopicFilter<Event>;
-  export type Log = TypedEventLog<Event>;
-  export type LogDescription = TypedLogDescription<Event>;
+export interface OwnershipTransferRequestedEventObject {
+  from: string;
+  to: string;
 }
+export type OwnershipTransferRequestedEvent = TypedEvent<
+  [string, string],
+  OwnershipTransferRequestedEventObject
+>;
 
-export namespace OwnershipTransferredEvent {
-  export type InputTuple = [from: AddressLike, to: AddressLike];
-  export type OutputTuple = [from: string, to: string];
-  export interface OutputObject {
-    from: string;
-    to: string;
-  }
-  export type Event = TypedContractEvent<InputTuple, OutputTuple, OutputObject>;
-  export type Filter = TypedDeferredTopicFilter<Event>;
-  export type Log = TypedEventLog<Event>;
-  export type LogDescription = TypedLogDescription<Event>;
+export type OwnershipTransferRequestedEventFilter =
+  TypedEventFilter<OwnershipTransferRequestedEvent>;
+
+export interface OwnershipTransferredEventObject {
+  from: string;
+  to: string;
 }
+export type OwnershipTransferredEvent = TypedEvent<
+  [string, string],
+  OwnershipTransferredEventObject
+>;
+
+export type OwnershipTransferredEventFilter =
+  TypedEventFilter<OwnershipTransferredEvent>;
 
 export interface ConfirmedOwner extends BaseContract {
-  connect(runner?: ContractRunner | null): ConfirmedOwner;
-  waitForDeployment(): Promise<this>;
+  connect(signerOrProvider: Signer | Provider | string): this;
+  attach(addressOrName: string): this;
+  deployed(): Promise<this>;
 
   interface: ConfirmedOwnerInterface;
 
-  queryFilter<TCEvent extends TypedContractEvent>(
-    event: TCEvent,
+  queryFilter<TEvent extends TypedEvent>(
+    event: TypedEventFilter<TEvent>,
     fromBlockOrBlockhash?: string | number | undefined,
     toBlock?: string | number | undefined
-  ): Promise<Array<TypedEventLog<TCEvent>>>;
-  queryFilter<TCEvent extends TypedContractEvent>(
-    filter: TypedDeferredTopicFilter<TCEvent>,
-    fromBlockOrBlockhash?: string | number | undefined,
-    toBlock?: string | number | undefined
-  ): Promise<Array<TypedEventLog<TCEvent>>>;
+  ): Promise<Array<TEvent>>;
 
-  on<TCEvent extends TypedContractEvent>(
-    event: TCEvent,
-    listener: TypedListener<TCEvent>
-  ): Promise<this>;
-  on<TCEvent extends TypedContractEvent>(
-    filter: TypedDeferredTopicFilter<TCEvent>,
-    listener: TypedListener<TCEvent>
-  ): Promise<this>;
+  listeners<TEvent extends TypedEvent>(
+    eventFilter?: TypedEventFilter<TEvent>
+  ): Array<TypedListener<TEvent>>;
+  listeners(eventName?: string): Array<Listener>;
+  removeAllListeners<TEvent extends TypedEvent>(
+    eventFilter: TypedEventFilter<TEvent>
+  ): this;
+  removeAllListeners(eventName?: string): this;
+  off: OnEvent<this>;
+  on: OnEvent<this>;
+  once: OnEvent<this>;
+  removeListener: OnEvent<this>;
 
-  once<TCEvent extends TypedContractEvent>(
-    event: TCEvent,
-    listener: TypedListener<TCEvent>
-  ): Promise<this>;
-  once<TCEvent extends TypedContractEvent>(
-    filter: TypedDeferredTopicFilter<TCEvent>,
-    listener: TypedListener<TCEvent>
-  ): Promise<this>;
+  functions: {
+    acceptOwnership(
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<ContractTransaction>;
 
-  listeners<TCEvent extends TypedContractEvent>(
-    event: TCEvent
-  ): Promise<Array<TypedListener<TCEvent>>>;
-  listeners(eventName?: string): Promise<Array<Listener>>;
-  removeAllListeners<TCEvent extends TypedContractEvent>(
-    event?: TCEvent
-  ): Promise<this>;
+    owner(overrides?: CallOverrides): Promise<[string]>;
 
-  acceptOwnership: TypedContractMethod<[], [void], "nonpayable">;
+    transferOwnership(
+      to: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<ContractTransaction>;
+  };
 
-  owner: TypedContractMethod<[], [string], "view">;
+  acceptOwnership(
+    overrides?: Overrides & { from?: PromiseOrValue<string> }
+  ): Promise<ContractTransaction>;
 
-  transferOwnership: TypedContractMethod<
-    [to: AddressLike],
-    [void],
-    "nonpayable"
-  >;
+  owner(overrides?: CallOverrides): Promise<string>;
 
-  getFunction<T extends ContractMethod = ContractMethod>(
-    key: string | FunctionFragment
-  ): T;
+  transferOwnership(
+    to: PromiseOrValue<string>,
+    overrides?: Overrides & { from?: PromiseOrValue<string> }
+  ): Promise<ContractTransaction>;
 
-  getFunction(
-    nameOrSignature: "acceptOwnership"
-  ): TypedContractMethod<[], [void], "nonpayable">;
-  getFunction(
-    nameOrSignature: "owner"
-  ): TypedContractMethod<[], [string], "view">;
-  getFunction(
-    nameOrSignature: "transferOwnership"
-  ): TypedContractMethod<[to: AddressLike], [void], "nonpayable">;
+  callStatic: {
+    acceptOwnership(overrides?: CallOverrides): Promise<void>;
 
-  getEvent(
-    key: "OwnershipTransferRequested"
-  ): TypedContractEvent<
-    OwnershipTransferRequestedEvent.InputTuple,
-    OwnershipTransferRequestedEvent.OutputTuple,
-    OwnershipTransferRequestedEvent.OutputObject
-  >;
-  getEvent(
-    key: "OwnershipTransferred"
-  ): TypedContractEvent<
-    OwnershipTransferredEvent.InputTuple,
-    OwnershipTransferredEvent.OutputTuple,
-    OwnershipTransferredEvent.OutputObject
-  >;
+    owner(overrides?: CallOverrides): Promise<string>;
+
+    transferOwnership(
+      to: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<void>;
+  };
 
   filters: {
-    "OwnershipTransferRequested(address,address)": TypedContractEvent<
-      OwnershipTransferRequestedEvent.InputTuple,
-      OwnershipTransferRequestedEvent.OutputTuple,
-      OwnershipTransferRequestedEvent.OutputObject
-    >;
-    OwnershipTransferRequested: TypedContractEvent<
-      OwnershipTransferRequestedEvent.InputTuple,
-      OwnershipTransferRequestedEvent.OutputTuple,
-      OwnershipTransferRequestedEvent.OutputObject
-    >;
+    "OwnershipTransferRequested(address,address)"(
+      from?: PromiseOrValue<string> | null,
+      to?: PromiseOrValue<string> | null
+    ): OwnershipTransferRequestedEventFilter;
+    OwnershipTransferRequested(
+      from?: PromiseOrValue<string> | null,
+      to?: PromiseOrValue<string> | null
+    ): OwnershipTransferRequestedEventFilter;
 
-    "OwnershipTransferred(address,address)": TypedContractEvent<
-      OwnershipTransferredEvent.InputTuple,
-      OwnershipTransferredEvent.OutputTuple,
-      OwnershipTransferredEvent.OutputObject
-    >;
-    OwnershipTransferred: TypedContractEvent<
-      OwnershipTransferredEvent.InputTuple,
-      OwnershipTransferredEvent.OutputTuple,
-      OwnershipTransferredEvent.OutputObject
-    >;
+    "OwnershipTransferred(address,address)"(
+      from?: PromiseOrValue<string> | null,
+      to?: PromiseOrValue<string> | null
+    ): OwnershipTransferredEventFilter;
+    OwnershipTransferred(
+      from?: PromiseOrValue<string> | null,
+      to?: PromiseOrValue<string> | null
+    ): OwnershipTransferredEventFilter;
+  };
+
+  estimateGas: {
+    acceptOwnership(
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<BigNumber>;
+
+    owner(overrides?: CallOverrides): Promise<BigNumber>;
+
+    transferOwnership(
+      to: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<BigNumber>;
+  };
+
+  populateTransaction: {
+    acceptOwnership(
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<PopulatedTransaction>;
+
+    owner(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    transferOwnership(
+      to: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<PopulatedTransaction>;
   };
 }

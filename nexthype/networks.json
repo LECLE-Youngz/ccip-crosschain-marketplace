@@ -30,6 +30,24 @@
     },
     "MysteryEvent": {
       "address": "0xD2B433BACf01ABeA6A5B09A583c4a3f15DFA1808"
+    },
+    "LuckyFactory": {
+      "address": "0x7506D8e5A7b45625640Ce7bA8A3359567720dE6c"
+    },
+    "LuckyNFT": {
+      "address": "0x8ddA73Ca2FfE117Fb93887aA3f60bE7543fFa541"
+    },
+    "BoxFactory": {
+      "address": "0xD2156E1443066c41E3D8580B0a14b01B8f48a880"
+    },
+    "MysteryBox": {
+      "address": "0x77D0745620b48AFD50E3cfA57d6e33929b576237"
+    },
+    "TreasuryFactory": {
+      "address": "0x29e74c72C83E2CEfdF031DFE1397981cAE93D805"
+    },
+    "LuckyTreasury": {
+      "address": "0x0E0CB16a1f057Fa2F0bf2116A777e8C9b292b591"
     }
   }
 }

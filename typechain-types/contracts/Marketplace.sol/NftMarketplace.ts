@@ -3,43 +3,64 @@
 /* eslint-disable */
 import type {
   BaseContract,
+  BigNumber,
   BigNumberish,
   BytesLike,
-  FunctionFragment,
-  Result,
-  Interface,
-  EventFragment,
-  AddressLike,
-  ContractRunner,
-  ContractMethod,
-  Listener,
+  CallOverrides,
+  ContractTransaction,
+  Overrides,
+  PayableOverrides,
+  PopulatedTransaction,
+  Signer,
+  utils,
 } from "ethers";
 import type {
-  TypedContractEvent,
-  TypedDeferredTopicFilter,
-  TypedEventLog,
-  TypedLogDescription,
+  FunctionFragment,
+  Result,
+  EventFragment,
+} from "@ethersproject/abi";
+import type { Listener, Provider } from "@ethersproject/providers";
+import type {
+  TypedEventFilter,
+  TypedEvent,
   TypedListener,
-  TypedContractMethod,
+  OnEvent,
+  PromiseOrValue,
 } from "../../common";
 
 export declare namespace NftMarketplace {
   export type ListingStruct = {
-    nftPrice: BigNumberish;
-    promptPrice: BigNumberish;
-    seller: AddressLike;
+    nftPrice: PromiseOrValue<BigNumberish>;
+    promptPrice: PromiseOrValue<BigNumberish>;
+    seller: PromiseOrValue<string>;
   };
 
-  export type ListingStructOutput = [
-    nftPrice: bigint,
-    promptPrice: bigint,
-    seller: string
-  ] & { nftPrice: bigint; promptPrice: bigint; seller: string };
+  export type ListingStructOutput = [BigNumber, BigNumber, string] & {
+    nftPrice: BigNumber;
+    promptPrice: BigNumber;
+    seller: string;
+  };
 }
 
-export interface NftMarketplaceInterface extends Interface {
+export interface NftMarketplaceInterface extends utils.Interface {
+  functions: {
+    "buyItem(address,uint256,uint256)": FunctionFragment;
+    "buyPrompt(address,uint256,uint256)": FunctionFragment;
+    "cancelListing(address,uint256)": FunctionFragment;
+    "getChainlinkDataFeedLatestAnswer()": FunctionFragment;
+    "getListPromptBuyers(address,uint256)": FunctionFragment;
+    "getListing(address,uint256)": FunctionFragment;
+    "getPromptPrice(address,uint256)": FunctionFragment;
+    "getTokenPrice(address,uint256)": FunctionFragment;
+    "listItem(address,uint256,uint256,uint256)": FunctionFragment;
+    "roundToMillion(uint256)": FunctionFragment;
+    "updateListing(address,uint256,uint256,uint256)": FunctionFragment;
+    "updatePromptPrice(address,uint256,uint256)": FunctionFragment;
+    "usdc()": FunctionFragment;
+  };
+
   getFunction(
-    nameOrSignature:
+    nameOrSignatureOrTopic:
       | "buyItem"
       | "buyPrompt"
       | "cancelListing"
@@ -55,25 +76,25 @@ export interface NftMarketplaceInterface extends Interface {
       | "usdc"
   ): FunctionFragment;
 
-  getEvent(
-    nameOrSignatureOrTopic:
-      | "ItemBought"
-      | "ItemCanceled"
-      | "ItemListed"
-      | "PromptBought"
-  ): EventFragment;
-
   encodeFunctionData(
     functionFragment: "buyItem",
-    values: [AddressLike, BigNumberish, BigNumberish]
+    values: [
+      PromiseOrValue<string>,
+      PromiseOrValue<BigNumberish>,
+      PromiseOrValue<BigNumberish>
+    ]
   ): string;
   encodeFunctionData(
     functionFragment: "buyPrompt",
-    values: [AddressLike, BigNumberish, BigNumberish]
+    values: [
+      PromiseOrValue<string>,
+      PromiseOrValue<BigNumberish>,
+      PromiseOrValue<BigNumberish>
+    ]
   ): string;
   encodeFunctionData(
     functionFragment: "cancelListing",
-    values: [AddressLike, BigNumberish]
+    values: [PromiseOrValue<string>, PromiseOrValue<BigNumberish>]
   ): string;
   encodeFunctionData(
     functionFragment: "getChainlinkDataFeedLatestAnswer",
@@ -81,35 +102,49 @@ export interface NftMarketplaceInterface extends Interface {
   ): string;
   encodeFunctionData(
     functionFragment: "getListPromptBuyers",
-    values: [AddressLike, BigNumberish]
+    values: [PromiseOrValue<string>, PromiseOrValue<BigNumberish>]
   ): string;
   encodeFunctionData(
     functionFragment: "getListing",
-    values: [AddressLike, BigNumberish]
+    values: [PromiseOrValue<string>, PromiseOrValue<BigNumberish>]
   ): string;
   encodeFunctionData(
     functionFragment: "getPromptPrice",
-    values: [AddressLike, BigNumberish]
+    values: [PromiseOrValue<string>, PromiseOrValue<BigNumberish>]
   ): string;
   encodeFunctionData(
     functionFragment: "getTokenPrice",
-    values: [AddressLike, BigNumberish]
+    values: [PromiseOrValue<string>, PromiseOrValue<BigNumberish>]
   ): string;
   encodeFunctionData(
     functionFragment: "listItem",
-    values: [AddressLike, BigNumberish, BigNumberish, BigNumberish]
+    values: [
+      PromiseOrValue<string>,
+      PromiseOrValue<BigNumberish>,
+      PromiseOrValue<BigNumberish>,
+      PromiseOrValue<BigNumberish>
+    ]
   ): string;
   encodeFunctionData(
     functionFragment: "roundToMillion",
-    values: [BigNumberish]
+    values: [PromiseOrValue<BigNumberish>]
   ): string;
   encodeFunctionData(
     functionFragment: "updateListing",
-    values: [AddressLike, BigNumberish, BigNumberish, BigNumberish]
+    values: [
+      PromiseOrValue<string>,
+      PromiseOrValue<BigNumberish>,
+      PromiseOrValue<BigNumberish>,
+      PromiseOrValue<BigNumberish>
+    ]
   ): string;
   encodeFunctionData(
     functionFragment: "updatePromptPrice",
-    values: [AddressLike, BigNumberish, BigNumberish]
+    values: [
+      PromiseOrValue<string>,
+      PromiseOrValue<BigNumberish>,
+      PromiseOrValue<BigNumberish>
+    ]
   ): string;
   encodeFunctionData(functionFragment: "usdc", values?: undefined): string;
 
@@ -150,407 +185,553 @@ export interface NftMarketplaceInterface extends Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "usdc", data: BytesLike): Result;
+
+  events: {
+    "ItemBought(address,address,uint256,uint256,uint256)": EventFragment;
+    "ItemCanceled(address,address,uint256)": EventFragment;
+    "ItemListed(address,address,uint256,uint256,uint256)": EventFragment;
+    "PromptBought(address,address,uint256,uint256,uint256)": EventFragment;
+  };
+
+  getEvent(nameOrSignatureOrTopic: "ItemBought"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "ItemCanceled"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "ItemListed"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "PromptBought"): EventFragment;
 }
 
-export namespace ItemBoughtEvent {
-  export type InputTuple = [
-    buyer: AddressLike,
-    nftAddress: AddressLike,
-    tokenId: BigNumberish,
-    nftPrice: BigNumberish,
-    promptPrice: BigNumberish
-  ];
-  export type OutputTuple = [
-    buyer: string,
-    nftAddress: string,
-    tokenId: bigint,
-    nftPrice: bigint,
-    promptPrice: bigint
-  ];
-  export interface OutputObject {
-    buyer: string;
-    nftAddress: string;
-    tokenId: bigint;
-    nftPrice: bigint;
-    promptPrice: bigint;
-  }
-  export type Event = TypedContractEvent<InputTuple, OutputTuple, OutputObject>;
-  export type Filter = TypedDeferredTopicFilter<Event>;
-  export type Log = TypedEventLog<Event>;
-  export type LogDescription = TypedLogDescription<Event>;
+export interface ItemBoughtEventObject {
+  buyer: string;
+  nftAddress: string;
+  tokenId: BigNumber;
+  nftPrice: BigNumber;
+  promptPrice: BigNumber;
 }
+export type ItemBoughtEvent = TypedEvent<
+  [string, string, BigNumber, BigNumber, BigNumber],
+  ItemBoughtEventObject
+>;
 
-export namespace ItemCanceledEvent {
-  export type InputTuple = [
-    seller: AddressLike,
-    nftAddress: AddressLike,
-    tokenId: BigNumberish
-  ];
-  export type OutputTuple = [
-    seller: string,
-    nftAddress: string,
-    tokenId: bigint
-  ];
-  export interface OutputObject {
-    seller: string;
-    nftAddress: string;
-    tokenId: bigint;
-  }
-  export type Event = TypedContractEvent<InputTuple, OutputTuple, OutputObject>;
-  export type Filter = TypedDeferredTopicFilter<Event>;
-  export type Log = TypedEventLog<Event>;
-  export type LogDescription = TypedLogDescription<Event>;
-}
+export type ItemBoughtEventFilter = TypedEventFilter<ItemBoughtEvent>;
 
-export namespace ItemListedEvent {
-  export type InputTuple = [
-    seller: AddressLike,
-    nftAddress: AddressLike,
-    tokenId: BigNumberish,
-    nftPrice: BigNumberish,
-    promptPrice: BigNumberish
-  ];
-  export type OutputTuple = [
-    seller: string,
-    nftAddress: string,
-    tokenId: bigint,
-    nftPrice: bigint,
-    promptPrice: bigint
-  ];
-  export interface OutputObject {
-    seller: string;
-    nftAddress: string;
-    tokenId: bigint;
-    nftPrice: bigint;
-    promptPrice: bigint;
-  }
-  export type Event = TypedContractEvent<InputTuple, OutputTuple, OutputObject>;
-  export type Filter = TypedDeferredTopicFilter<Event>;
-  export type Log = TypedEventLog<Event>;
-  export type LogDescription = TypedLogDescription<Event>;
+export interface ItemCanceledEventObject {
+  seller: string;
+  nftAddress: string;
+  tokenId: BigNumber;
 }
+export type ItemCanceledEvent = TypedEvent<
+  [string, string, BigNumber],
+  ItemCanceledEventObject
+>;
 
-export namespace PromptBoughtEvent {
-  export type InputTuple = [
-    buyer: AddressLike,
-    nftAddress: AddressLike,
-    tokenId: BigNumberish,
-    nftPrice: BigNumberish,
-    promptPrice: BigNumberish
-  ];
-  export type OutputTuple = [
-    buyer: string,
-    nftAddress: string,
-    tokenId: bigint,
-    nftPrice: bigint,
-    promptPrice: bigint
-  ];
-  export interface OutputObject {
-    buyer: string;
-    nftAddress: string;
-    tokenId: bigint;
-    nftPrice: bigint;
-    promptPrice: bigint;
-  }
-  export type Event = TypedContractEvent<InputTuple, OutputTuple, OutputObject>;
-  export type Filter = TypedDeferredTopicFilter<Event>;
-  export type Log = TypedEventLog<Event>;
-  export type LogDescription = TypedLogDescription<Event>;
+export type ItemCanceledEventFilter = TypedEventFilter<ItemCanceledEvent>;
+
+export interface ItemListedEventObject {
+  seller: string;
+  nftAddress: string;
+  tokenId: BigNumber;
+  nftPrice: BigNumber;
+  promptPrice: BigNumber;
 }
+export type ItemListedEvent = TypedEvent<
+  [string, string, BigNumber, BigNumber, BigNumber],
+  ItemListedEventObject
+>;
+
+export type ItemListedEventFilter = TypedEventFilter<ItemListedEvent>;
+
+export interface PromptBoughtEventObject {
+  buyer: string;
+  nftAddress: string;
+  tokenId: BigNumber;
+  nftPrice: BigNumber;
+  promptPrice: BigNumber;
+}
+export type PromptBoughtEvent = TypedEvent<
+  [string, string, BigNumber, BigNumber, BigNumber],
+  PromptBoughtEventObject
+>;
+
+export type PromptBoughtEventFilter = TypedEventFilter<PromptBoughtEvent>;
 
 export interface NftMarketplace extends BaseContract {
-  connect(runner?: ContractRunner | null): NftMarketplace;
-  waitForDeployment(): Promise<this>;
+  connect(signerOrProvider: Signer | Provider | string): this;
+  attach(addressOrName: string): this;
+  deployed(): Promise<this>;
 
   interface: NftMarketplaceInterface;
 
-  queryFilter<TCEvent extends TypedContractEvent>(
-    event: TCEvent,
+  queryFilter<TEvent extends TypedEvent>(
+    event: TypedEventFilter<TEvent>,
     fromBlockOrBlockhash?: string | number | undefined,
     toBlock?: string | number | undefined
-  ): Promise<Array<TypedEventLog<TCEvent>>>;
-  queryFilter<TCEvent extends TypedContractEvent>(
-    filter: TypedDeferredTopicFilter<TCEvent>,
-    fromBlockOrBlockhash?: string | number | undefined,
-    toBlock?: string | number | undefined
-  ): Promise<Array<TypedEventLog<TCEvent>>>;
+  ): Promise<Array<TEvent>>;
 
-  on<TCEvent extends TypedContractEvent>(
-    event: TCEvent,
-    listener: TypedListener<TCEvent>
-  ): Promise<this>;
-  on<TCEvent extends TypedContractEvent>(
-    filter: TypedDeferredTopicFilter<TCEvent>,
-    listener: TypedListener<TCEvent>
-  ): Promise<this>;
+  listeners<TEvent extends TypedEvent>(
+    eventFilter?: TypedEventFilter<TEvent>
+  ): Array<TypedListener<TEvent>>;
+  listeners(eventName?: string): Array<Listener>;
+  removeAllListeners<TEvent extends TypedEvent>(
+    eventFilter: TypedEventFilter<TEvent>
+  ): this;
+  removeAllListeners(eventName?: string): this;
+  off: OnEvent<this>;
+  on: OnEvent<this>;
+  once: OnEvent<this>;
+  removeListener: OnEvent<this>;
 
-  once<TCEvent extends TypedContractEvent>(
-    event: TCEvent,
-    listener: TypedListener<TCEvent>
-  ): Promise<this>;
-  once<TCEvent extends TypedContractEvent>(
-    filter: TypedDeferredTopicFilter<TCEvent>,
-    listener: TypedListener<TCEvent>
-  ): Promise<this>;
+  functions: {
+    buyItem(
+      nftAddress: PromiseOrValue<string>,
+      tokenId: PromiseOrValue<BigNumberish>,
+      tokenAmount: PromiseOrValue<BigNumberish>,
+      overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
+    ): Promise<ContractTransaction>;
 
-  listeners<TCEvent extends TypedContractEvent>(
-    event: TCEvent
-  ): Promise<Array<TypedListener<TCEvent>>>;
-  listeners(eventName?: string): Promise<Array<Listener>>;
-  removeAllListeners<TCEvent extends TypedContractEvent>(
-    event?: TCEvent
-  ): Promise<this>;
+    buyPrompt(
+      nftAddress: PromiseOrValue<string>,
+      tokenId: PromiseOrValue<BigNumberish>,
+      tokenAmount: PromiseOrValue<BigNumberish>,
+      overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
+    ): Promise<ContractTransaction>;
 
-  buyItem: TypedContractMethod<
-    [nftAddress: AddressLike, tokenId: BigNumberish, tokenAmount: BigNumberish],
-    [void],
-    "payable"
-  >;
+    cancelListing(
+      nftAddress: PromiseOrValue<string>,
+      tokenId: PromiseOrValue<BigNumberish>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<ContractTransaction>;
 
-  buyPrompt: TypedContractMethod<
-    [nftAddress: AddressLike, tokenId: BigNumberish, tokenAmount: BigNumberish],
-    [void],
-    "payable"
-  >;
+    getChainlinkDataFeedLatestAnswer(
+      overrides?: CallOverrides
+    ): Promise<[BigNumber]>;
 
-  cancelListing: TypedContractMethod<
-    [nftAddress: AddressLike, tokenId: BigNumberish],
-    [void],
-    "nonpayable"
-  >;
+    getListPromptBuyers(
+      nftAddress: PromiseOrValue<string>,
+      tokenId: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<[string[]]>;
 
-  getChainlinkDataFeedLatestAnswer: TypedContractMethod<[], [bigint], "view">;
+    getListing(
+      nftAddress: PromiseOrValue<string>,
+      tokenId: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<[NftMarketplace.ListingStructOutput]>;
 
-  getListPromptBuyers: TypedContractMethod<
-    [nftAddress: AddressLike, tokenId: BigNumberish],
-    [string[]],
-    "view"
-  >;
+    getPromptPrice(
+      nftAddress: PromiseOrValue<string>,
+      tokenId: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<[BigNumber, BigNumber]>;
 
-  getListing: TypedContractMethod<
-    [nftAddress: AddressLike, tokenId: BigNumberish],
-    [NftMarketplace.ListingStructOutput],
-    "view"
-  >;
+    getTokenPrice(
+      nftAddress: PromiseOrValue<string>,
+      tokenId: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<[BigNumber, BigNumber]>;
 
-  getPromptPrice: TypedContractMethod<
-    [nftAddress: AddressLike, tokenId: BigNumberish],
-    [[bigint, bigint]],
-    "view"
-  >;
+    listItem(
+      nftAddress: PromiseOrValue<string>,
+      tokenId: PromiseOrValue<BigNumberish>,
+      nftPrice: PromiseOrValue<BigNumberish>,
+      promptPrice: PromiseOrValue<BigNumberish>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<ContractTransaction>;
 
-  getTokenPrice: TypedContractMethod<
-    [nftAddress: AddressLike, tokenId: BigNumberish],
-    [[bigint, bigint]],
-    "view"
-  >;
+    roundToMillion(
+      input: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<[BigNumber]>;
 
-  listItem: TypedContractMethod<
-    [
-      nftAddress: AddressLike,
-      tokenId: BigNumberish,
-      nftPrice: BigNumberish,
-      promptPrice: BigNumberish
-    ],
-    [void],
-    "nonpayable"
-  >;
+    updateListing(
+      nftAddress: PromiseOrValue<string>,
+      tokenId: PromiseOrValue<BigNumberish>,
+      newNFTPrice: PromiseOrValue<BigNumberish>,
+      newPromptPrice: PromiseOrValue<BigNumberish>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<ContractTransaction>;
 
-  roundToMillion: TypedContractMethod<[input: BigNumberish], [bigint], "view">;
+    updatePromptPrice(
+      nftAddress: PromiseOrValue<string>,
+      tokenId: PromiseOrValue<BigNumberish>,
+      newPromptPrice: PromiseOrValue<BigNumberish>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<ContractTransaction>;
 
-  updateListing: TypedContractMethod<
-    [
-      nftAddress: AddressLike,
-      tokenId: BigNumberish,
-      newNFTPrice: BigNumberish,
-      newPromptPrice: BigNumberish
-    ],
-    [void],
-    "nonpayable"
-  >;
+    usdc(overrides?: CallOverrides): Promise<[string]>;
+  };
 
-  updatePromptPrice: TypedContractMethod<
-    [
-      nftAddress: AddressLike,
-      tokenId: BigNumberish,
-      newPromptPrice: BigNumberish
-    ],
-    [void],
-    "nonpayable"
-  >;
+  buyItem(
+    nftAddress: PromiseOrValue<string>,
+    tokenId: PromiseOrValue<BigNumberish>,
+    tokenAmount: PromiseOrValue<BigNumberish>,
+    overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
+  ): Promise<ContractTransaction>;
 
-  usdc: TypedContractMethod<[], [string], "view">;
+  buyPrompt(
+    nftAddress: PromiseOrValue<string>,
+    tokenId: PromiseOrValue<BigNumberish>,
+    tokenAmount: PromiseOrValue<BigNumberish>,
+    overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
+  ): Promise<ContractTransaction>;
 
-  getFunction<T extends ContractMethod = ContractMethod>(
-    key: string | FunctionFragment
-  ): T;
+  cancelListing(
+    nftAddress: PromiseOrValue<string>,
+    tokenId: PromiseOrValue<BigNumberish>,
+    overrides?: Overrides & { from?: PromiseOrValue<string> }
+  ): Promise<ContractTransaction>;
 
-  getFunction(
-    nameOrSignature: "buyItem"
-  ): TypedContractMethod<
-    [nftAddress: AddressLike, tokenId: BigNumberish, tokenAmount: BigNumberish],
-    [void],
-    "payable"
-  >;
-  getFunction(
-    nameOrSignature: "buyPrompt"
-  ): TypedContractMethod<
-    [nftAddress: AddressLike, tokenId: BigNumberish, tokenAmount: BigNumberish],
-    [void],
-    "payable"
-  >;
-  getFunction(
-    nameOrSignature: "cancelListing"
-  ): TypedContractMethod<
-    [nftAddress: AddressLike, tokenId: BigNumberish],
-    [void],
-    "nonpayable"
-  >;
-  getFunction(
-    nameOrSignature: "getChainlinkDataFeedLatestAnswer"
-  ): TypedContractMethod<[], [bigint], "view">;
-  getFunction(
-    nameOrSignature: "getListPromptBuyers"
-  ): TypedContractMethod<
-    [nftAddress: AddressLike, tokenId: BigNumberish],
-    [string[]],
-    "view"
-  >;
-  getFunction(
-    nameOrSignature: "getListing"
-  ): TypedContractMethod<
-    [nftAddress: AddressLike, tokenId: BigNumberish],
-    [NftMarketplace.ListingStructOutput],
-    "view"
-  >;
-  getFunction(
-    nameOrSignature: "getPromptPrice"
-  ): TypedContractMethod<
-    [nftAddress: AddressLike, tokenId: BigNumberish],
-    [[bigint, bigint]],
-    "view"
-  >;
-  getFunction(
-    nameOrSignature: "getTokenPrice"
-  ): TypedContractMethod<
-    [nftAddress: AddressLike, tokenId: BigNumberish],
-    [[bigint, bigint]],
-    "view"
-  >;
-  getFunction(
-    nameOrSignature: "listItem"
-  ): TypedContractMethod<
-    [
-      nftAddress: AddressLike,
-      tokenId: BigNumberish,
-      nftPrice: BigNumberish,
-      promptPrice: BigNumberish
-    ],
-    [void],
-    "nonpayable"
-  >;
-  getFunction(
-    nameOrSignature: "roundToMillion"
-  ): TypedContractMethod<[input: BigNumberish], [bigint], "view">;
-  getFunction(
-    nameOrSignature: "updateListing"
-  ): TypedContractMethod<
-    [
-      nftAddress: AddressLike,
-      tokenId: BigNumberish,
-      newNFTPrice: BigNumberish,
-      newPromptPrice: BigNumberish
-    ],
-    [void],
-    "nonpayable"
-  >;
-  getFunction(
-    nameOrSignature: "updatePromptPrice"
-  ): TypedContractMethod<
-    [
-      nftAddress: AddressLike,
-      tokenId: BigNumberish,
-      newPromptPrice: BigNumberish
-    ],
-    [void],
-    "nonpayable"
-  >;
-  getFunction(
-    nameOrSignature: "usdc"
-  ): TypedContractMethod<[], [string], "view">;
+  getChainlinkDataFeedLatestAnswer(
+    overrides?: CallOverrides
+  ): Promise<BigNumber>;
 
-  getEvent(
-    key: "ItemBought"
-  ): TypedContractEvent<
-    ItemBoughtEvent.InputTuple,
-    ItemBoughtEvent.OutputTuple,
-    ItemBoughtEvent.OutputObject
-  >;
-  getEvent(
-    key: "ItemCanceled"
-  ): TypedContractEvent<
-    ItemCanceledEvent.InputTuple,
-    ItemCanceledEvent.OutputTuple,
-    ItemCanceledEvent.OutputObject
-  >;
-  getEvent(
-    key: "ItemListed"
-  ): TypedContractEvent<
-    ItemListedEvent.InputTuple,
-    ItemListedEvent.OutputTuple,
-    ItemListedEvent.OutputObject
-  >;
-  getEvent(
-    key: "PromptBought"
-  ): TypedContractEvent<
-    PromptBoughtEvent.InputTuple,
-    PromptBoughtEvent.OutputTuple,
-    PromptBoughtEvent.OutputObject
-  >;
+  getListPromptBuyers(
+    nftAddress: PromiseOrValue<string>,
+    tokenId: PromiseOrValue<BigNumberish>,
+    overrides?: CallOverrides
+  ): Promise<string[]>;
+
+  getListing(
+    nftAddress: PromiseOrValue<string>,
+    tokenId: PromiseOrValue<BigNumberish>,
+    overrides?: CallOverrides
+  ): Promise<NftMarketplace.ListingStructOutput>;
+
+  getPromptPrice(
+    nftAddress: PromiseOrValue<string>,
+    tokenId: PromiseOrValue<BigNumberish>,
+    overrides?: CallOverrides
+  ): Promise<[BigNumber, BigNumber]>;
+
+  getTokenPrice(
+    nftAddress: PromiseOrValue<string>,
+    tokenId: PromiseOrValue<BigNumberish>,
+    overrides?: CallOverrides
+  ): Promise<[BigNumber, BigNumber]>;
+
+  listItem(
+    nftAddress: PromiseOrValue<string>,
+    tokenId: PromiseOrValue<BigNumberish>,
+    nftPrice: PromiseOrValue<BigNumberish>,
+    promptPrice: PromiseOrValue<BigNumberish>,
+    overrides?: Overrides & { from?: PromiseOrValue<string> }
+  ): Promise<ContractTransaction>;
+
+  roundToMillion(
+    input: PromiseOrValue<BigNumberish>,
+    overrides?: CallOverrides
+  ): Promise<BigNumber>;
+
+  updateListing(
+    nftAddress: PromiseOrValue<string>,
+    tokenId: PromiseOrValue<BigNumberish>,
+    newNFTPrice: PromiseOrValue<BigNumberish>,
+    newPromptPrice: PromiseOrValue<BigNumberish>,
+    overrides?: Overrides & { from?: PromiseOrValue<string> }
+  ): Promise<ContractTransaction>;
+
+  updatePromptPrice(
+    nftAddress: PromiseOrValue<string>,
+    tokenId: PromiseOrValue<BigNumberish>,
+    newPromptPrice: PromiseOrValue<BigNumberish>,
+    overrides?: Overrides & { from?: PromiseOrValue<string> }
+  ): Promise<ContractTransaction>;
+
+  usdc(overrides?: CallOverrides): Promise<string>;
+
+  callStatic: {
+    buyItem(
+      nftAddress: PromiseOrValue<string>,
+      tokenId: PromiseOrValue<BigNumberish>,
+      tokenAmount: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
+    buyPrompt(
+      nftAddress: PromiseOrValue<string>,
+      tokenId: PromiseOrValue<BigNumberish>,
+      tokenAmount: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
+    cancelListing(
+      nftAddress: PromiseOrValue<string>,
+      tokenId: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
+    getChainlinkDataFeedLatestAnswer(
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    getListPromptBuyers(
+      nftAddress: PromiseOrValue<string>,
+      tokenId: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<string[]>;
+
+    getListing(
+      nftAddress: PromiseOrValue<string>,
+      tokenId: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<NftMarketplace.ListingStructOutput>;
+
+    getPromptPrice(
+      nftAddress: PromiseOrValue<string>,
+      tokenId: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<[BigNumber, BigNumber]>;
+
+    getTokenPrice(
+      nftAddress: PromiseOrValue<string>,
+      tokenId: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<[BigNumber, BigNumber]>;
+
+    listItem(
+      nftAddress: PromiseOrValue<string>,
+      tokenId: PromiseOrValue<BigNumberish>,
+      nftPrice: PromiseOrValue<BigNumberish>,
+      promptPrice: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
+    roundToMillion(
+      input: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    updateListing(
+      nftAddress: PromiseOrValue<string>,
+      tokenId: PromiseOrValue<BigNumberish>,
+      newNFTPrice: PromiseOrValue<BigNumberish>,
+      newPromptPrice: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
+    updatePromptPrice(
+      nftAddress: PromiseOrValue<string>,
+      tokenId: PromiseOrValue<BigNumberish>,
+      newPromptPrice: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
+    usdc(overrides?: CallOverrides): Promise<string>;
+  };
 
   filters: {
-    "ItemBought(address,address,uint256,uint256,uint256)": TypedContractEvent<
-      ItemBoughtEvent.InputTuple,
-      ItemBoughtEvent.OutputTuple,
-      ItemBoughtEvent.OutputObject
-    >;
-    ItemBought: TypedContractEvent<
-      ItemBoughtEvent.InputTuple,
-      ItemBoughtEvent.OutputTuple,
-      ItemBoughtEvent.OutputObject
-    >;
+    "ItemBought(address,address,uint256,uint256,uint256)"(
+      buyer?: PromiseOrValue<string> | null,
+      nftAddress?: PromiseOrValue<string> | null,
+      tokenId?: PromiseOrValue<BigNumberish> | null,
+      nftPrice?: null,
+      promptPrice?: null
+    ): ItemBoughtEventFilter;
+    ItemBought(
+      buyer?: PromiseOrValue<string> | null,
+      nftAddress?: PromiseOrValue<string> | null,
+      tokenId?: PromiseOrValue<BigNumberish> | null,
+      nftPrice?: null,
+      promptPrice?: null
+    ): ItemBoughtEventFilter;
 
-    "ItemCanceled(address,address,uint256)": TypedContractEvent<
-      ItemCanceledEvent.InputTuple,
-      ItemCanceledEvent.OutputTuple,
-      ItemCanceledEvent.OutputObject
-    >;
-    ItemCanceled: TypedContractEvent<
-      ItemCanceledEvent.InputTuple,
-      ItemCanceledEvent.OutputTuple,
-      ItemCanceledEvent.OutputObject
-    >;
+    "ItemCanceled(address,address,uint256)"(
+      seller?: PromiseOrValue<string> | null,
+      nftAddress?: PromiseOrValue<string> | null,
+      tokenId?: PromiseOrValue<BigNumberish> | null
+    ): ItemCanceledEventFilter;
+    ItemCanceled(
+      seller?: PromiseOrValue<string> | null,
+      nftAddress?: PromiseOrValue<string> | null,
+      tokenId?: PromiseOrValue<BigNumberish> | null
+    ): ItemCanceledEventFilter;
 
-    "ItemListed(address,address,uint256,uint256,uint256)": TypedContractEvent<
-      ItemListedEvent.InputTuple,
-      ItemListedEvent.OutputTuple,
-      ItemListedEvent.OutputObject
-    >;
-    ItemListed: TypedContractEvent<
-      ItemListedEvent.InputTuple,
-      ItemListedEvent.OutputTuple,
-      ItemListedEvent.OutputObject
-    >;
+    "ItemListed(address,address,uint256,uint256,uint256)"(
+      seller?: PromiseOrValue<string> | null,
+      nftAddress?: PromiseOrValue<string> | null,
+      tokenId?: PromiseOrValue<BigNumberish> | null,
+      nftPrice?: null,
+      promptPrice?: null
+    ): ItemListedEventFilter;
+    ItemListed(
+      seller?: PromiseOrValue<string> | null,
+      nftAddress?: PromiseOrValue<string> | null,
+      tokenId?: PromiseOrValue<BigNumberish> | null,
+      nftPrice?: null,
+      promptPrice?: null
+    ): ItemListedEventFilter;
 
-    "PromptBought(address,address,uint256,uint256,uint256)": TypedContractEvent<
-      PromptBoughtEvent.InputTuple,
-      PromptBoughtEvent.OutputTuple,
-      PromptBoughtEvent.OutputObject
-    >;
-    PromptBought: TypedContractEvent<
-      PromptBoughtEvent.InputTuple,
-      PromptBoughtEvent.OutputTuple,
-      PromptBoughtEvent.OutputObject
-    >;
+    "PromptBought(address,address,uint256,uint256,uint256)"(
+      buyer?: PromiseOrValue<string> | null,
+      nftAddress?: PromiseOrValue<string> | null,
+      tokenId?: PromiseOrValue<BigNumberish> | null,
+      nftPrice?: null,
+      promptPrice?: null
+    ): PromptBoughtEventFilter;
+    PromptBought(
+      buyer?: PromiseOrValue<string> | null,
+      nftAddress?: PromiseOrValue<string> | null,
+      tokenId?: PromiseOrValue<BigNumberish> | null,
+      nftPrice?: null,
+      promptPrice?: null
+    ): PromptBoughtEventFilter;
+  };
+
+  estimateGas: {
+    buyItem(
+      nftAddress: PromiseOrValue<string>,
+      tokenId: PromiseOrValue<BigNumberish>,
+      tokenAmount: PromiseOrValue<BigNumberish>,
+      overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
+    ): Promise<BigNumber>;
+
+    buyPrompt(
+      nftAddress: PromiseOrValue<string>,
+      tokenId: PromiseOrValue<BigNumberish>,
+      tokenAmount: PromiseOrValue<BigNumberish>,
+      overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
+    ): Promise<BigNumber>;
+
+    cancelListing(
+      nftAddress: PromiseOrValue<string>,
+      tokenId: PromiseOrValue<BigNumberish>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<BigNumber>;
+
+    getChainlinkDataFeedLatestAnswer(
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    getListPromptBuyers(
+      nftAddress: PromiseOrValue<string>,
+      tokenId: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    getListing(
+      nftAddress: PromiseOrValue<string>,
+      tokenId: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    getPromptPrice(
+      nftAddress: PromiseOrValue<string>,
+      tokenId: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    getTokenPrice(
+      nftAddress: PromiseOrValue<string>,
+      tokenId: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    listItem(
+      nftAddress: PromiseOrValue<string>,
+      tokenId: PromiseOrValue<BigNumberish>,
+      nftPrice: PromiseOrValue<BigNumberish>,
+      promptPrice: PromiseOrValue<BigNumberish>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<BigNumber>;
+
+    roundToMillion(
+      input: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    updateListing(
+      nftAddress: PromiseOrValue<string>,
+      tokenId: PromiseOrValue<BigNumberish>,
+      newNFTPrice: PromiseOrValue<BigNumberish>,
+      newPromptPrice: PromiseOrValue<BigNumberish>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<BigNumber>;
+
+    updatePromptPrice(
+      nftAddress: PromiseOrValue<string>,
+      tokenId: PromiseOrValue<BigNumberish>,
+      newPromptPrice: PromiseOrValue<BigNumberish>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<BigNumber>;
+
+    usdc(overrides?: CallOverrides): Promise<BigNumber>;
+  };
+
+  populateTransaction: {
+    buyItem(
+      nftAddress: PromiseOrValue<string>,
+      tokenId: PromiseOrValue<BigNumberish>,
+      tokenAmount: PromiseOrValue<BigNumberish>,
+      overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
+    ): Promise<PopulatedTransaction>;
+
+    buyPrompt(
+      nftAddress: PromiseOrValue<string>,
+      tokenId: PromiseOrValue<BigNumberish>,
+      tokenAmount: PromiseOrValue<BigNumberish>,
+      overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
+    ): Promise<PopulatedTransaction>;
+
+    cancelListing(
+      nftAddress: PromiseOrValue<string>,
+      tokenId: PromiseOrValue<BigNumberish>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<PopulatedTransaction>;
+
+    getChainlinkDataFeedLatestAnswer(
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    getListPromptBuyers(
+      nftAddress: PromiseOrValue<string>,
+      tokenId: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    getListing(
+      nftAddress: PromiseOrValue<string>,
+      tokenId: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    getPromptPrice(
+      nftAddress: PromiseOrValue<string>,
+      tokenId: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    getTokenPrice(
+      nftAddress: PromiseOrValue<string>,
+      tokenId: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    listItem(
+      nftAddress: PromiseOrValue<string>,
+      tokenId: PromiseOrValue<BigNumberish>,
+      nftPrice: PromiseOrValue<BigNumberish>,
+      promptPrice: PromiseOrValue<BigNumberish>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<PopulatedTransaction>;
+
+    roundToMillion(
+      input: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    updateListing(
+      nftAddress: PromiseOrValue<string>,
+      tokenId: PromiseOrValue<BigNumberish>,
+      newNFTPrice: PromiseOrValue<BigNumberish>,
+      newPromptPrice: PromiseOrValue<BigNumberish>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<PopulatedTransaction>;
+
+    updatePromptPrice(
+      nftAddress: PromiseOrValue<string>,
+      tokenId: PromiseOrValue<BigNumberish>,
+      newPromptPrice: PromiseOrValue<BigNumberish>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<PopulatedTransaction>;
+
+    usdc(overrides?: CallOverrides): Promise<PopulatedTransaction>;
   };
 }

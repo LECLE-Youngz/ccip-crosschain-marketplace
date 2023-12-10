@@ -39,9 +39,11 @@ export interface LuckyNFTInterface extends utils.Interface {
     "isApprovedForAll(address,address)": FunctionFragment;
     "lastRequestId()": FunctionFragment;
     "name()": FunctionFragment;
+    "owner()": FunctionFragment;
     "ownerOf(uint256)": FunctionFragment;
     "premiumNFT()": FunctionFragment;
     "rawFulfillRandomWords(uint256,uint256[])": FunctionFragment;
+    "renounceOwnership()": FunctionFragment;
     "requestIds(uint256)": FunctionFragment;
     "s_baseURI()": FunctionFragment;
     "s_requests(uint256)": FunctionFragment;
@@ -55,6 +57,7 @@ export interface LuckyNFTInterface extends utils.Interface {
     "symbol()": FunctionFragment;
     "tokenURI(uint256)": FunctionFragment;
     "transferFrom(address,address,uint256)": FunctionFragment;
+    "transferOwnership(address)": FunctionFragment;
   };
 
   getFunction(
@@ -69,9 +72,11 @@ export interface LuckyNFTInterface extends utils.Interface {
       | "isApprovedForAll"
       | "lastRequestId"
       | "name"
+      | "owner"
       | "ownerOf"
       | "premiumNFT"
       | "rawFulfillRandomWords"
+      | "renounceOwnership"
       | "requestIds"
       | "s_baseURI"
       | "s_requests"
@@ -85,6 +90,7 @@ export interface LuckyNFTInterface extends utils.Interface {
       | "symbol"
       | "tokenURI"
       | "transferFrom"
+      | "transferOwnership"
   ): FunctionFragment;
 
   encodeFunctionData(
@@ -124,6 +130,7 @@ export interface LuckyNFTInterface extends utils.Interface {
     values?: undefined
   ): string;
   encodeFunctionData(functionFragment: "name", values?: undefined): string;
+  encodeFunctionData(functionFragment: "owner", values?: undefined): string;
   encodeFunctionData(
     functionFragment: "ownerOf",
     values: [PromiseOrValue<BigNumberish>]
@@ -135,6 +142,10 @@ export interface LuckyNFTInterface extends utils.Interface {
   encodeFunctionData(
     functionFragment: "rawFulfillRandomWords",
     values: [PromiseOrValue<BigNumberish>, PromiseOrValue<BigNumberish>[]]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "renounceOwnership",
+    values?: undefined
   ): string;
   encodeFunctionData(
     functionFragment: "requestIds",
@@ -195,6 +206,10 @@ export interface LuckyNFTInterface extends utils.Interface {
       PromiseOrValue<BigNumberish>
     ]
   ): string;
+  encodeFunctionData(
+    functionFragment: "transferOwnership",
+    values: [PromiseOrValue<string>]
+  ): string;
 
   decodeFunctionResult(
     functionFragment: "_nextTokenId",
@@ -227,10 +242,15 @@ export interface LuckyNFTInterface extends utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "name", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "owner", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "ownerOf", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "premiumNFT", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "rawFulfillRandomWords",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "renounceOwnership",
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "requestIds", data: BytesLike): Result;
@@ -267,12 +287,17 @@ export interface LuckyNFTInterface extends utils.Interface {
     functionFragment: "transferFrom",
     data: BytesLike
   ): Result;
+  decodeFunctionResult(
+    functionFragment: "transferOwnership",
+    data: BytesLike
+  ): Result;
 
   events: {
     "Approval(address,address,uint256)": EventFragment;
     "ApprovalForAll(address,address,bool)": EventFragment;
     "LotteryRequestFulfilled(uint256,address,uint256,uint256)": EventFragment;
     "LotteryRequestSent(uint256,address)": EventFragment;
+    "OwnershipTransferred(address,address)": EventFragment;
     "Transfer(address,address,uint256)": EventFragment;
   };
 
@@ -280,6 +305,7 @@ export interface LuckyNFTInterface extends utils.Interface {
   getEvent(nameOrSignatureOrTopic: "ApprovalForAll"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "LotteryRequestFulfilled"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "LotteryRequestSent"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "OwnershipTransferred"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "Transfer"): EventFragment;
 }
 
@@ -332,6 +358,18 @@ export type LotteryRequestSentEvent = TypedEvent<
 
 export type LotteryRequestSentEventFilter =
   TypedEventFilter<LotteryRequestSentEvent>;
+
+export interface OwnershipTransferredEventObject {
+  previousOwner: string;
+  newOwner: string;
+}
+export type OwnershipTransferredEvent = TypedEvent<
+  [string, string],
+  OwnershipTransferredEventObject
+>;
+
+export type OwnershipTransferredEventFilter =
+  TypedEventFilter<OwnershipTransferredEvent>;
 
 export interface TransferEventObject {
   from: string;
@@ -417,6 +455,8 @@ export interface LuckyNFT extends BaseContract {
 
     name(overrides?: CallOverrides): Promise<[string]>;
 
+    owner(overrides?: CallOverrides): Promise<[string]>;
+
     ownerOf(
       tokenId: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
@@ -427,6 +467,10 @@ export interface LuckyNFT extends BaseContract {
     rawFulfillRandomWords(
       requestId: PromiseOrValue<BigNumberish>,
       randomWords: PromiseOrValue<BigNumberish>[],
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<ContractTransaction>;
+
+    renounceOwnership(
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
@@ -496,6 +540,11 @@ export interface LuckyNFT extends BaseContract {
       tokenId: PromiseOrValue<BigNumberish>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
+
+    transferOwnership(
+      newOwner: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<ContractTransaction>;
   };
 
   _nextTokenId(overrides?: CallOverrides): Promise<BigNumber>;
@@ -543,6 +592,8 @@ export interface LuckyNFT extends BaseContract {
 
   name(overrides?: CallOverrides): Promise<string>;
 
+  owner(overrides?: CallOverrides): Promise<string>;
+
   ownerOf(
     tokenId: PromiseOrValue<BigNumberish>,
     overrides?: CallOverrides
@@ -553,6 +604,10 @@ export interface LuckyNFT extends BaseContract {
   rawFulfillRandomWords(
     requestId: PromiseOrValue<BigNumberish>,
     randomWords: PromiseOrValue<BigNumberish>[],
+    overrides?: Overrides & { from?: PromiseOrValue<string> }
+  ): Promise<ContractTransaction>;
+
+  renounceOwnership(
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
@@ -623,6 +678,11 @@ export interface LuckyNFT extends BaseContract {
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
+  transferOwnership(
+    newOwner: PromiseOrValue<string>,
+    overrides?: Overrides & { from?: PromiseOrValue<string> }
+  ): Promise<ContractTransaction>;
+
   callStatic: {
     _nextTokenId(overrides?: CallOverrides): Promise<BigNumber>;
 
@@ -669,6 +729,8 @@ export interface LuckyNFT extends BaseContract {
 
     name(overrides?: CallOverrides): Promise<string>;
 
+    owner(overrides?: CallOverrides): Promise<string>;
+
     ownerOf(
       tokenId: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
@@ -681,6 +743,8 @@ export interface LuckyNFT extends BaseContract {
       randomWords: PromiseOrValue<BigNumberish>[],
       overrides?: CallOverrides
     ): Promise<void>;
+
+    renounceOwnership(overrides?: CallOverrides): Promise<void>;
 
     requestIds(
       arg0: PromiseOrValue<BigNumberish>,
@@ -748,6 +812,11 @@ export interface LuckyNFT extends BaseContract {
       tokenId: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<void>;
+
+    transferOwnership(
+      newOwner: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<void>;
   };
 
   filters: {
@@ -794,6 +863,15 @@ export interface LuckyNFT extends BaseContract {
       requestId?: null,
       subscriber?: null
     ): LotteryRequestSentEventFilter;
+
+    "OwnershipTransferred(address,address)"(
+      previousOwner?: PromiseOrValue<string> | null,
+      newOwner?: PromiseOrValue<string> | null
+    ): OwnershipTransferredEventFilter;
+    OwnershipTransferred(
+      previousOwner?: PromiseOrValue<string> | null,
+      newOwner?: PromiseOrValue<string> | null
+    ): OwnershipTransferredEventFilter;
 
     "Transfer(address,address,uint256)"(
       from?: PromiseOrValue<string> | null,
@@ -851,6 +929,8 @@ export interface LuckyNFT extends BaseContract {
 
     name(overrides?: CallOverrides): Promise<BigNumber>;
 
+    owner(overrides?: CallOverrides): Promise<BigNumber>;
+
     ownerOf(
       tokenId: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
@@ -861,6 +941,10 @@ export interface LuckyNFT extends BaseContract {
     rawFulfillRandomWords(
       requestId: PromiseOrValue<BigNumberish>,
       randomWords: PromiseOrValue<BigNumberish>[],
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<BigNumber>;
+
+    renounceOwnership(
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
@@ -930,6 +1014,11 @@ export interface LuckyNFT extends BaseContract {
       tokenId: PromiseOrValue<BigNumberish>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
+
+    transferOwnership(
+      newOwner: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<BigNumber>;
   };
 
   populateTransaction: {
@@ -976,6 +1065,8 @@ export interface LuckyNFT extends BaseContract {
 
     name(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
+    owner(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
     ownerOf(
       tokenId: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
@@ -986,6 +1077,10 @@ export interface LuckyNFT extends BaseContract {
     rawFulfillRandomWords(
       requestId: PromiseOrValue<BigNumberish>,
       randomWords: PromiseOrValue<BigNumberish>[],
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<PopulatedTransaction>;
+
+    renounceOwnership(
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 
@@ -1053,6 +1148,11 @@ export interface LuckyNFT extends BaseContract {
       from: PromiseOrValue<string>,
       to: PromiseOrValue<string>,
       tokenId: PromiseOrValue<BigNumberish>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<PopulatedTransaction>;
+
+    transferOwnership(
+      newOwner: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
   };

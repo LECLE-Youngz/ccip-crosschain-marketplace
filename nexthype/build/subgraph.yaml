@@ -124,9 +124,9 @@ dataSources:
     name: MysteryFactory
     network: fuji
     source:
-      address: "0x827Bd6f2299a56e1e422b057A37d77588cE2C03C"
+      address: "0x747c50201d070c86a11EAa1e34fCDf7a2D99e7B9"
       abi: MysteryFactory
-      startBlock: 28436949
+      startBlock: 28428276
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.7
@@ -140,6 +140,66 @@ dataSources:
         - event: MysteryEventCreated(address,address)
           handler: handleMysteryEventCreated
       file: MysteryFactory\MysteryFactory.wasm
+  - kind: ethereum
+    name: LuckyFactory
+    network: fuji
+    source:
+      address: "0x7506D8e5A7b45625640Ce7bA8A3359567720dE6c"
+      abi: LuckyFactory
+      startBlock: 28449915
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - LuckyTokenCreated
+      abis:
+        - name: LuckyFactory
+          file: LuckyFactory\abis\LuckyFactory.json
+      eventHandlers:
+        - event: LuckyTokenCreated(address,address)
+          handler: handleLuckyTokenCreated
+      file: LuckyFactory\LuckyFactory.wasm
+  - kind: ethereum
+    name: BoxFactory
+    network: fuji
+    source:
+      address: "0xD2156E1443066c41E3D8580B0a14b01B8f48a880"
+      abi: BoxFactory
+      startBlock: 28455783
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - MysteryBoxCreated
+      abis:
+        - name: BoxFactory
+          file: BoxFactory\abis\BoxFactory.json
+      eventHandlers:
+        - event: MysteryBoxCreated(address,address)
+          handler: handleMysteryBoxCreated
+      file: BoxFactory\BoxFactory.wasm
+  - kind: ethereum
+    name: TreasuryFactory
+    network: fuji
+    source:
+      address: "0x29e74c72C83E2CEfdF031DFE1397981cAE93D805"
+      abi: TreasuryFactory
+      startBlock: 28454516
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - LuckyTreasuryCreated
+      abis:
+        - name: TreasuryFactory
+          file: TreasuryFactory\abis\TreasuryFactory.json
+      eventHandlers:
+        - event: LuckyTreasuryCreated(address,address)
+          handler: handleLuckyTreasuryCreated
+      file: TreasuryFactory\TreasuryFactory.wasm
 templates:
   - kind: ethereum
     name: Contract
@@ -237,7 +297,7 @@ templates:
       entities:
         - MysteryEventApproval
         - MysteryEventApprovalForAll
-        - LuckyNFTRequest
+        - MysteryNFTRequest
         - OwnershipTransferRequested
         - MysteryEventOwnershipTransferred
         - RandomnessRequest
@@ -254,7 +314,7 @@ templates:
         - event: ApprovalForAll(indexed address,indexed address,bool)
           handler: handleApprovalForAll
         - event: MysteryNFTRequest(address,bytes32)
-          handler: handleLuckyNFTRequest
+          handler: handleMysteryNFTRequest
         - event: OwnershipTransferRequested(indexed address,indexed address)
           handler: handleOwnershipTransferRequested
         - event: RandomnessRequest(uint256)
@@ -268,3 +328,84 @@ templates:
         - event: Transfer(indexed address,indexed address,indexed uint256)
           handler: handleTransfer
       file: templates\MysteryEvent\MysteryEvent.wasm
+  - kind: ethereum
+    name: LuckyNFT
+    network: fuji
+    source:
+      abi: LuckyNFT
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - LuckyNFTApproval
+        - LuckyNFTApprovalForAll
+        - LotteryRequestFulfilled
+        - LotteryRequestSent
+        - LuckyNFTOwnershipTransferred
+        - LuckyNFTTransfer
+      abis:
+        - name: LuckyNFT
+          file: LuckyNFT\abis\LuckyNFT.json
+      eventHandlers:
+        - event: Approval(indexed address,indexed address,indexed uint256)
+          handler: handleApproval
+        - event: ApprovalForAll(indexed address,indexed address,bool)
+          handler: handleApprovalForAll
+        - event: LotteryRequestFulfilled(uint256,address,uint256,uint256)
+          handler: handleLotteryRequestFulfilled
+        - event: LotteryRequestSent(uint256,address)
+          handler: handleLotteryRequestSent
+        - event: OwnershipTransferred(indexed address,indexed address)
+          handler: handleOwnershipTransferred
+        - event: Transfer(indexed address,indexed address,indexed uint256)
+          handler: handleTransfer
+      file: templates\LuckyNFT\LuckyNFT.wasm
+  - kind: ethereum
+    name: MysteryBox
+    network: fuji
+    source:
+      abi: MysteryBox
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - MysteryBoxApproval
+        - MysteryBoxApprovalForAll
+        - MysteryBoxOwnershipTransferred
+        - MysteryBoxRandomnessRequest
+        - MysteryBoxTransfer
+      abis:
+        - name: MysteryBox
+          file: MysteryBox\abis\MysteryBox.json
+      eventHandlers:
+        - event: Approval(indexed address,indexed address,indexed uint256)
+          handler: handleApproval
+        - event: ApprovalForAll(indexed address,indexed address,bool)
+          handler: handleApprovalForAll
+        - event: OwnershipTransferred(indexed address,indexed address)
+          handler: handleOwnershipTransferred
+        - event: RandomnessRequest(uint256)
+          handler: handleRandomnessRequest
+        - event: Transfer(indexed address,indexed address,indexed uint256)
+          handler: handleTransfer
+      file: templates\MysteryBox\MysteryBox.wasm
+  - kind: ethereum
+    name: LuckyTreasury
+    network: fuji
+    source:
+      abi: LuckyTreasury
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - LuckyTreasuryOwnershipTransferred
+      abis:
+        - name: LuckyTreasury
+          file: LuckyTreasury\abis\LuckyTreasury.json
+      eventHandlers:
+        - event: OwnershipTransferred(indexed address,indexed address)
+          handler: handleOwnershipTransferred
+      file: templates\LuckyTreasury\LuckyTreasury.wasm

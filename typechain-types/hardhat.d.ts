@@ -201,6 +201,10 @@ declare module "hardhat/types/runtime" {
       signerOrOptions?: ethers.Signer | FactoryOptions
     ): Promise<Contracts.LuckyNFTFactory__factory>;
     getContractFactory(
+      name: "LuckyTreasury",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.LuckyTreasury__factory>;
+    getContractFactory(
       name: "NftMarketplace",
       signerOrOptions?: ethers.Signer | FactoryOptions
     ): Promise<Contracts.NftMarketplace__factory>;
@@ -208,6 +212,10 @@ declare module "hardhat/types/runtime" {
       name: "MysteryBox",
       signerOrOptions?: ethers.Signer | FactoryOptions
     ): Promise<Contracts.MysteryBox__factory>;
+    getContractFactory(
+      name: "MysteryBoxFactory",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.MysteryBoxFactory__factory>;
     getContractFactory(
       name: "MysteryDropEvent",
       signerOrOptions?: ethers.Signer | FactoryOptions
@@ -240,6 +248,10 @@ declare module "hardhat/types/runtime" {
       name: "VRFv2Consumer",
       signerOrOptions?: ethers.Signer | FactoryOptions
     ): Promise<Contracts.VRFv2Consumer__factory>;
+    getContractFactory(
+      name: "TreasuryFactory",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.TreasuryFactory__factory>;
     getContractFactory(
       name: "Withdraw",
       signerOrOptions?: ethers.Signer | FactoryOptions
@@ -485,6 +497,11 @@ declare module "hardhat/types/runtime" {
       signer?: ethers.Signer
     ): Promise<Contracts.LuckyNFTFactory>;
     getContractAt(
+      name: "LuckyTreasury",
+      address: string,
+      signer?: ethers.Signer
+    ): Promise<Contracts.LuckyTreasury>;
+    getContractAt(
       name: "NftMarketplace",
       address: string,
       signer?: ethers.Signer
@@ -494,6 +511,11 @@ declare module "hardhat/types/runtime" {
       address: string,
       signer?: ethers.Signer
     ): Promise<Contracts.MysteryBox>;
+    getContractAt(
+      name: "MysteryBoxFactory",
+      address: string,
+      signer?: ethers.Signer
+    ): Promise<Contracts.MysteryBoxFactory>;
     getContractAt(
       name: "MysteryDropEvent",
       address: string,
@@ -534,6 +556,11 @@ declare module "hardhat/types/runtime" {
       address: string,
       signer?: ethers.Signer
     ): Promise<Contracts.VRFv2Consumer>;
+    getContractAt(
+      name: "TreasuryFactory",
+      address: string,
+      signer?: ethers.Signer
+    ): Promise<Contracts.TreasuryFactory>;
     getContractAt(
       name: "Withdraw",
       address: string,
