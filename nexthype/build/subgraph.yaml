@@ -124,7 +124,7 @@ dataSources:
     name: MysteryFactory
     network: fuji
     source:
-      address: "0x747c50201d070c86a11EAa1e34fCDf7a2D99e7B9"
+      address: "0x4661dCC571657680bfc4A710546ED1622Bf29af8"
       abi: MysteryFactory
       startBlock: 28428276
     mapping:
@@ -164,7 +164,7 @@ dataSources:
     name: BoxFactory
     network: fuji
     source:
-      address: "0xD2156E1443066c41E3D8580B0a14b01B8f48a880"
+      address: "0xFf0aC217995C5037a83B7c1B2bD4f347983527Ff"
       abi: BoxFactory
       startBlock: 28455783
     mapping:
