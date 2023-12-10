@@ -31,12 +31,16 @@ import type {
 export interface MysteryBoxInterface extends utils.Interface {
   functions: {
     "approve(address,uint256)": FunctionFragment;
+    "automation()": FunctionFragment;
     "balanceOf(address)": FunctionFragment;
     "getApproved(uint256)": FunctionFragment;
     "getBaseURI()": FunctionFragment;
     "getFee()": FunctionFragment;
     "getProvenanceHash()": FunctionFragment;
     "getWhitelistRoot()": FunctionFragment;
+    "i_maxMintPerUser()": FunctionFragment;
+    "i_maxSupply()": FunctionFragment;
+    "i_vrfSubscriptionId()": FunctionFragment;
     "isApprovedForAll(address,address)": FunctionFragment;
     "name()": FunctionFragment;
     "owner()": FunctionFragment;
@@ -46,9 +50,11 @@ export interface MysteryBoxInterface extends utils.Interface {
     "rawFulfillRandomWords(uint256,uint256[])": FunctionFragment;
     "renounceOwnership()": FunctionFragment;
     "reveal()": FunctionFragment;
+    "s_unrevealedURI()": FunctionFragment;
     "safeTransferFrom(address,address,uint256)": FunctionFragment;
     "safeTransferFrom(address,address,uint256,bytes)": FunctionFragment;
     "setApprovalForAll(address,bool)": FunctionFragment;
+    "setAutomation(address)": FunctionFragment;
     "setBaseURI(string)": FunctionFragment;
     "setMintFee(uint256)": FunctionFragment;
     "setProvenanceHash(string)": FunctionFragment;
@@ -67,12 +73,16 @@ export interface MysteryBoxInterface extends utils.Interface {
   getFunction(
     nameOrSignatureOrTopic:
       | "approve"
+      | "automation"
       | "balanceOf"
       | "getApproved"
       | "getBaseURI"
       | "getFee"
       | "getProvenanceHash"
       | "getWhitelistRoot"
+      | "i_maxMintPerUser"
+      | "i_maxSupply"
+      | "i_vrfSubscriptionId"
       | "isApprovedForAll"
       | "name"
       | "owner"
@@ -82,9 +92,11 @@ export interface MysteryBoxInterface extends utils.Interface {
       | "rawFulfillRandomWords"
       | "renounceOwnership"
       | "reveal"
+      | "s_unrevealedURI"
       | "safeTransferFrom(address,address,uint256)"
       | "safeTransferFrom(address,address,uint256,bytes)"
       | "setApprovalForAll"
+      | "setAutomation"
       | "setBaseURI"
       | "setMintFee"
       | "setProvenanceHash"
@@ -105,6 +117,10 @@ export interface MysteryBoxInterface extends utils.Interface {
     values: [PromiseOrValue<string>, PromiseOrValue<BigNumberish>]
   ): string;
   encodeFunctionData(
+    functionFragment: "automation",
+    values?: undefined
+  ): string;
+  encodeFunctionData(
     functionFragment: "balanceOf",
     values: [PromiseOrValue<string>]
   ): string;
@@ -123,6 +139,18 @@ export interface MysteryBoxInterface extends utils.Interface {
   ): string;
   encodeFunctionData(
     functionFragment: "getWhitelistRoot",
+    values?: undefined
+  ): string;
+  encodeFunctionData(
+    functionFragment: "i_maxMintPerUser",
+    values?: undefined
+  ): string;
+  encodeFunctionData(
+    functionFragment: "i_maxSupply",
+    values?: undefined
+  ): string;
+  encodeFunctionData(
+    functionFragment: "i_vrfSubscriptionId",
     values?: undefined
   ): string;
   encodeFunctionData(
@@ -153,6 +181,10 @@ export interface MysteryBoxInterface extends utils.Interface {
   ): string;
   encodeFunctionData(functionFragment: "reveal", values?: undefined): string;
   encodeFunctionData(
+    functionFragment: "s_unrevealedURI",
+    values?: undefined
+  ): string;
+  encodeFunctionData(
     functionFragment: "safeTransferFrom(address,address,uint256)",
     values: [
       PromiseOrValue<string>,
@@ -172,6 +204,10 @@ export interface MysteryBoxInterface extends utils.Interface {
   encodeFunctionData(
     functionFragment: "setApprovalForAll",
     values: [PromiseOrValue<string>, PromiseOrValue<boolean>]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "setAutomation",
+    values: [PromiseOrValue<string>]
   ): string;
   encodeFunctionData(
     functionFragment: "setBaseURI",
@@ -225,6 +261,7 @@ export interface MysteryBoxInterface extends utils.Interface {
   encodeFunctionData(functionFragment: "withdraw", values?: undefined): string;
 
   decodeFunctionResult(functionFragment: "approve", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "automation", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "balanceOf", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "getApproved",
@@ -238,6 +275,18 @@ export interface MysteryBoxInterface extends utils.Interface {
   ): Result;
   decodeFunctionResult(
     functionFragment: "getWhitelistRoot",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "i_maxMintPerUser",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "i_maxSupply",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "i_vrfSubscriptionId",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
@@ -262,6 +311,10 @@ export interface MysteryBoxInterface extends utils.Interface {
   ): Result;
   decodeFunctionResult(functionFragment: "reveal", data: BytesLike): Result;
   decodeFunctionResult(
+    functionFragment: "s_unrevealedURI",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
     functionFragment: "safeTransferFrom(address,address,uint256)",
     data: BytesLike
   ): Result;
@@ -271,6 +324,10 @@ export interface MysteryBoxInterface extends utils.Interface {
   ): Result;
   decodeFunctionResult(
     functionFragment: "setApprovalForAll",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "setAutomation",
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "setBaseURI", data: BytesLike): Result;
@@ -418,6 +475,8 @@ export interface MysteryBox extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
+    automation(overrides?: CallOverrides): Promise<[string]>;
+
     balanceOf(
       owner: PromiseOrValue<string>,
       overrides?: CallOverrides
@@ -435,6 +494,12 @@ export interface MysteryBox extends BaseContract {
     getProvenanceHash(overrides?: CallOverrides): Promise<[string]>;
 
     getWhitelistRoot(overrides?: CallOverrides): Promise<[string]>;
+
+    i_maxMintPerUser(overrides?: CallOverrides): Promise<[BigNumber]>;
+
+    i_maxSupply(overrides?: CallOverrides): Promise<[BigNumber]>;
+
+    i_vrfSubscriptionId(overrides?: CallOverrides): Promise<[BigNumber]>;
 
     isApprovedForAll(
       owner: PromiseOrValue<string>,
@@ -476,6 +541,8 @@ export interface MysteryBox extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
+    s_unrevealedURI(overrides?: CallOverrides): Promise<[string]>;
+
     "safeTransferFrom(address,address,uint256)"(
       from: PromiseOrValue<string>,
       to: PromiseOrValue<string>,
@@ -494,6 +561,11 @@ export interface MysteryBox extends BaseContract {
     setApprovalForAll(
       operator: PromiseOrValue<string>,
       approved: PromiseOrValue<boolean>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<ContractTransaction>;
+
+    setAutomation(
+      _automation: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
@@ -564,6 +636,8 @@ export interface MysteryBox extends BaseContract {
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
+  automation(overrides?: CallOverrides): Promise<string>;
+
   balanceOf(
     owner: PromiseOrValue<string>,
     overrides?: CallOverrides
@@ -581,6 +655,12 @@ export interface MysteryBox extends BaseContract {
   getProvenanceHash(overrides?: CallOverrides): Promise<string>;
 
   getWhitelistRoot(overrides?: CallOverrides): Promise<string>;
+
+  i_maxMintPerUser(overrides?: CallOverrides): Promise<BigNumber>;
+
+  i_maxSupply(overrides?: CallOverrides): Promise<BigNumber>;
+
+  i_vrfSubscriptionId(overrides?: CallOverrides): Promise<BigNumber>;
 
   isApprovedForAll(
     owner: PromiseOrValue<string>,
@@ -622,6 +702,8 @@ export interface MysteryBox extends BaseContract {
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
+  s_unrevealedURI(overrides?: CallOverrides): Promise<string>;
+
   "safeTransferFrom(address,address,uint256)"(
     from: PromiseOrValue<string>,
     to: PromiseOrValue<string>,
@@ -640,6 +722,11 @@ export interface MysteryBox extends BaseContract {
   setApprovalForAll(
     operator: PromiseOrValue<string>,
     approved: PromiseOrValue<boolean>,
+    overrides?: Overrides & { from?: PromiseOrValue<string> }
+  ): Promise<ContractTransaction>;
+
+  setAutomation(
+    _automation: PromiseOrValue<string>,
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
@@ -710,6 +797,8 @@ export interface MysteryBox extends BaseContract {
       overrides?: CallOverrides
     ): Promise<void>;
 
+    automation(overrides?: CallOverrides): Promise<string>;
+
     balanceOf(
       owner: PromiseOrValue<string>,
       overrides?: CallOverrides
@@ -727,6 +816,12 @@ export interface MysteryBox extends BaseContract {
     getProvenanceHash(overrides?: CallOverrides): Promise<string>;
 
     getWhitelistRoot(overrides?: CallOverrides): Promise<string>;
+
+    i_maxMintPerUser(overrides?: CallOverrides): Promise<BigNumber>;
+
+    i_maxSupply(overrides?: CallOverrides): Promise<BigNumber>;
+
+    i_vrfSubscriptionId(overrides?: CallOverrides): Promise<BigNumber>;
 
     isApprovedForAll(
       owner: PromiseOrValue<string>,
@@ -764,6 +859,8 @@ export interface MysteryBox extends BaseContract {
 
     reveal(overrides?: CallOverrides): Promise<void>;
 
+    s_unrevealedURI(overrides?: CallOverrides): Promise<string>;
+
     "safeTransferFrom(address,address,uint256)"(
       from: PromiseOrValue<string>,
       to: PromiseOrValue<string>,
@@ -782,6 +879,11 @@ export interface MysteryBox extends BaseContract {
     setApprovalForAll(
       operator: PromiseOrValue<string>,
       approved: PromiseOrValue<boolean>,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
+    setAutomation(
+      _automation: PromiseOrValue<string>,
       overrides?: CallOverrides
     ): Promise<void>;
 
@@ -900,6 +1002,8 @@ export interface MysteryBox extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
+    automation(overrides?: CallOverrides): Promise<BigNumber>;
+
     balanceOf(
       owner: PromiseOrValue<string>,
       overrides?: CallOverrides
@@ -917,6 +1021,12 @@ export interface MysteryBox extends BaseContract {
     getProvenanceHash(overrides?: CallOverrides): Promise<BigNumber>;
 
     getWhitelistRoot(overrides?: CallOverrides): Promise<BigNumber>;
+
+    i_maxMintPerUser(overrides?: CallOverrides): Promise<BigNumber>;
+
+    i_maxSupply(overrides?: CallOverrides): Promise<BigNumber>;
+
+    i_vrfSubscriptionId(overrides?: CallOverrides): Promise<BigNumber>;
 
     isApprovedForAll(
       owner: PromiseOrValue<string>,
@@ -958,6 +1068,8 @@ export interface MysteryBox extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
+    s_unrevealedURI(overrides?: CallOverrides): Promise<BigNumber>;
+
     "safeTransferFrom(address,address,uint256)"(
       from: PromiseOrValue<string>,
       to: PromiseOrValue<string>,
@@ -976,6 +1088,11 @@ export interface MysteryBox extends BaseContract {
     setApprovalForAll(
       operator: PromiseOrValue<string>,
       approved: PromiseOrValue<boolean>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<BigNumber>;
+
+    setAutomation(
+      _automation: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
@@ -1047,6 +1164,8 @@ export interface MysteryBox extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 
+    automation(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
     balanceOf(
       owner: PromiseOrValue<string>,
       overrides?: CallOverrides
@@ -1064,6 +1183,14 @@ export interface MysteryBox extends BaseContract {
     getProvenanceHash(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     getWhitelistRoot(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    i_maxMintPerUser(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    i_maxSupply(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    i_vrfSubscriptionId(
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
 
     isApprovedForAll(
       owner: PromiseOrValue<string>,
@@ -1105,6 +1232,8 @@ export interface MysteryBox extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 
+    s_unrevealedURI(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
     "safeTransferFrom(address,address,uint256)"(
       from: PromiseOrValue<string>,
       to: PromiseOrValue<string>,
@@ -1123,6 +1252,11 @@ export interface MysteryBox extends BaseContract {
     setApprovalForAll(
       operator: PromiseOrValue<string>,
       approved: PromiseOrValue<boolean>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<PopulatedTransaction>;
+
+    setAutomation(
+      _automation: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 

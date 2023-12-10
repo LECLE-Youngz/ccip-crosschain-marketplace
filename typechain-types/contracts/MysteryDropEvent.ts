@@ -37,6 +37,8 @@ export interface MysteryDropEventInterface extends utils.Interface {
     "getBaseURI()": FunctionFragment;
     "getProvenanceHash()": FunctionFragment;
     "handleOracleFulfillment(bytes32,bytes,bytes)": FunctionFragment;
+    "i_CLSubscriptionId()": FunctionFragment;
+    "i_maxSupply()": FunctionFragment;
     "isApprovedForAll(address,address)": FunctionFragment;
     "name()": FunctionFragment;
     "nftPurchasedRequired()": FunctionFragment;
@@ -44,6 +46,7 @@ export interface MysteryDropEventInterface extends utils.Interface {
     "ownerOf(uint256)": FunctionFragment;
     "rawFulfillRandomWords(uint256,uint256[])": FunctionFragment;
     "reveal()": FunctionFragment;
+    "s_baseURI()": FunctionFragment;
     "s_lastError()": FunctionFragment;
     "s_lastRequestId()": FunctionFragment;
     "s_requestIdToSubscriber(bytes32)": FunctionFragment;
@@ -72,6 +75,8 @@ export interface MysteryDropEventInterface extends utils.Interface {
       | "getBaseURI"
       | "getProvenanceHash"
       | "handleOracleFulfillment"
+      | "i_CLSubscriptionId"
+      | "i_maxSupply"
       | "isApprovedForAll"
       | "name"
       | "nftPurchasedRequired"
@@ -79,6 +84,7 @@ export interface MysteryDropEventInterface extends utils.Interface {
       | "ownerOf"
       | "rawFulfillRandomWords"
       | "reveal"
+      | "s_baseURI"
       | "s_lastError"
       | "s_lastRequestId"
       | "s_requestIdToSubscriber"
@@ -134,6 +140,14 @@ export interface MysteryDropEventInterface extends utils.Interface {
     ]
   ): string;
   encodeFunctionData(
+    functionFragment: "i_CLSubscriptionId",
+    values?: undefined
+  ): string;
+  encodeFunctionData(
+    functionFragment: "i_maxSupply",
+    values?: undefined
+  ): string;
+  encodeFunctionData(
     functionFragment: "isApprovedForAll",
     values: [PromiseOrValue<string>, PromiseOrValue<string>]
   ): string;
@@ -152,6 +166,7 @@ export interface MysteryDropEventInterface extends utils.Interface {
     values: [PromiseOrValue<BigNumberish>, PromiseOrValue<BigNumberish>[]]
   ): string;
   encodeFunctionData(functionFragment: "reveal", values?: undefined): string;
+  encodeFunctionData(functionFragment: "s_baseURI", values?: undefined): string;
   encodeFunctionData(
     functionFragment: "s_lastError",
     values?: undefined
@@ -251,6 +266,14 @@ export interface MysteryDropEventInterface extends utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(
+    functionFragment: "i_CLSubscriptionId",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "i_maxSupply",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
     functionFragment: "isApprovedForAll",
     data: BytesLike
   ): Result;
@@ -266,6 +289,7 @@ export interface MysteryDropEventInterface extends utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "reveal", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "s_baseURI", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "s_lastError",
     data: BytesLike
@@ -526,6 +550,10 @@ export interface MysteryDropEvent extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
+    i_CLSubscriptionId(overrides?: CallOverrides): Promise<[BigNumber]>;
+
+    i_maxSupply(overrides?: CallOverrides): Promise<[BigNumber]>;
+
     isApprovedForAll(
       owner: PromiseOrValue<string>,
       operator: PromiseOrValue<string>,
@@ -552,6 +580,8 @@ export interface MysteryDropEvent extends BaseContract {
     reveal(
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
+
+    s_baseURI(overrides?: CallOverrides): Promise<[string]>;
 
     s_lastError(overrides?: CallOverrides): Promise<[string]>;
 
@@ -666,6 +696,10 @@ export interface MysteryDropEvent extends BaseContract {
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
+  i_CLSubscriptionId(overrides?: CallOverrides): Promise<BigNumber>;
+
+  i_maxSupply(overrides?: CallOverrides): Promise<BigNumber>;
+
   isApprovedForAll(
     owner: PromiseOrValue<string>,
     operator: PromiseOrValue<string>,
@@ -692,6 +726,8 @@ export interface MysteryDropEvent extends BaseContract {
   reveal(
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
+
+  s_baseURI(overrides?: CallOverrides): Promise<string>;
 
   s_lastError(overrides?: CallOverrides): Promise<string>;
 
@@ -804,6 +840,10 @@ export interface MysteryDropEvent extends BaseContract {
       overrides?: CallOverrides
     ): Promise<void>;
 
+    i_CLSubscriptionId(overrides?: CallOverrides): Promise<BigNumber>;
+
+    i_maxSupply(overrides?: CallOverrides): Promise<BigNumber>;
+
     isApprovedForAll(
       owner: PromiseOrValue<string>,
       operator: PromiseOrValue<string>,
@@ -828,6 +868,8 @@ export interface MysteryDropEvent extends BaseContract {
     ): Promise<void>;
 
     reveal(overrides?: CallOverrides): Promise<void>;
+
+    s_baseURI(overrides?: CallOverrides): Promise<string>;
 
     s_lastError(overrides?: CallOverrides): Promise<string>;
 
@@ -1033,6 +1075,10 @@ export interface MysteryDropEvent extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
+    i_CLSubscriptionId(overrides?: CallOverrides): Promise<BigNumber>;
+
+    i_maxSupply(overrides?: CallOverrides): Promise<BigNumber>;
+
     isApprovedForAll(
       owner: PromiseOrValue<string>,
       operator: PromiseOrValue<string>,
@@ -1059,6 +1105,8 @@ export interface MysteryDropEvent extends BaseContract {
     reveal(
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
+
+    s_baseURI(overrides?: CallOverrides): Promise<BigNumber>;
 
     s_lastError(overrides?: CallOverrides): Promise<BigNumber>;
 
@@ -1174,6 +1222,12 @@ export interface MysteryDropEvent extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 
+    i_CLSubscriptionId(
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    i_maxSupply(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
     isApprovedForAll(
       owner: PromiseOrValue<string>,
       operator: PromiseOrValue<string>,
@@ -1202,6 +1256,8 @@ export interface MysteryDropEvent extends BaseContract {
     reveal(
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
+
+    s_baseURI(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     s_lastError(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 

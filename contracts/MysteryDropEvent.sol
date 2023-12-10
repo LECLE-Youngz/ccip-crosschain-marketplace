@@ -31,7 +31,7 @@ contract MysteryDropEvent is
     bytes32 donID =
         0x66756e2d6176616c616e6368652d66756a692d31000000000000000000000000;
 
-    uint64 private immutable i_CLSubscriptionId;
+    uint64 public immutable i_CLSubscriptionId;
 
     event MysteryNFTRequest(address subscriber, bytes32 requestId);
     event Response(bytes32 indexed requestId, bytes response, bytes err);
@@ -44,9 +44,9 @@ contract MysteryDropEvent is
     uint64 private immutable i_vrfSubscriptionId;
 
     // MisteryEvent STATE
-    uint256 private immutable i_maxSupply;
+    uint256 public immutable i_maxSupply;
     /// @notice The base URI for tokens after it is revealed
-    string private s_baseURI;
+    string public s_baseURI;
     /// @notice The Amount of NFTs required Subscriber to buy in order to participate in the MysteryDropEvent
     uint64 public nftPurchasedRequired;
     mapping(address => bytes32) public s_subscriberToRequestId;
@@ -173,32 +173,26 @@ contract MysteryDropEvent is
         _safeMint(subscriber, 1);
     }
 
-    /// @inheritdoc ERC721Psi
     function _baseURI() internal view override returns (string memory) {
         return s_baseURI;
     }
 
-    /// @inheritdoc ERC721PsiMysteryBox
     function _unrevealedURI() internal view override returns (string memory) {
         return s_unrevealedURI;
     }
 
-    /// @inheritdoc ERC721PsiMysteryBox
     function _maxSupply() internal view override returns (uint256) {
         return i_maxSupply;
     }
 
-    /// @inheritdoc ERC721PsiMysteryBox
     function _coordinator() internal view override returns (address) {
         return i_vrfCoordinatorV2;
     }
 
-    /// @inheritdoc ERC721PsiMysteryBox
     function _keyHash() internal view override returns (bytes32) {
         return i_vrfKeyHash;
     }
 
-    /// @inheritdoc ERC721PsiMysteryBox
     function _subscriptionId() internal view override returns (uint64) {
         return i_vrfSubscriptionId;
     }

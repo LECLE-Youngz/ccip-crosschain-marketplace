@@ -12,183 +12,207 @@ import {ERC721Psi, ERC721PsiMysteryBox} from "./ERC721Psi/ERC721PsiMysteryBox.so
 /// @notice NFT collection with random token distribution
 /// @dev Using Chainlink VRF for randomness
 contract MysteryBox is ERC721PsiMysteryBox, Ownable {
-  /// @notice The maximum amount of tokens that can be minted
-  uint256 private immutable i_maxSupply;
+    /// @notice The maximum amount of tokens that can be minted
+    uint256 public immutable i_maxSupply;
 
-  /// @notice The maximum amount of tokens that can be minted per address
-  uint256 private immutable i_maxMintPerUser;
+    /// @notice The maximum amount of tokens that can be minted per address
+    uint256 public immutable i_maxMintPerUser;
 
-  /// @notice The keyhash for Chainlink VRF
-  bytes32 private immutable i_vrfKeyHash;
+    /// @notice The keyhash for Chainlink VRF
+    bytes32 private immutable i_vrfKeyHash;
 
-  /// @notice The address of Chainlink VRF Coordinator
-  address private immutable i_vrfCoordinatorV2;
+    /// @notice The address of Chainlink VRF Coordinator
+    address private immutable i_vrfCoordinatorV2;
 
-  /// @notice The subscription ID for Chainlink VRF
-  uint64 private immutable i_vrfSubscriptionId;
+    /// @notice The subscription ID for Chainlink VRF
+    uint64 public immutable i_vrfSubscriptionId;
 
-  /// @notice The fee for minting one token
-  uint256 private s_fee;
+    /// @notice The fee for minting one token
+    uint256 private s_fee;
 
-  /// @notice The base URI for tokens after it is revealed
-  string private s_baseURI;
+    /// @notice The base URI for tokens after it is revealed
+    string private s_baseURI;
 
-  /// @notice The URI for all tokens before reveal
-  string private s_unrevealedURI;
+    /// @notice The URI for all tokens before reveal
+    string public s_unrevealedURI;
 
-  /// @notice The provenance hash of all images in the collection
-  string private s_provenanceHash;
+    /// @notice The provenance hash of all images in the collection
+    string private s_provenanceHash;
 
-  /// @notice Whether the public mint is enabled
-  bool private s_publicMint;
+    /// @notice Whether the public mint is enabled
+    bool private s_publicMint;
 
-  /// @notice The root of the whitelist merkle tree
-  bytes32 private s_whitelistRoot;
+    /// @notice The root of the whitelist merkle tree
+    bytes32 private s_whitelistRoot;
 
-  /// @notice The amount of tokens minted per address
-  mapping(address => uint256) private s_userAmountMinted;
+    /// @notice The amount of tokens minted per address
+    mapping(address => uint256) private s_userAmountMinted;
 
-  /// @notice The user is not allowed to mint
-  error NotAllowed();
+    error NotAllowed();
 
-  /// @notice The user is not eligible for private mint
-  error NotEligible();
+    /// @notice The user is not eligible for private mint
+    error NotEligible();
 
-  /// @notice The amount requested for mint is zero
-  error ZeroAmount();
+    /// @notice The amount requested for mint is zero
+    error ZeroAmount();
 
-  /// @notice The value sent is insufficient for the mint
-  error InsufficientValue();
+    error InsufficientValue();
 
-  /// @notice The user has exceeded the limit of tokens per address
-  error LimitPerUserExceeded();
+    /// @notice The user has exceeded the limit of tokens per address
+    error LimitPerUserExceeded();
 
-  /// @notice The funds could not be withdrawn
-  error FailedToWithdrawFunds();
+    error FailedToWithdrawFunds();
 
-  constructor(
-    string memory name,
-    string memory symbol,
-    string memory unrevealedURI,
-    uint256 maxSupply,
-    uint256 maxMintPerUser,
-    uint256 fee,
-    bytes32 whitelistRoot,
-    uint64 vrfSubscriptionId
-  ) ERC721PsiMysteryBox(0x2eD832Ba664535e5886b75D64C46EB9a228C2610) ERC721Psi(name, symbol) {
-    i_maxSupply = maxSupply;
-    i_maxMintPerUser = maxMintPerUser;
-    i_vrfKeyHash = 0x354d2f95da55398f44b7cff77da56283d9c6c829a4bdf1bbcaf2ad6a4d081f61;
-    i_vrfCoordinatorV2 = 0x2eD832Ba664535e5886b75D64C46EB9a228C2610;
-    i_vrfSubscriptionId = vrfSubscriptionId;
-    s_fee = fee;
-    s_whitelistRoot = whitelistRoot;
-    s_unrevealedURI = unrevealedURI;
-    transferOwnership(tx.origin);
-  }
+    // Chainlink time-based automation 
+    address public automation;
 
-  function publicMint(uint256 amount) external payable {
-    if (!s_publicMint) revert NotAllowed();
+    constructor(
+        string memory name,
+        string memory symbol,
+        string memory unrevealedURI,
+        uint256 maxSupply,
+        uint256 maxMintPerUser,
+        uint256 fee,
+        bytes32 whitelistRoot,
+        uint64 vrfSubscriptionId
+    )
+        ERC721PsiMysteryBox(0x2eD832Ba664535e5886b75D64C46EB9a228C2610)
+        ERC721Psi(name, symbol)
+    {
+        i_maxSupply = maxSupply;
+        i_maxMintPerUser = maxMintPerUser;
+        i_vrfKeyHash = 0x354d2f95da55398f44b7cff77da56283d9c6c829a4bdf1bbcaf2ad6a4d081f61;
+        i_vrfCoordinatorV2 = 0x2eD832Ba664535e5886b75D64C46EB9a228C2610;
+        i_vrfSubscriptionId = vrfSubscriptionId;
+        s_fee = fee;
+        s_whitelistRoot = whitelistRoot;
+        s_unrevealedURI = unrevealedURI;
+        transferOwnership(tx.origin);
+    }
 
-    _mintAmount(amount);
-  }
+    function publicMint(uint256 amount) external payable {
+        if (!s_publicMint) revert NotAllowed();
 
-  function privateMint(uint256 amount, bytes32[] calldata proof) external payable {
-    bytes32 leaf = keccak256(abi.encodePacked(msg.sender));
+        _mintAmount(amount);
+    }
 
-    if (!MerkleProof.verify(proof, s_whitelistRoot, leaf)) revert NotEligible();
+    function privateMint(
+        uint256 amount,
+        bytes32[] calldata proof
+    ) external payable {
+        bytes32 leaf = keccak256(abi.encodePacked(msg.sender));
 
-    _mintAmount(amount);
-  }
+        if (!MerkleProof.verify(proof, s_whitelistRoot, leaf))
+            revert NotEligible();
 
-  function _mintAmount(uint256 amount) internal {
-    if (_revealed()) revert NotAllowed();
+        _mintAmount(amount);
+    }
 
-    if (amount == 0) revert ZeroAmount();
+    function _mintAmount(uint256 amount) internal {
+        if (_revealed()) revert NotAllowed();
 
-    if (msg.value < s_fee * amount) revert InsufficientValue();
+        if (amount == 0) revert ZeroAmount();
 
-    if (s_userAmountMinted[msg.sender] + amount > i_maxMintPerUser) revert LimitPerUserExceeded();
+        if (msg.value < s_fee * amount) revert InsufficientValue();
 
-    s_userAmountMinted[msg.sender] += amount;
+        if (s_userAmountMinted[msg.sender] + amount > i_maxMintPerUser)
+            revert LimitPerUserExceeded();
 
-    _safeMint(msg.sender, amount);
-  }
+        s_userAmountMinted[msg.sender] += amount;
 
-  function getFee() external view returns (uint256) {
-    return s_fee;
-  }
+        _safeMint(msg.sender, amount);
+    }
 
-  function getWhitelistRoot() external view returns (bytes32) {
-    return s_whitelistRoot;
-  }
+    function getFee() external view returns (uint256) {
+        return s_fee;
+    }
 
-  function getProvenanceHash() external view returns (string memory) {
-    return s_provenanceHash;
-  }
+    function getWhitelistRoot() external view returns (bytes32) {
+        return s_whitelistRoot;
+    }
 
-  function getBaseURI() external view returns (string memory) {
-    return s_baseURI;
-  }
+    function getProvenanceHash() external view returns (string memory) {
+        return s_provenanceHash;
+    }
 
-  function reveal() external onlyOwner {
-    _reveal();
-  }
+    function getBaseURI() external view returns (string memory) {
+        return s_baseURI;
+    }
 
-  function setBaseURI(string memory newBaseURI) external onlyOwner {
-    s_baseURI = newBaseURI;
-  }
+    function reveal() external {
+        require(
+            msg.sender == owner() || msg.sender == automation,
+            "Caller's allowed to perform this action"
+        );
+        _reveal();
+    }
 
-  /// @notice Enable or disable public mint
-  /// @param publicMintEnabled True to enable public mint, false to disable
-  function setPublicMint(bool publicMintEnabled) external onlyOwner {
-    s_publicMint = publicMintEnabled;
-  }
+    function setBaseURI(string memory newBaseURI) external onlyOwner {
+        s_baseURI = newBaseURI;
+    }
 
-  function setWhitelistRoot(bytes32 whiteListRoot) external onlyOwner {
-    s_whitelistRoot = whiteListRoot;
-  }
+    function setAutomation(address _automation) external onlyOwner {
+        automation = _automation;
+    }
 
-  function setProvenanceHash(string memory provenanceHash) external onlyOwner {
-    s_provenanceHash = provenanceHash;
-  }
+    /// @notice Enable or disable public mint
+    /// @param publicMintEnabled True to enable public mint, false to disable
+    function setPublicMint(bool publicMintEnabled) external {
+        require(
+            msg.sender == owner() || msg.sender == automation,
+            "Caller's allowed to perform this action"
+        );
+        s_publicMint = publicMintEnabled;
+    }
 
-  function setMintFee(uint256 fee) external onlyOwner {
-    s_fee = fee;
-  }
+    function setWhitelistRoot(bytes32 whiteListRoot) external onlyOwner {
+        s_whitelistRoot = whiteListRoot;
+    }
 
-  function withdraw() external onlyOwner {
-    // solhint-disable-next-line avoid-low-level-calls
-    (bool sent, ) = payable(owner()).call{value: address(this).balance}("");
+    function setProvenanceHash(
+        string memory provenanceHash
+    ) external onlyOwner {
+        s_provenanceHash = provenanceHash;
+    }
 
-    if (!sent) revert FailedToWithdrawFunds();
-  }
+    function setMintFee(uint256 fee) external onlyOwner {
+        s_fee = fee;
+    }
 
-  function _baseURI() internal view override returns (string memory) {
-    return s_baseURI;
-  }
+    function withdraw() external onlyOwner {
+        // solhint-disable-next-line avoid-low-level-calls
+        (bool sent, ) = payable(owner()).call{value: address(this).balance}("");
 
-  function _unrevealedURI() internal view override returns (string memory) {
-    return s_unrevealedURI;
-  }
+        if (!sent) revert FailedToWithdrawFunds();
+    }
 
-  function _maxSupply() internal view override returns (uint256) {
-    return i_maxSupply;
-  }
+    function _baseURI() internal view override returns (string memory) {
+        return s_baseURI;
+    }
 
-  function _coordinator() internal view override returns (address) {
-    return i_vrfCoordinatorV2;
-  }
+    function _unrevealedURI() internal view override returns (string memory) {
+        return s_unrevealedURI;
+    }
 
-  function _keyHash() internal view override returns (bytes32) {
-    return i_vrfKeyHash;
-  }
+    function _maxSupply() internal view override returns (uint256) {
+        return i_maxSupply;
+    }
 
-  function _subscriptionId() internal view override returns (uint64) {
-    return i_vrfSubscriptionId;
-  }
+    function _coordinator() internal view override returns (address) {
+        return i_vrfCoordinatorV2;
+    }
 
-  function supportsInterface(bytes4 interfaceId) public view virtual override(ERC721Psi) returns (bool) {
-    return super.supportsInterface(interfaceId);
-  }
+    function _keyHash() internal view override returns (bytes32) {
+        return i_vrfKeyHash;
+    }
+
+    function _subscriptionId() internal view override returns (uint64) {
+        return i_vrfSubscriptionId;
+    }
+
+    function supportsInterface(
+        bytes4 interfaceId
+    ) public view virtual override(ERC721Psi) returns (bool) {
+        return super.supportsInterface(interfaceId);
+    }
 }
