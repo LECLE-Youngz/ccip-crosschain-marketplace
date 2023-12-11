@@ -8,7 +8,8 @@ import {
   Approval,
   ApprovalForAll,
   OwnershipTransferred,
-  ContractTransfer
+  ContractTransfer,
+  NFTTransfer
 } from "../generated/schema"
 
 export function handleApproval(event: ApprovalEvent): void {
@@ -68,6 +69,19 @@ export function handleTransfer(event: TransferEvent): void {
   entity.blockNumber = event.block.number
   entity.blockTimestamp = event.block.timestamp
   entity.transactionHash = event.transaction.hash
+
+  let nftEntity = new NFTTransfer(
+    event.transaction.hash.concatI32(event.logIndex.toI32())
+  )
+  nftEntity.from = event.params.from
+  nftEntity.to = event.params.to
+  nftEntity.tokenId = event.params.tokenId
+  nftEntity.contract = event.address
+  nftEntity.blockNumber = event.block.number
+  nftEntity.blockTimestamp = event.block.timestamp
+  nftEntity.transactionHash = event.transaction.hash
+  
+  nftEntity.save()
 
   entity.save()
 }
