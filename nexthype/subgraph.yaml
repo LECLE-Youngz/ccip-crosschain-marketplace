@@ -1,0 +1,411 @@
+specVersion: 0.0.5
+schema:
+  file: ./schema.graphql
+dataSources:
+  - kind: ethereum
+    name: Marketplace
+    network: fuji
+    source:
+      address: "0xD9799F37a6e5310d2261cfC66e9994C6B30E5446"
+      abi: Marketplace
+      startBlock: 28232245
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - ItemBought
+        - ItemCanceled
+        - ItemListed
+        - PromptBought
+      abis:
+        - name: Marketplace
+          file: ./abis/Marketplace.json
+      eventHandlers:
+        - event: ItemBought(indexed address,indexed address,indexed uint256,uint256,uint256)
+          handler: handleItemBought
+        - event: ItemCanceled(indexed address,indexed address,indexed uint256)
+          handler: handleItemCanceled
+        - event: ItemListed(indexed address,indexed address,indexed uint256,uint256,uint256)
+          handler: handleItemListed
+        - event: PromptBought(indexed address,indexed address,indexed uint256,uint256,uint256)
+          handler: handlePromptBought
+      file: ./src/marketplace.ts
+  - kind: ethereum
+    name: nexthypeNFT
+    network: fuji
+    source:
+      address: "0xF579d4f36aa6ED63aEb325ee8a3A37eDDCAE01Cb"
+      abi: nexthypeNFT
+      startBlock: 28232263
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - Approval
+        - ApprovalForAll
+        - OwnershipTransferred
+        - Transfer
+      abis:
+        - name: nexthypeNFT
+          file: ./abis/nexthypeNFT.json
+      eventHandlers:
+        - event: Approval(indexed address,indexed address,indexed uint256)
+          handler: handleApproval
+        - event: ApprovalForAll(indexed address,indexed address,bool)
+          handler: handleApprovalForAll
+        - event: OwnershipTransferred(indexed address,indexed address)
+          handler: handleOwnershipTransferred
+        - event: Transfer(indexed address,indexed address,indexed uint256)
+          handler: handleTransfer
+      file: ./src/nexthype-nft.ts
+  - kind: ethereum
+    name: GenFactory
+    network: fuji
+    source:
+      address: "0x6C8E612528656899a8Ea62263C201BF73F4cA3DA"
+      abi: GenFactory
+      startBlock: 28218816
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - ERC721TokenCreated
+      abis:
+        - name: GenFactory
+          file: ./abis/GenFactory.json
+      eventHandlers:
+        - event: ERC721TokenCreated(address,address)
+          handler: handleERC721TokenCreated
+      file: ./src/gen-factory.ts
+  - kind: ethereum
+    name: PremiumFactory
+    network: fuji
+    source:
+      address: "0x347654538f81414D217dc91c93318B0f8AEdA13F"
+      abi: PremiumFactory
+      startBlock: 28332960
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - PremiumTokenCreated
+      abis:
+        - name: PremiumFactory
+          file: ./abis/PremiumFactory.json
+      eventHandlers:
+        - event: PremiumTokenCreated(address,address)
+          handler: handlePremiumTokenCreated
+      file: ./src/premium-factory.ts
+  - kind: ethereum
+    name: ExclusiveFactory
+    network: fuji
+    source:
+      address: "0xc17EE3A5aFeBb3726E00E7bc809EE3AcA26827f9"
+      abi: ExclusiveFactory
+      startBlock: 28380580
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - ExclusiveNFTCreated
+      abis:
+        - name: ExclusiveFactory
+          file: ./abis/ExclusiveFactory.json
+      eventHandlers:
+        - event: ExclusiveNFTCreated(address,address,string,address)
+          handler: handleExclusiveNFTCreated
+      file: ./src/exclusive-factory.ts
+  - kind: ethereum
+    name: MysteryFactory
+    network: fuji
+    source:
+      address: "0x4661dCC571657680bfc4A710546ED1622Bf29af8"
+      abi: MysteryFactory
+      startBlock: 28428276
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - MysteryEventCreated
+      abis:
+        - name: MysteryFactory
+          file: ./abis/MysteryFactory.json
+      eventHandlers:
+        - event: MysteryEventCreated(address,address)
+          handler: handleMysteryEventCreated
+      file: ./src/mystery-factory.ts
+  - kind: ethereum
+    name: LuckyFactory
+    network: fuji
+    source:
+      address: "0x7506D8e5A7b45625640Ce7bA8A3359567720dE6c"
+      abi: LuckyFactory
+      startBlock: 28449915
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - LuckyTokenCreated
+      abis:
+        - name: LuckyFactory
+          file: ./abis/LuckyFactory.json
+      eventHandlers:
+        - event: LuckyTokenCreated(address,address)
+          handler: handleLuckyTokenCreated
+      file: ./src/lucky-factory.ts
+  - kind: ethereum
+    name: BoxFactory
+    network: fuji
+    source:
+      address: "0xFf0aC217995C5037a83B7c1B2bD4f347983527Ff"
+      abi: BoxFactory
+      startBlock: 28455783
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - MysteryBoxCreated
+      abis:
+        - name: BoxFactory
+          file: ./abis/BoxFactory.json
+      eventHandlers:
+        - event: MysteryBoxCreated(address,address)
+          handler: handleMysteryBoxCreated
+      file: ./src/box-factory.ts
+  - kind: ethereum
+    name: TreasuryFactory
+    network: fuji
+    source:
+      address: "0x29e74c72C83E2CEfdF031DFE1397981cAE93D805"
+      abi: TreasuryFactory
+      startBlock: 28454516
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - LuckyTreasuryCreated
+      abis:
+        - name: TreasuryFactory
+          file: ./abis/TreasuryFactory.json
+      eventHandlers:
+        - event: LuckyTreasuryCreated(address,address)
+          handler: handleLuckyTreasuryCreated
+      file: ./src/treasury-factory.ts
+templates:
+  - kind: ethereum
+    name: Contract
+    network: fuji
+    source:
+      abi: Contract
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - ContractApproval
+        - ContractApprovalForAll
+        - ContractOwnershipTransferred
+        - ContractTransfer
+      abis:
+        - name: Contract
+          file: ./abis/Contract.json
+      eventHandlers:
+        - event: Approval(indexed address,indexed address,indexed uint256)
+          handler: handleApproval
+        - event: ApprovalForAll(indexed address,indexed address,bool)
+          handler: handleApprovalForAll
+        - event: OwnershipTransferred(indexed address,indexed address)
+          handler: handleOwnershipTransferred
+        - event: Transfer(indexed address,indexed address,indexed uint256)
+          handler: handleTransfer
+      file: ./src/contract.ts
+  - kind: ethereum
+    name: PremiumNFT
+    network: fuji
+    source:
+      abi: PremiumNFT
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - PremiumNFTApproval
+        - PremiumNFTApprovalForAll
+        - PremiumNFTOwnershipTransferred
+        - PremiumMemberSubscribed
+        - PremiumNFTTransfer
+      abis:
+        - name: PremiumNFT
+          file: ./abis/PremiumNFT.json
+      eventHandlers:
+        - event: Approval(indexed address,indexed address,indexed uint256)
+          handler: handleApproval
+        - event: ApprovalForAll(indexed address,indexed address,bool)
+          handler: handleApprovalForAll
+        - event: OwnershipTransferred(indexed address,indexed address)
+          handler: handleOwnershipTransferred
+        - event: PremiumMemberSubscribed(address,address)
+          handler: handlePremiumMemberSubscribed
+        - event: Transfer(indexed address,indexed address,indexed uint256)
+          handler: handleTransfer
+      file: ./src/premium-nft.ts
+  - kind: ethereum
+    name: ExclusiveNFT
+    network: fuji
+    source:
+      abi: ExclusiveNFT
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - ExclusiveNFTApproval
+        - ExclusiveNFTApprovalForAll
+        - ExclusiveNFTOwnershipTransferred
+        - ExclusiveNFTTransfer
+      abis:
+        - name: ExclusiveNFT
+          file: ./abis/ExclusiveNFT.json
+      eventHandlers:
+        - event: Approval(indexed address,indexed address,indexed uint256)
+          handler: handleApproval
+        - event: ApprovalForAll(indexed address,indexed address,bool)
+          handler: handleApprovalForAll
+        - event: OwnershipTransferred(indexed address,indexed address)
+          handler: handleOwnershipTransferred
+        - event: Transfer(indexed address,indexed address,indexed uint256)
+          handler: handleTransfer
+      file: ./src/exclusive-nft.ts
+  - kind: ethereum
+    name: MysteryEvent
+    network: fuji
+    source:
+      abi: MysteryEvent
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - MysteryEventApproval
+        - MysteryEventApprovalForAll
+        - MysteryNFTRequest
+        - OwnershipTransferRequested
+        - MysteryEventOwnershipTransferred
+        - RandomnessRequest
+        - RequestFulfilled
+        - RequestSent
+        - Response
+        - MysteryEventTransfer
+      abis:
+        - name: MysteryEvent
+          file: ./abis/MysteryEvent.json
+      eventHandlers:
+        - event: Approval(indexed address,indexed address,indexed uint256)
+          handler: handleApproval
+        - event: ApprovalForAll(indexed address,indexed address,bool)
+          handler: handleApprovalForAll
+        - event: MysteryNFTRequest(address,bytes32)
+          handler: handleMysteryNFTRequest
+        - event: OwnershipTransferRequested(indexed address,indexed address)
+          handler: handleOwnershipTransferRequested
+        - event: RandomnessRequest(uint256)
+          handler: handleRandomnessRequest
+        - event: RequestFulfilled(indexed bytes32)
+          handler: handleRequestFulfilled
+        - event: RequestSent(indexed bytes32)
+          handler: handleRequestSent
+        - event: Response(indexed bytes32,bytes,bytes)
+          handler: handleResponse
+        - event: Transfer(indexed address,indexed address,indexed uint256)
+          handler: handleTransfer
+      file: ./src/mystery-event.ts
+  - kind: ethereum
+    name: LuckyNFT
+    network: fuji
+    source:
+      abi: LuckyNFT
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - LuckyNFTApproval
+        - LuckyNFTApprovalForAll
+        - LotteryRequestFulfilled
+        - LotteryRequestSent
+        - LuckyNFTOwnershipTransferred
+        - LuckyNFTTransfer
+      abis:
+        - name: LuckyNFT
+          file: ./abis/LuckyNFT.json
+      eventHandlers:
+        - event: Approval(indexed address,indexed address,indexed uint256)
+          handler: handleApproval
+        - event: ApprovalForAll(indexed address,indexed address,bool)
+          handler: handleApprovalForAll
+        - event: LotteryRequestFulfilled(uint256,address,uint256,uint256)
+          handler: handleLotteryRequestFulfilled
+        - event: LotteryRequestSent(uint256,address)
+          handler: handleLotteryRequestSent
+        - event: OwnershipTransferred(indexed address,indexed address)
+          handler: handleOwnershipTransferred
+        - event: Transfer(indexed address,indexed address,indexed uint256)
+          handler: handleTransfer
+      file: ./src/lucky-nft.ts
+  - kind: ethereum
+    name: MysteryBox
+    network: fuji
+    source:
+      abi: MysteryBox
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - MysteryBoxApproval
+        - MysteryBoxApprovalForAll
+        - MysteryBoxOwnershipTransferred
+        - MysteryBoxRandomnessRequest
+        - MysteryBoxTransfer
+      abis:
+        - name: MysteryBox
+          file: ./abis/MysteryBox.json
+      eventHandlers:
+        - event: Approval(indexed address,indexed address,indexed uint256)
+          handler: handleApproval
+        - event: ApprovalForAll(indexed address,indexed address,bool)
+          handler: handleApprovalForAll
+        - event: OwnershipTransferred(indexed address,indexed address)
+          handler: handleOwnershipTransferred
+        - event: RandomnessRequest(uint256)
+          handler: handleRandomnessRequest
+        - event: Transfer(indexed address,indexed address,indexed uint256)
+          handler: handleTransfer
+      file: ./src/mystery-box.ts
+  - kind: ethereum
+    name: LuckyTreasury
+    network: fuji
+    source:
+      abi: LuckyTreasury
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - LuckyTreasuryOwnershipTransferred
+      abis:
+        - name: LuckyTreasury
+          file: ./abis/LuckyTreasury.json
+      eventHandlers:
+        - event: OwnershipTransferred(indexed address,indexed address)
+          handler: handleOwnershipTransferred
+      file: ./src/lucky-treasury.ts

@@ -15,7 +15,7 @@ task(`deploy-destination-minter`, `Deploys MyNFT.sol and DestinationMinter.sol s
         const privateKey = getPrivateKey();
         const rpcProviderUrl = getProviderRpcUrl(hre.network.name);
 
-        const provider = new ethers.JsonRpcProvider(rpcProviderUrl);
+        const provider = new ethers.providers.JsonRpcProvider(rpcProviderUrl);
         const wallet = new Wallet(privateKey);
         const deployer = wallet.connect(provider);
 

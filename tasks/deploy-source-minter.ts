@@ -16,7 +16,7 @@ task(`deploy-source-minter`, `Deploys SourceMinter.sol smart contract`)
         const privateKey = getPrivateKey();
         const rpcProviderUrl = getProviderRpcUrl(hre.network.name);
 
-        const provider = new ethers.JsonRpcProvider(rpcProviderUrl);
+        const provider = new ethers.providers.JsonRpcProvider(rpcProviderUrl);
         const wallet = new Wallet(privateKey);
         const deployer = wallet.connect(provider);
 
@@ -32,5 +32,5 @@ task(`deploy-source-minter`, `Deploys SourceMinter.sol smart contract`)
         await sourceMinter.waitForDeployment();
 
         spinner.stop();
-        console.log(`✅ SourceMinter contract deployed at address ${sourceMinter.target} on the ${hre.network.name} blockchain`);
+        console.log(`✅ SourceMinter contract deployed at address ${sourceMinter.address} on the ${hre.network.name} blockchain`);
     })

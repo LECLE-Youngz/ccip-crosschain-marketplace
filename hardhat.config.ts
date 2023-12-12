@@ -1,9 +1,10 @@
 import * as dotenvenc from '@chainlink/env-enc'
+import "@chainlink/hardhat-chainlink";
+import '@nomicfoundation/hardhat-toolbox'
+import { HardhatUserConfig } from "hardhat/config";
+import './tasks'
 dotenvenc.config();
 
-import { HardhatUserConfig } from "hardhat/config";
-import "@nomicfoundation/hardhat-toolbox";
-import './tasks'
 
 const PRIVATE_KEY = process.env.PRIVATE_KEY;
 const ETHEREUM_SEPOLIA_RPC_URL = process.env.ETHEREUM_SEPOLIA_RPC_URL;
@@ -11,9 +12,18 @@ const POLYGON_MUMBAI_RPC_URL = process.env.POLYGON_MUMBAI_RPC_URL;
 const OPTIMISM_GOERLI_RPC_URL = process.env.OPTIMISM_GOERLI_RPC_URL;
 const ARBITRUM_TESTNET_RPC_URL = process.env.ARBITRUM_TESTNET_RPC_URL;
 const AVALANCHE_FUJI_RPC_URL = process.env.AVALANCHE_FUJI_RPC_URL;
+const SNOWTRACE_API_KEY = process.env.SNOWTRACE_API_KEY;
 
 const config: HardhatUserConfig = {
-  solidity: "0.8.19",
+  solidity: {
+    version: '0.8.19',
+    settings: {
+      optimizer: {
+        enabled: true,
+        runs: 500,
+      },
+    },
+  },
   networks: {
     hardhat: {
       chainId: 31337
@@ -43,7 +53,13 @@ const config: HardhatUserConfig = {
       accounts: PRIVATE_KEY !== undefined ? [PRIVATE_KEY] : [],
       chainId: 43113
     }
-  }
+  }, 
+  etherscan: {
+    apiKey: {
+      // avalanche
+      avalancheFujiTestnet: SNOWTRACE_API_KEY || '',
+    },
+  },
 };
 
 export default config;

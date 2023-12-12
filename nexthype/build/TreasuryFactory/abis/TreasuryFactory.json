@@ -1,0 +1,87 @@
+[
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "owner",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "tokenAddress",
+        "type": "address"
+      }
+    ],
+    "name": "LuckyTreasuryCreated",
+    "type": "event"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_luckyNFT",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "_net",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_luckyPoint",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_tokenReward",
+        "type": "uint256"
+      }
+    ],
+    "name": "deployLuckyTreasury",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "name": "events",
+    "outputs": [
+      {
+        "internalType": "contract LuckyTreasury",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "getTotalEvents",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "amount",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  }
+]

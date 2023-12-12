@@ -1,0 +1,47 @@
+// Check out https://github.com/Fantom-foundation/Artion-Contracts/blob/5c90d2bc0401af6fb5abf35b860b762b31dfee02/contracts/FantomMarketplace.sol
+// For a full decentralized nft marketplace
+
+    // IsNotOwner Modifier - Nft Owner can't buy his/her NFT
+    // Modifies buyItem function
+    // Owner should only list, cancel listing or update listing
+    /* modifier isNotOwner(
+        address nftAddress,
+        uint256 tokenId,
+        address spender
+    ) {
+        IERC721 nft = IERC721(nftAddress);
+        address owner = nft.ownerOf(tokenId);
+        if (spender == owner) {
+            revert IsNotOwner();
+        }
+        _;
+    } */
+
+
+    /*
+     * @notice Method for withdrawing proceeds from sales
+     */
+    function withdrawProceeds() external {
+        uint256 proceeds = s_proceeds[msg.sender];
+        if (proceeds <= 0) {
+            revert NoProceeds();
+        }
+        s_proceeds[msg.sender] = 0;
+        (bool success, ) = payable(msg.sender).call{value: proceeds}("");
+        require(success, "Transfer failed");
+    }
+
+        // Challenge - How would you refactor this contract to take:
+        // 1. Abitrary tokens as payment? (HINT - Chainlink Price Feeds!)
+        // 2. Be able to set prices in other currencies?
+        // 3. Tweet me @PatrickAlphaC if you come up with a solution!
+0x5425890298aed601595a70AB815c96711a31Bc65
+        npx hardhat verify 0xa9dEA1924e533090535f1Df56FD98BFDDBd36962 0x0b9d5D9136855f6FEc3c0993feE6E9CE8a297846 0x5498BB86BC934c8D34FDA08E81D444153d0D06aD --network avalancheFuji
+
+        "https://ipfs.io/ipfs/QmYuKY45Aq87LeL1R5dhb1hqHLp6ZFbJaCP8jxqKM1MX6y/babe_ruth_1.json";
+
+        (graph codegen) -and (graph build)
+        graph deploy --studio nexthype
+
+0xD2156E1443066c41E3D8580B0a14b01B8f48a880 mstryBox
+0x29e74c72C83E2CEfdF031DFE1397981cAE93D805 trsr
